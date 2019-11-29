@@ -1,0 +1,42 @@
+# 无特殊情况不要修改规则或在代码中忽略规则，有些问题 swiftlint 会帮助修复，默认规则参见：https://github.com/realm/SwiftLint/blob/master/Rules.md
+
+included: # 执行 linting 时包含的路径。
+- Tangram
+
+excluded: # 执行 linting 时忽略的路径。 优先级比 included 高。
+- Carthage
+- Pods
+
+disabled_rules: # 执行时排除掉的规则
+- trailing_whitespace # Lines should not have trailing whitespace.
+- force_cast # Force casts should be avoided.
+- line_length # Lines should not span too many characters.
+- type_name # Type name should only contain alphanumeric characters, start with an uppercase character and span between 3 and 40 characters in length.
+- identifier_name # Identifier names should only contain alphanumeric characters and start with a lowercase character or should only contain capital letters.
+- unused_closure_parameter # Unused parameter in a closure should be replaced with _.
+- notification_center_detachment # An object should only remove itself as an observer in deinit.
+
+opt_in_rules: # 一些规则仅仅是可选的
+- closure_spacing # Closure expressions should have a single space inside each brace.
+- empty_count # Prefer checking isEmpty over comparing count to zero.
+- fatal_error_message # A fatalError call should have a message.
+- overridden_super_call # Some overridden methods should always call super
+- operator_usage_whitespace # Operators should be surrounded by a single whitespace when they are being used.
+
+nesting:
+    type_level: 5
+  
+cyclomatic_complexity: 12
+
+type_body_length:
+- 600 # warning
+- 1200 # error
+function_body_length:
+- 80
+- 160
+# 或者也可以同时进行显式设置
+file_length:
+- 600
+- 1200
+
+reporter: "xcode" # 报告类型 (xcode, json, csv, checkstyle, junit, html, emoji)
