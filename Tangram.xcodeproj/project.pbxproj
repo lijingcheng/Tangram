@@ -35,7 +35,7 @@
 		F385710B2318C7130043EBC2 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = F385710A2318C7130043EBC2 /* R.generated.swift */; };
 		F385710D2318C7250043EBC2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F385710C2318C7250043EBC2 /* Assets.xcassets */; };
 		F38571112318C7500043EBC2 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = F385710F2318C7500043EBC2 /* README.md */; };
-		F38571132318C7620043EBC2 /* Tangram.podspec in Resources */ = {isa = PBXBuildFile; fileRef = F38571122318C7620043EBC2 /* Tangram.podspec */; };
+		F38571132318C7620043EBC2 /* TangramX.podspec in Resources */ = {isa = PBXBuildFile; fileRef = F38571122318C7620043EBC2 /* TangramX.podspec */; };
 		F38571152318C7C70043EBC2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F38571142318C7C70043EBC2 /* LaunchScreen.storyboard */; };
 		F38571172318C8890043EBC2 /* CountDown.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38571162318C8890043EBC2 /* CountDown.swift */; };
 		F38BBE902330D06A00A194AE /* UIViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BBE8F2330D06A00A194AE /* UIViewExt.swift */; };
@@ -101,7 +101,7 @@
 		F385710A2318C7130043EBC2 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		F385710C2318C7250043EBC2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F385710F2318C7500043EBC2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
-		F38571122318C7620043EBC2 /* Tangram.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = Tangram.podspec; sourceTree = SOURCE_ROOT; };
+		F38571122318C7620043EBC2 /* TangramX.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = TangramX.podspec; sourceTree = SOURCE_ROOT; };
 		F38571142318C7C70043EBC2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F38571162318C8890043EBC2 /* CountDown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDown.swift; sourceTree = "<group>"; };
 		F38BBE8F2330D06A00A194AE /* UIViewExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExt.swift; sourceTree = "<group>"; };
@@ -223,7 +223,7 @@
 				F38571142318C7C70043EBC2 /* LaunchScreen.storyboard */,
 				F385710A2318C7130043EBC2 /* R.generated.swift */,
 				F385710F2318C7500043EBC2 /* README.md */,
-				F38571122318C7620043EBC2 /* Tangram.podspec */,
+				F38571122318C7620043EBC2 /* TangramX.podspec */,
 				F385710C2318C7250043EBC2 /* Assets.xcassets */,
 				F38BBECF2330DB9600A194AE /* Info.plist */,
 			);
@@ -386,7 +386,7 @@
 			files = (
 				F385710D2318C7250043EBC2 /* Assets.xcassets in Resources */,
 				F38571112318C7500043EBC2 /* README.md in Resources */,
-				F38571132318C7620043EBC2 /* Tangram.podspec in Resources */,
+				F38571132318C7620043EBC2 /* TangramX.podspec in Resources */,
 				F38571152318C7C70043EBC2 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

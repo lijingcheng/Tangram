@@ -1,8 +1,8 @@
 PODS:
   - Alamofire (5.0.0-rc.3)
-  - Kingfisher (5.10.1):
-    - Kingfisher/Core (= 5.10.1)
-  - Kingfisher/Core (5.10.1)
+  - Kingfisher (5.11.0):
+    - Kingfisher/Core (= 5.11.0)
+  - Kingfisher/Core (5.11.0)
   - R.swift (5.1.0):
     - R.swift.Library (~> 5.1.0)
   - R.swift.Library (5.1.0)
@@ -18,7 +18,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (= 5.0.0-rc.3)
-  - Kingfisher (= 5.10.1)
+  - Kingfisher (= 5.11.0)
   - R.swift (= 5.1.0)
   - RxCocoa (= 5.0.1)
   - RxSwift (= 5.0.1)
@@ -41,7 +41,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: ca8c0de6906873be89d6deec5c8de279e00bf872
-  Kingfisher: eb36b7dfcc78d60877051c92c119a2865972961a
+  Kingfisher: 4569606189149e19c7d9439f47e885d0679b7a90
   R.swift: 8cbc4fc69b740305b6a17c8a8ed968eb788962d9
   R.swift.Library: fa85ce1e0d0b7e818cd9e080df910ba54d2776cc
   RxCocoa: e741b9749968e8a143e2b787f1dfbff2b63d0a5c
@@ -51,6 +51,6 @@ SPEC CHECKSUMS:
   SwiftLint: c078a14d7d7ade75e5507795d185e3da41d844d2
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: 8d1f65b80a1345669f37374ba002d58e8e95306f
+PODFILE CHECKSUM: 9e836c85f20a6a479e7919d2cfb83c0f677cd75c
 
 COCOAPODS: 1.8.4

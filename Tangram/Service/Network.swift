@@ -163,7 +163,7 @@ public class Network {
         return nil
     }
     
-    /// 发送 upload 请求，需要限制上传大小的功能 maxSize 需要指定值，单位 kb
+    /// 发送 upload 请求
     @discardableResult
     public static func upload(_ path: String, data: Data?, finishedCallback: @escaping (_ result: [String: Any]?, _ error: Network.Error?) -> Void) -> DataRequest? {
         guard let uploadData = data else {

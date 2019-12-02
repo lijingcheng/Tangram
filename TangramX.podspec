@@ -14,7 +14,7 @@ s.source_files = 'R.generated.swift', 'Tangram/Base/*.swift', 'Tangram/Extension
 s.resource_bundles = { 'Tangram' => ['Tangram/Assets.xcassets'] }
 
 s.dependency 'Alamofire', '5.0.0-rc.3'
-s.dependency 'Kingfisher', '5.10.1'
+s.dependency 'Kingfisher', '5.11.0'
 s.dependency 'SwiftyJSON', '5.0.0'
 s.dependency 'SnapKit', '5.0.1'
 s.dependency 'R.swift', '5.1.0'
