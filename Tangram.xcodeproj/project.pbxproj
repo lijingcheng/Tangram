@@ -29,7 +29,6 @@
 		F3393687238E62D600D76D4B /* StepperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3393686238E62D600D76D4B /* StepperView.swift */; };
 		F3393731238E689C00D76D4B /* MultipleLinesFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3393730238E689C00D76D4B /* MultipleLinesFlowLayout.swift */; };
 		F3393733238E7CFE00D76D4B /* TagListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3393732238E7CFE00D76D4B /* TagListView.swift */; };
-		F345CAF1234EC8BD000127C0 /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F345CAF0234EC8BD000127C0 /* BaseNavigationController.swift */; };
 		F3689C4E230FD8D4005447BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3689C4D230FD8D4005447BA /* AppDelegate.swift */; };
 		F38570C42317DFDF0043EBC2 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38570C32317DFDF0043EBC2 /* App.swift */; };
 		F385710B2318C7130043EBC2 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = F385710A2318C7130043EBC2 /* R.generated.swift */; };
@@ -94,7 +93,6 @@
 		F3393686238E62D600D76D4B /* StepperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperView.swift; sourceTree = "<group>"; };
 		F3393730238E689C00D76D4B /* MultipleLinesFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleLinesFlowLayout.swift; sourceTree = "<group>"; };
 		F3393732238E7CFE00D76D4B /* TagListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListView.swift; sourceTree = "<group>"; };
-		F345CAF0234EC8BD000127C0 /* BaseNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavigationController.swift; sourceTree = "<group>"; };
 		F3689C4A230FD8D4005447BA /* Tangram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tangram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3689C4D230FD8D4005447BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F38570C32317DFDF0043EBC2 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -210,7 +208,6 @@
 			children = (
 				F38570C32317DFDF0043EBC2 /* App.swift */,
 				F316D9CC2318CC0F0066FD90 /* Device.swift */,
-				F345CAF0234EC8BD000127C0 /* BaseNavigationController.swift */,
 				F3393730238E689C00D76D4B /* MultipleLinesFlowLayout.swift */,
 				F316D9CE2318CC7B0066FD90 /* UnknownCaseRepresentable.swift */,
 			);
@@ -465,7 +462,6 @@
 				F339366F238D2A2A00D76D4B /* LoadMoreView.swift in Sources */,
 				F38BBE902330D06A00A194AE /* UIViewExt.swift in Sources */,
 				F3689C4E230FD8D4005447BA /* AppDelegate.swift in Sources */,
-				F345CAF1234EC8BD000127C0 /* BaseNavigationController.swift in Sources */,
 				F38BBEA42330D17400A194AE /* UITabBarItemExt.swift in Sources */,
 				F316D9CF2318CC7B0066FD90 /* UnknownCaseRepresentable.swift in Sources */,
 				F3393731238E689C00D76D4B /* MultipleLinesFlowLayout.swift in Sources */,

@@ -48,4 +48,34 @@ extension UINavigationController {
             self.viewControllers = ary
         }
     }
+    
+    /// 支持旋转
+    open override var shouldAutorotate: Bool {
+        return true
+    }
+    
+    /// 设置旋转方向
+    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        if let visibleVC = visibleViewController {
+            if visibleVC.supportRotate {
+                return .allButUpsideDown
+            } else {
+                for child in visibleVC.children where child.supportRotate {
+                    return .allButUpsideDown
+                }
+            }
+        }
+        
+        return .portrait
+    }
+    
+    /// 控制状态条是否隐藏
+    open override var childForStatusBarHidden: UIViewController? {
+        return topViewController
+    }
+    
+    /// 控制状态条样式
+    open override var childForStatusBarStyle: UIViewController? {
+        return topViewController
+    }
 }
