@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+/// 适用于多行控件布局的 layout 类，需要在外部设置 itemSize
 class MultipleLinesFlowLayout: UICollectionViewFlowLayout {
     weak var delegate: UICollectionViewDelegateFlowLayout!
 
