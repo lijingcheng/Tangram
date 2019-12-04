@@ -81,6 +81,7 @@ public class WebViewController: UIViewController {
         
         navigationItem.title = navigationItemTitle
         
+        view.backgroundColor = .white
         extendedLayoutIncludesOpaqueBars = true
         
         let backBarButtonItem = UIBarButtonItem(image: R.image.icon_nav_back(), style: .plain, target: self, action: #selector(back))
