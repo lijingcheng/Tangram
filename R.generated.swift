@@ -109,8 +109,8 @@ struct R: Rswift.Validatable {
   struct file {
     /// Resource file `README.md`.
     static let readmeMd = Rswift.FileResource(bundle: R.hostingBundle, name: "README", pathExtension: "md")
-    /// Resource file `Tangram.podspec`.
-    static let tangramPodspec = Rswift.FileResource(bundle: R.hostingBundle, name: "Tangram", pathExtension: "podspec")
+    /// Resource file `TangramX.podspec`.
+    static let tangramXPodspec = Rswift.FileResource(bundle: R.hostingBundle, name: "TangramX", pathExtension: "podspec")
 
     /// `bundle.url(forResource: "README", withExtension: "md")`
     static func readmeMd(_: Void = ()) -> Foundation.URL? {
@@ -118,9 +118,9 @@ struct R: Rswift.Validatable {
       return fileResource.bundle.url(forResource: fileResource)
     }
 
-    /// `bundle.url(forResource: "Tangram", withExtension: "podspec")`
-    static func tangramPodspec(_: Void = ()) -> Foundation.URL? {
-      let fileResource = R.file.tangramPodspec
+    /// `bundle.url(forResource: "TangramX", withExtension: "podspec")`
+    static func tangramXPodspec(_: Void = ()) -> Foundation.URL? {
+      let fileResource = R.file.tangramXPodspec
       return fileResource.bundle.url(forResource: fileResource)
     }
 

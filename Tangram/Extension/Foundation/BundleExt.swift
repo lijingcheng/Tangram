@@ -11,7 +11,7 @@ import Foundation
 extension Bundle {
     /// 框架 bundle
     public static var tangram: Bundle {
-        if let path = Bundle(for: BaseNavigationController.self).path(forResource: "Tangram", ofType: "bundle") {
+        if let path = Bundle(for: MultipleLinesFlowLayout.self).path(forResource: "Tangram", ofType: "bundle") {
             return Bundle(path: path)!
         }
         

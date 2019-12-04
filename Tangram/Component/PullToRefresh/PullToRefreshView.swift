@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import RxSwift
-import RxCocoa
 
 /// 下拉刷新视图，默认拉 60 点松手后就可以刷新了
 class PullToRefreshView: UIView {

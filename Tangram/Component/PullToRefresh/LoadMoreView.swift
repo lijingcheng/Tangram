@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import RxSwift
-import RxCocoa
 
 /// 上拉加载有三种结果：失败了、还有下一页、没有下一页数据了
 public enum LoadMoreResult {
