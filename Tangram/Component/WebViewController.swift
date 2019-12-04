@@ -53,7 +53,7 @@ public class WebViewController: UIViewController {
         configuration.userContentController = WKUserContentController()
         configuration.userContentController.addUserScript(script)
         
-        let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: Device.width, height: Device.height - Device.statusBarHeight - Device.navigationBarHeight), configuration: configuration)
+        let webView = WKWebView(frame: CGRect(x: 0, y: Device.statusBarHeight + Device.navigationBarHeight, width: Device.width, height: Device.height - Device.statusBarHeight - Device.navigationBarHeight), configuration: configuration)
         webView.allowsBackForwardNavigationGestures = true
         
         if #available(iOS 11.0, *) {
@@ -64,7 +64,7 @@ public class WebViewController: UIViewController {
     }()
     
     lazy fileprivate var progressView: UIProgressView = {
-        let progressView = UIProgressView(frame: CGRect(x: 0, y: 0, width: Device.width, height: 3))
+        let progressView = UIProgressView(frame: CGRect(x: 0, y: Device.statusBarHeight + Device.navigationBarHeight, width: Device.width, height: 3))
         progressView.progressTintColor = .darkGray
         progressView.trackTintColor = .clear
         
@@ -77,6 +77,8 @@ public class WebViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.title = navigationItemTitle
+        
+        extendedLayoutIncludesOpaqueBars = true
         
         let backBarButtonItem = UIBarButtonItem(image: R.image.icon_nav_back(), style: .plain, target: self, action: #selector(back))
         backBarButtonItem.imageInsets = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
@@ -137,7 +139,10 @@ public class WebViewController: UIViewController {
     override public func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
-        webView.frame = view.bounds
+        if !(parent is UINavigationController) {
+            webView.frame = view.bounds
+            progressView.y = view.y
+        }
     }
     
     override public func viewDidAppear(_ animated: Bool) {
