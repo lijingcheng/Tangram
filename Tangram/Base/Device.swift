@@ -28,9 +28,9 @@ public struct Device {
         }
     }
     
-    /// 获取导航栏高度，目前直接返回 44
+    /// 获取导航栏高度
     public static var navigationBarHeight: CGFloat {
-        return 44
+        return UIWindow.visibleViewController()?.navigationController?.navigationBar.height ?? 44
     }
     
     /// 获取tabbar高度
