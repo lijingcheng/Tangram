@@ -24,8 +24,11 @@ public class WebViewController: UIViewController {
     /// 导航条上的title
     @objc public var navigationItemTitle = ""
     
-    ///个别页面不支持返回上一页可设置此属性
+    /// 隐藏返回按钮
     @objc public var hideBackBarButton: ObjCBool = false
+    
+    /// 隐藏关闭按钮
+    @objc public var hideCloseBarButton: ObjCBool = false
     
     /// 通常 H5 唤起登录页面后，登录成功再返回时需要刷新 WebView
     @objc public var needReloadWebView: ObjCBool = false
@@ -86,11 +89,15 @@ public class WebViewController: UIViewController {
         let closeBarButtonItem = UIBarButtonItem(image: R.image.icon_nav_close(), style: .plain, target: self, action: #selector(close))
         closeBarButtonItem.imageInsets = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 0)
         
+        navigationItem.leftBarButtonItems = [backBarButtonItem, closeBarButtonItem]
+        
         if hideBackBarButton.boolValue {
             closeBarButtonItem.imageInsets = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
             navigationItem.leftBarButtonItems = [closeBarButtonItem]
-        } else {
-            navigationItem.leftBarButtonItems = [backBarButtonItem, closeBarButtonItem]
+        }
+        
+        if hideCloseBarButton.boolValue {
+            navigationItem.leftBarButtonItems = [backBarButtonItem]
         }
         
         view.addSubview(webView)
