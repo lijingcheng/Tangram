@@ -171,15 +171,10 @@ public class Router {
     public static func switchTabBarSelectedIndex(index: Int) {
         let rootVC = UIApplication.shared.windows.first?.rootViewController
         
-        if rootVC is UITabBarController {
-            DispatchQueue.main.async {
-                let tabBarController = rootVC as! UITabBarController
-                let navigationController = tabBarController.selectedViewController as! UINavigationController
-                
-                navigationController.popToRootViewController(animated: false)
-                
-                tabBarController.selectedIndex = index
-            }
+        if let tabBarController = rootVC as? UITabBarController {
+            RouterService.pop(popType: .root, animated: false)
+
+            tabBarController.selectedIndex = index.rawValue
         }
     }
     
