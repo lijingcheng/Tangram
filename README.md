@@ -19,7 +19,7 @@ pod 'TangramX'
 
 ## Author
 
-lijingcheng
+李京城
 
 ## License
 
