@@ -28,7 +28,7 @@ public class WebViewController: UIViewController {
     @objc public var hideBackBarButton: ObjCBool = false
     
     /// 隐藏关闭按钮
-    @objc public var hideCloseBarButton: ObjCBool = false
+    @objc public var hideCloseBarButton: ObjCBool = true
     
     /// 通常 H5 唤起登录页面后，登录成功再返回时需要刷新 WebView
     @objc public var needReloadWebView: ObjCBool = false

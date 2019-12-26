@@ -38,6 +38,8 @@ public class Router {
                 }
                 
                 if present {
+                    vc.modalPresentationStyle = .fullScreen
+                    
                     visibleVC.present(vc, animated: animated, completion: { completion?() })
                 } else {
                     vc.hidesBottomBarWhenPushed = true
@@ -172,9 +174,9 @@ public class Router {
         let rootVC = UIApplication.shared.windows.first?.rootViewController
         
         if let tabBarController = rootVC as? UITabBarController {
-            RouterService.pop(popType: .root, animated: false)
+            Router.pop(popType: .root, animated: false)
 
-            tabBarController.selectedIndex = index.rawValue
+            tabBarController.selectedIndex = index
         }
     }
     
