@@ -30,6 +30,9 @@ public class WebViewController: UIViewController {
     /// 隐藏关闭按钮
     @objc public var hideCloseBarButton: ObjCBool = true
     
+    /// 底部是否需要适配安全区
+    @objc public var needSafeAreaBottom: ObjCBool = false
+    
     /// 通常 H5 唤起登录页面后，登录成功再返回时需要刷新 WebView
     @objc public var needReloadWebView: ObjCBool = false
     
@@ -56,7 +59,7 @@ public class WebViewController: UIViewController {
         configuration.userContentController = WKUserContentController()
         configuration.userContentController.addUserScript(script)
         
-        let webView = WKWebView(frame: CGRect(x: 0, y: Device.statusBarHeight + Device.navigationBarHeight, width: Device.width, height: Device.height - Device.statusBarHeight - Device.navigationBarHeight), configuration: configuration)
+        let webView = WKWebView(frame: CGRect(x: 0, y: Device.statusBarHeight + Device.navigationBarHeight, width: Device.width, height: Device.height - Device.statusBarHeight - Device.navigationBarHeight - (needSafeAreaBottom.boolValue ? Device.safeAreaBottomInset : 0)), configuration: configuration)
         webView.allowsBackForwardNavigationGestures = true
         
         if #available(iOS 11.0, *) {
@@ -135,6 +138,7 @@ public class WebViewController: UIViewController {
             webView.uiDelegate = self
         }
         
+        webView.configuration.userContentController.removeAllUserScripts()
         messageHandlers.forEach { [weak self] name in
             guard let self = self else {
                 return
@@ -148,7 +152,7 @@ public class WebViewController: UIViewController {
         super.viewWillLayoutSubviews()
         
         if !(parent is UINavigationController) {
-            webView.frame = view.bounds
+            webView.frame = CGRect(x: 0, y: 0, width: view.width, height: view.height - (needSafeAreaBottom.boolValue ? Device.safeAreaBottomInset : 0))
             progressView.y = view.y
         }
     }
@@ -169,8 +173,12 @@ public class WebViewController: UIViewController {
             webView.stopLoading()
         }
         
-        messageHandlers.forEach { name in
-            webView.configuration.userContentController.removeScriptMessageHandler(forName: name)
+        messageHandlers.forEach { [weak self] name in
+            guard let self = self else {
+                return
+            }
+            
+            self.webView.configuration.userContentController.removeScriptMessageHandler(forName: name)
         }
         
         webView.navigationDelegate = nil
