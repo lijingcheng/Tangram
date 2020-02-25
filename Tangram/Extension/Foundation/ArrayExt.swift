@@ -38,3 +38,10 @@ extension Array {
         return String(data: jsonData, encoding: .utf8)
     }
 }
+
+extension Array where Element: Equatable {
+    /// 删除数组对象
+    mutating public func remove(_ obj: Element) {
+        self = self.filter { $0 != obj }
+    }
+}

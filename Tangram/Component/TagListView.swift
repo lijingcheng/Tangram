@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-/// 展示多个小标签视图，支持换行但不支持选择，如果需要支持选择可以 pod JCTagListView
+/// 展示多个小标签视图，支持换行和选择
 class TagCell: UICollectionViewCell {
     static let reuseIdentifier = "tagListViewItemId"
     
@@ -20,7 +20,7 @@ class TagCell: UICollectionViewCell {
         return titleLabel
     }()
     
-    var contentInset = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+    var contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,6 +32,7 @@ class TagCell: UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
+        layer.masksToBounds = true
         contentView.addSubview(titleLabel)
     }
     
@@ -72,6 +73,15 @@ public class TagListView: UIView, UICollectionViewDelegate, UICollectionViewData
     public var tagTextColors: [String: UIColor]? // 多 tag 文字颜色不同时设置这个参数，key 是要匹配的文字内容
     public var tagBackgroundColor = UIColor.white
     
+    /// 默认仅支持一行，如果需要多行展示，可以设置为 0 （目前仅支持 1 和 0）
+    public var numberOfLines = 1
+    
+    public var supportSelected = false
+    public var supportMultipleSelected = false
+    public var tagSelectedBorderColor: UIColor = UIColor.orange
+    public var tagSelectedTextColor: UIColor = UIColor.orange
+    public var tagSelectedBackgroundColor: UIColor = UIColor.white
+    
     public var tagFont = UIFont.systemFont(ofSize: 14) {
         didSet {
             testLabel.font = tagFont
@@ -108,9 +118,26 @@ public class TagListView: UIView, UICollectionViewDelegate, UICollectionViewData
     /// 标签列表内容
     public var datas: [String] = [] {
         didSet {
-            collectionView.reloadData()
+            datas.forEach { item in
+                itemSizes.append(getTagItemSize(item))
+            }
+            
+            reloadData()
         }
     }
+    
+    /// 用来记录所有数据的 size
+    private var itemSizes: [CGSize] = []
+    
+    /// 选中的数据
+    public var selectedDatas: [String] = [] {
+        didSet {
+            reloadData()
+        }
+    }
+
+    /// 选中数据的 index
+    public var selectedDatasIndex: [Int] = []
 
     override public func awakeFromNib() {
         super.awakeFromNib()
@@ -122,11 +149,23 @@ public class TagListView: UIView, UICollectionViewDelegate, UICollectionViewData
         super.layoutSubviews()
         
         collectionView.frame = bounds
+        
+        if numberOfLines == 1 {
+            tagLineSpacing = 10000
+        }
     }
     
     /// 刷新数据
     public func reloadData() {
+        selectedDatasIndex.removeAll()
+        
         collectionView.reloadData()
+    }
+    
+    private var selectedItemHandler: ((_ index: Int) -> Void)?
+    
+    public func selectedItemHandler(_ selectedItemHandler: @escaping (_ indexs: Int) -> Void) {
+        self.selectedItemHandler = selectedItemHandler
     }
 }
 
@@ -143,12 +182,21 @@ extension TagListView {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TagCell.reuseIdentifier, for: indexPath) as! TagCell
         cell.titleLabel.text = datas[indexPath.item]
         cell.titleLabel.font = tagFont
-        cell.titleLabel.textColor = tagTextColor
         cell.contentInset = tagContentInset
         cell.cornerRadius = tagCornerRadius
         cell.borderWidth = tagBorderWidth
-        cell.borderColor = tagBorderColor
-        cell.layer.backgroundColor = tagBackgroundColor.cgColor
+        
+        if supportSelected && selectedDatas.contains(datas[indexPath.item]) {
+            cell.titleLabel.textColor = tagSelectedTextColor
+            cell.borderColor = tagSelectedBorderColor
+            cell.layer.backgroundColor = tagSelectedBackgroundColor.cgColor
+            
+            selectedDatasIndex.append(indexPath.item)
+        } else {
+            cell.titleLabel.textColor = tagTextColor
+            cell.borderColor = tagBorderColor
+            cell.layer.backgroundColor = tagBackgroundColor.cgColor
+        }
         
         tagTextColors?.forEach({ (key, value) in
             if key == datas[indexPath.item] {
@@ -159,18 +207,40 @@ extension TagListView {
         
         return cell
     }
+    
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if supportSelected {
+            if supportMultipleSelected {
+                if selectedDatas.contains(datas[indexPath.item]) {
+                    selectedDatas.remove(datas[indexPath.item])
+                } else {
+                    selectedDatas.append(datas[indexPath.item])
+                }
+            } else {
+                selectedDatas = [datas[indexPath.item]]
+            }
+            
+            reloadData()
+            
+            selectedItemHandler?(indexPath.item)
+        }
+    }
 }
 
 extension TagListView {
     /// 返回 tagListView 需要占用的高度
     public func contentHeight() -> CGFloat {
+        guard numberOfLines == 0 else {
+            return collectionView.height
+        }
+        
         var contentHeight: CGFloat = 0
  
         var originX: CGFloat = 0
         var originY: CGFloat = 0
 
-        for (index, value) in datas.enumerated() {
-            let itemSize = getTagItemSize(value)
+        for index in 0..<itemSizes.count {
+            let itemSize = itemSizes[index]
                   
             if index == 0 {
                 contentHeight += itemSize.height
