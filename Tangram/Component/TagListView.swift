@@ -118,6 +118,8 @@ public class TagListView: UIView, UICollectionViewDelegate, UICollectionViewData
     /// 标签列表内容
     public var datas: [String] = [] {
         didSet {
+            itemSizes.removeAll()
+            
             datas.forEach { item in
                 itemSizes.append(getTagItemSize(item))
             }
