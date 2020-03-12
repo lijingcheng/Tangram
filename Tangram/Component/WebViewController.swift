@@ -222,7 +222,13 @@ public class WebViewController: UIViewController {
 extension WebViewController: WKNavigationDelegate {
     // 发送请求前调用，决定是否跳转
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        decisionHandler(.allow)
+        if let url = navigationAction.request.url, url.scheme == "tel" {
+            App.call(url.absoluteString)
+            
+            decisionHandler(.cancel)
+        } else {
+            decisionHandler(.allow)
+        }
     }
     
     // 在收到响应后，决定是否跳转的代理
