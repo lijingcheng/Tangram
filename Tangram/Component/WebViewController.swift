@@ -53,11 +53,8 @@ public class WebViewController: UIViewController {
     }
     
     lazy fileprivate var webView: WKWebView = {
-        let script = WKUserScript(source: userScript, injectionTime: .atDocumentStart, forMainFrameOnly: true)
-        
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = WKUserContentController()
-        configuration.userContentController.addUserScript(script)
         
         let webView = WKWebView(frame: CGRect(x: 0, y: Device.statusBarHeight + Device.navigationBarHeight, width: Device.width, height: Device.height - Device.statusBarHeight - Device.navigationBarHeight - (needSafeAreaBottom.boolValue ? Device.safeAreaBottomInset : 0)), configuration: configuration)
         webView.allowsBackForwardNavigationGestures = true
@@ -139,6 +136,8 @@ public class WebViewController: UIViewController {
         }
         
         webView.configuration.userContentController.removeAllUserScripts()
+        webView.configuration.userContentController.addUserScript(WKUserScript(source: userScript, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        
         messageHandlers.forEach { [weak self] name in
             guard let self = self else {
                 return
