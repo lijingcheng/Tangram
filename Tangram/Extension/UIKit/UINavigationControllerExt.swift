@@ -9,21 +9,6 @@
 import UIKit
 
 extension UINavigationController {
-    private struct AssociatedKeys {
-        static var lockKey = "UINavigationController.lockKey"
-    }
-    
-    /// remove 时加锁
-    private var lock: NSLock {
-        get {
-            let value = objc_getAssociatedObject(self, &AssociatedKeys.lockKey) as? NSLock
-            return value ?? NSLock()
-        }
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.lockKey, newValue, .OBJC_ASSOCIATION_RETAIN)
-        }
-    }
-    
     /// 将 classNames 参数对应的 vc 从导航堆栈中移除
     public func remove(_ classNames: [String]) {
         var vcs = self.viewControllers
