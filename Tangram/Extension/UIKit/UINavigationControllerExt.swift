@@ -24,29 +24,17 @@ extension UINavigationController {
         }
     }
     
-    /// 将 vc 参数从导航堆栈中移除
-    public func remove(_ vc: UIViewController?) {
-        remove(vc?.className)
-    }
-    
-    /// 将 className 参数对应的 vc 从导航堆栈中移除
-    public func remove(_ className: String?) {
-        guard let name = className else {
-            return
+    /// 将 classNames 参数对应的 vc 从导航堆栈中移除
+    public func remove(_ classNames: [String]) {
+        var vcs = self.viewControllers
+        
+        self.viewControllers.forEach { vc in
+            if classNames.contains(vc.className) {
+                vcs.remove(vc)
+            }
         }
         
-        DispatchQueue.main.async {
-            self.lock.lock()
-            defer { self.lock.unlock() }
-            
-            var ary = self.viewControllers
-            
-            for (index, value) in self.viewControllers.enumerated() where value.className == name {
-                ary.remove(at: index)
-            }
-            
-            self.viewControllers = ary
-        }
+        self.viewControllers = vcs
     }
     
     /// 支持旋转
