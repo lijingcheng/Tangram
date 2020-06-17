@@ -9,9 +9,21 @@
 import UIKit
 import WebKit
 
-/// 当向 H5 页面注入 Native 方法后，需要用自己的类作为代理并实现此协议中的方法
-@objc public protocol WebViewControllerDelegate {
-    @objc optional func webViewMessageHandler(methodName: String, params: Any)
+public extension App {
+    struct Web {
+        /// 供 H5 调用的 Native 方法名
+        public static var messageHandlers: [String] = []
+        
+        /// 注入 H5 的代码
+        public static var userScript = ""
+    }
+}
+
+extension Notification.Name {
+    public struct Web {
+        /// 接收到 H5 发送过来的消息
+        public static let didReceiveScriptMessage = Notification.Name(rawValue: "com.tangram.notification.name.web.didReceiveScriptMessage")
+    }
 }
 
 public class WebViewController: UIViewController {
@@ -36,14 +48,8 @@ public class WebViewController: UIViewController {
     /// 通常 H5 唤起登录页面后，登录成功再返回时需要刷新 WebView
     @objc public var needReloadWebView: ObjCBool = false
     
-    /// 需要注入 H5 页面的角本代码
-    @objc public var userScript = ""
-    
-    /// 需要向 H5 页面注入的 Native 方法名称，然后需要扩展 WebViewController 并确认 WKScriptMessageHandler 协议，然后重写 userContentController 方法，来接收 H5 发送的消息，再具体判断需要调用哪个 Native 方法
-    @objc public var messageHandlers: [String] = []
-    
-    /// 当向 H5 页面注入 Native 方法后，需要用自己的类作为代理并实现相关方法
-    weak public var messageHandlersDelegate: WebViewControllerDelegate?
+    /// 是否支持侧滑返回
+    @objc public var canPopGestureRecognizer: ObjCBool = true
     
     /// 使用 webVC 时，如果有业务逻辑上的处理，可以设置这个 delegate，然后把业务代码写在自己的类里
     @objc public weak var navigationDelegate: WKNavigationDelegate? {
@@ -136,15 +142,17 @@ public class WebViewController: UIViewController {
         }
         
         webView.configuration.userContentController.removeAllUserScripts()
-        webView.configuration.userContentController.addUserScript(WKUserScript(source: userScript, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        webView.configuration.userContentController.addUserScript(WKUserScript(source: App.Web.userScript, injectionTime: .atDocumentStart, forMainFrameOnly: true))
         
-        messageHandlers.forEach { [weak self] name in
+        App.Web.messageHandlers.forEach { [weak self] name in
             guard let self = self else {
                 return
             }
             
             self.webView.configuration.userContentController.add(self, name: name)
         }
+        
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = canPopGestureRecognizer.boolValue
     }
     
     override public func viewWillLayoutSubviews() {
@@ -172,7 +180,7 @@ public class WebViewController: UIViewController {
             webView.stopLoading()
         }
         
-        messageHandlers.forEach { [weak self] name in
+        App.Web.messageHandlers.forEach { [weak self] name in
             guard let self = self else {
                 return
             }
@@ -182,6 +190,8 @@ public class WebViewController: UIViewController {
         
         webView.navigationDelegate = nil
         webView.uiDelegate = nil
+        
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     
     override public func didReceiveMemoryWarning() {
@@ -307,6 +317,6 @@ extension WebViewController: WKUIDelegate {
 
 extension WebViewController: WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        messageHandlersDelegate?.webViewMessageHandler?(methodName: message.name, params: message.body)
+        NotificationCenter.default.post(name: Notification.Name.Web.didReceiveScriptMessage, object: message.name)
     }
 }

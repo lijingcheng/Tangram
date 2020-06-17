@@ -78,6 +78,7 @@ public class TagListView: UIView, UICollectionViewDelegate, UICollectionViewData
     
     public var supportSelected = false
     public var supportMultipleSelected = false
+    
     public var tagSelectedBorderColor: UIColor = UIColor.orange
     public var tagSelectedTextColor: UIColor = UIColor.orange
     public var tagSelectedBackgroundColor: UIColor = UIColor.white
@@ -121,7 +122,7 @@ public class TagListView: UIView, UICollectionViewDelegate, UICollectionViewData
             itemSizes.removeAll()
             
             datas.forEach { item in
-                itemSizes.append(getTagItemSize(item))
+                itemSizes.append(TagListView.getTagItemSize(item, maxWidth: width, contentInset: tagContentInset, useLabel: testLabel))
             }
             
             reloadData()
@@ -177,7 +178,7 @@ extension TagListView {
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return getTagItemSize(datas[indexPath.item])
+        return itemSizes[indexPath.item]
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -229,44 +230,67 @@ extension TagListView {
     }
 }
 
+public struct TagStyle {
+    var estimatedSize: CGSize
+    var itemSpacing: CGFloat
+    var lineSpacing: CGFloat
+    var contentInset: UIEdgeInsets
+    var font: UIFont
+}
+
 extension TagListView {
-    /// 返回 tagListView 需要占用的高度
-    public func contentHeight() -> CGFloat {
-        guard numberOfLines == 0 else {
-            return collectionView.height
+    /// 通过指定相关数据来计算 tagListView 需要占用的高度
+    public static func contentHeight(_ datas: [String], style: TagStyle) -> CGFloat {
+        var sizes: [CGSize] = []
+        
+        let useLabel = UILabel(frame: .zero)
+        useLabel.font = style.font
+        
+        datas.forEach { item in
+            sizes.append(TagListView.getTagItemSize(item, maxWidth: style.estimatedSize.width, contentInset: style.contentInset, useLabel: useLabel))
         }
         
+        return TagListView.calculateContentHeight(style.estimatedSize, itemSpacing: style.itemSpacing, lineSpacing: style.lineSpacing, itemSizes: sizes)
+    }
+    
+    /// 通过 tagListView 对象计算它需要占用的高度，要注意调用时机
+    public func contentHeight() -> CGFloat {
+        return TagListView.calculateContentHeight(collectionView.size, itemSpacing: tagItemSpacing, lineSpacing: tagLineSpacing, itemSizes: itemSizes)
+    }
+    
+    /// 计算 tagListView 需要占用的高度
+    private static func calculateContentHeight(_ estimatedSize: CGSize, itemSpacing: CGFloat, lineSpacing: CGFloat, itemSizes: [CGSize]) -> CGFloat {
         var contentHeight: CGFloat = 0
- 
+        
         var originX: CGFloat = 0
         var originY: CGFloat = 0
-
+               
         for index in 0..<itemSizes.count {
             let itemSize = itemSizes[index]
-                  
+                         
             if index == 0 {
                 contentHeight += itemSize.height
             }
-                         
-            if (originX + itemSize.width) > collectionView.width {
+                                
+            if (originX + itemSize.width) > estimatedSize.width {
                 originX = 0
-                originY += (tagLineSpacing + itemSize.height)
-                contentHeight += (tagLineSpacing + itemSize.height)
+                originY += (lineSpacing + itemSize.height)
+                contentHeight += (lineSpacing + itemSize.height)
             }
-                         
-            originX += (tagItemSpacing + itemSize.width)
+                                
+            originX += (itemSpacing + itemSize.width)
         }
-              
+               
         return contentHeight
     }
     
     /// 根据内容计算 tag size
-    private func getTagItemSize(_ text: String) -> CGSize {
-        testLabel.text = text
-        testLabel.sizeToFit()
+    private static func getTagItemSize(_ text: String, maxWidth: CGFloat, contentInset: UIEdgeInsets, useLabel: UILabel) -> CGSize {
+        useLabel.text = text
+        useLabel.sizeToFit()
         
-        let itemWidth = min(width, ceil(testLabel.width) + tagContentInset.left + tagContentInset.right)
-        let itemHeight = ceil(testLabel.height) + tagContentInset.top + tagContentInset.bottom
+        let itemWidth = min(maxWidth, ceil(useLabel.width) + contentInset.left + contentInset.right)
+        let itemHeight = ceil(useLabel.height) + contentInset.top + contentInset.bottom
         
         return CGSize(width: itemWidth, height: itemHeight)
     }
