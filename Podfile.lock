@@ -1,33 +1,33 @@
 PODS:
-  - Alamofire (5.0.0-rc.3)
-  - Kingfisher (5.11.0):
-    - Kingfisher/Core (= 5.11.0)
-  - Kingfisher/Core (5.11.0)
-  - R.swift (5.1.0):
-    - R.swift.Library (~> 5.1.0)
-  - R.swift.Library (5.1.0)
-  - RxCocoa (5.0.1):
-    - RxRelay (~> 5)
-    - RxSwift (~> 5)
-  - RxRelay (5.0.1):
-    - RxSwift (~> 5)
-  - RxSwift (5.0.1)
+  - Alamofire (5.4.1)
+  - Kingfisher (5.15.8):
+    - Kingfisher/Core (= 5.15.8)
+  - Kingfisher/Core (5.15.8)
+  - R.swift (5.3.1):
+    - R.swift.Library (~> 5.3.0)
+  - R.swift.Library (5.3.0)
+  - RxCocoa (6.0.0-rc.2):
+    - RxRelay (= 6.0.0-rc.2)
+    - RxSwift (= 6.0.0-rc.2)
+  - RxRelay (6.0.0-rc.2):
+    - RxSwift (= 6.0.0-rc.2)
+  - RxSwift (6.0.0-rc.2)
   - SnapKit (5.0.1)
-  - SwiftLint (0.37.0)
+  - SwiftLint (0.42.0)
   - SwiftyJSON (5.0.0)
 
 DEPENDENCIES:
-  - Alamofire (= 5.0.0-rc.3)
-  - Kingfisher (= 5.11.0)
-  - R.swift (= 5.1.0)
-  - RxCocoa (= 5.0.1)
-  - RxSwift (= 5.0.1)
+  - Alamofire (= 5.4.1)
+  - Kingfisher (= 5.15.8)
+  - R.swift (= 5.3.1)
+  - RxCocoa (= 6.0.0-rc.2)
+  - RxSwift (= 6.0.0-rc.2)
   - SnapKit (= 5.0.1)
-  - SwiftLint
+  - SwiftLint (= 0.42.0)
   - SwiftyJSON (= 5.0.0)
 
 SPEC REPOS:
-  https://cdn.cocoapods.org/:
+  trunk:
     - Alamofire
     - Kingfisher
     - R.swift
@@ -40,17 +40,17 @@ SPEC REPOS:
     - SwiftyJSON
 
 SPEC CHECKSUMS:
-  Alamofire: ca8c0de6906873be89d6deec5c8de279e00bf872
-  Kingfisher: 4569606189149e19c7d9439f47e885d0679b7a90
-  R.swift: 8cbc4fc69b740305b6a17c8a8ed968eb788962d9
-  R.swift.Library: fa85ce1e0d0b7e818cd9e080df910ba54d2776cc
-  RxCocoa: e741b9749968e8a143e2b787f1dfbff2b63d0a5c
-  RxRelay: 89d54507f4fd4d969e6ec1d4bd7f3673640b4640
-  RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
+  Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
+  Kingfisher: a3c03d702433fa6cfedabb2bddbe076fb8f2e902
+  R.swift: 56ec7e3aef34b9eee47a659e42462db2c1cc5ac3
+  R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
+  RxCocoa: 38445a25751be5907f52f7ea02c137f52ce2e7f2
+  RxRelay: b9e2483e83f46e4e7bf1234c6fe418e5c2eaf825
+  RxSwift: ada35be6643bedf6881cdbd6bbfb27aeea527670
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
-  SwiftLint: c078a14d7d7ade75e5507795d185e3da41d844d2
+  SwiftLint: 4fa9579c63416865179bc416f0a92d55f009600d
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: 9e836c85f20a6a479e7919d2cfb83c0f677cd75c
+PODFILE CHECKSUM: d49399bcea398b042789536e9c558e0027a351e5
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.3

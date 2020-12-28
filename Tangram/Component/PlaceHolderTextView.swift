@@ -9,10 +9,9 @@
 import UIKit
 
 /// 支持 placeHolder 并可以设置其颜色的 UITextView
-@IBDesignable
 public class PlaceHolderTextView: UITextView {
 
-    @IBInspectable public var placeHolder: NSString? {
+    @IBInspectable public var placeHolder: String? {
         didSet {
             setNeedsDisplay()
         }
@@ -24,8 +23,12 @@ public class PlaceHolderTextView: UITextView {
         }
     }
 
-    override public func awakeFromNib() {
-        super.awakeFromNib()
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    public override func didAddSubview(_ subview: UIView) {
+        super.didAddSubview(subview)
         
         NotificationCenter.default.addObserver(self, selector: #selector(textDidChange), name: UITextView.textDidChangeNotification, object: self)
     }
@@ -43,22 +46,23 @@ public class PlaceHolderTextView: UITextView {
         
         if text.isEmpty {
             guard let placeHolder = placeHolder else { return }
-            
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.alignment = textAlignment
             paragraphStyle.lineBreakMode = .byTruncatingTail
             
             let rect = CGRect(x: textContainerInset.left + 5.0,
                               y: textContainerInset.top,
-                              width: width - textContainerInset.left - textContainerInset.right,
-                              height: height)
+                              width: frame.size.width - textContainerInset.left - textContainerInset.right,
+                              height: frame.size.height)
             
             placeHolder.draw(in: rect, withAttributes:
-                [NSAttributedString.Key.font: font!, NSAttributedString.Key.foregroundColor: placeHolderColor, NSAttributedString.Key.paragraphStyle: paragraphStyle])
+                [NSAttributedString.Key.font: font ?? UIFont.systemFont(ofSize: 17), NSAttributedString.Key.foregroundColor: placeHolderColor, NSAttributedString.Key.paragraphStyle: paragraphStyle])
         }
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+
+        setNeedsDisplay()
     }
 }

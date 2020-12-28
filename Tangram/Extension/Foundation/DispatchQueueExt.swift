@@ -41,8 +41,7 @@ public func delay(_ time: TimeInterval, task: @escaping () -> Void) -> Task? {
     var closure: (() -> Void)? = task
     var result: Task?
     
-    let delayedClosure: Task = {
-        cancel in
+    let delayedClosure: Task = { cancel in
         if let internalClosure = closure {
             if !cancel {
                 DispatchQueue.main.async(execute: internalClosure)

@@ -67,7 +67,7 @@ public class CountDown {
         self.interval = interval
         self.trggerTime = Date()
         
-        timer?.invalidate()
+        stopTimer()
         timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(interval), repeats: true, block: { [weak self] timer in
             guard let self = self else {
                 return
@@ -87,11 +87,16 @@ public class CountDown {
     
     /// 结束倒计时
     public func stop() {
-        timer?.invalidate()
+        stopTimer()
         time.onNext(0)
     }
     
-    deinit {
+    private func stopTimer() {
         timer?.invalidate()
+        timer = nil
+    }
+    
+    deinit {
+        stopTimer()
     }
 }

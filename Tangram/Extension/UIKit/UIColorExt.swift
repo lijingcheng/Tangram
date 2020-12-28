@@ -58,9 +58,12 @@ extension UIColor {
     
     /// 颜色过度转换
     public func transform(_ end: UIColor, fraction: CGFloat) -> UIColor? {
-        guard let c1 = cgColor.components, let c2 = end.cgColor.components else {
+        guard var c1 = cgColor.components, var c2 = end.cgColor.components else {
             return nil
         }
+        
+        c1 = checkColorArrayCount(c1)
+        c2 = checkColorArrayCount(c2)
         
         let f = min(max(0, fraction), 1)
         
@@ -70,5 +73,20 @@ extension UIColor {
         let a: CGFloat = CGFloat(c1[3] + (c2[3] - c1[3]) * f)
         
         return UIColor(red: r, green: g, blue: b, alpha: a)
+    }
+    
+    /// 白色和黑色数组长度为 2，这里做下转换
+    private func checkColorArrayCount(_ color: [CGFloat]) -> [CGFloat] {
+        var color = color
+        
+        if color.count < 4 {
+            if color[0] == 0 {
+                color = [0, 0, 0, 1]
+            } else if color[0] == 1 {
+                color = [1, 1, 1, 1]
+            }
+        }
+        
+        return color
     }
 }

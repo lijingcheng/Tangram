@@ -14,15 +14,19 @@ extension UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 1)
         color.setFill()
         UIRectFill(CGRect(x: 0, y: 0, width: size.width, height: size.height))
+        
         guard let image = UIGraphicsGetImageFromCurrentImageContext() else {
             self.init()
             return
         }
+        
         UIGraphicsEndImageContext()
+        
         guard let aCgImage = image.cgImage else {
             self.init()
             return
         }
+        
         self.init(cgImage: aCgImage)
     }
  
@@ -35,23 +39,25 @@ extension UIImage {
     
     /// 调整图片大小
     public func resize(size: CGSize) -> UIImage? {
-        let renderer = UIGraphicsImageRenderer(size: size)
-        return renderer.image { (context) in
+        return UIGraphicsImageRenderer(size: size).image { (context) in
             self.draw(in: CGRect(origin: .zero, size: size))
         }
     }
     
     /// 图片染色
-    public func filled(_ color: UIColor, blendMode: CGBlendMode) -> UIImage {
+    public func filled(_ color: UIColor, blendMode: CGBlendMode = .normal) -> UIImage {
         let drawRect = CGRect(x: 0.0, y: 0.0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        
         defer {
             UIGraphicsEndImageContext()
         }
+        
         let context = UIGraphicsGetCurrentContext()
         color.setFill()
         context?.fill(drawRect)
         draw(in: drawRect, blendMode: blendMode, alpha: 1.0)
+        
         return UIGraphicsGetImageFromCurrentImageContext()!
     }
     
@@ -59,6 +65,7 @@ extension UIImage {
     public func withRoundedCorners(radius: CGFloat? = nil) -> UIImage? {
         let maxRadius = min(size.width, size.height) / 2
         let cornerRadius: CGFloat
+        
         if let radius = radius, radius > 0 && radius <= maxRadius {
             cornerRadius = radius
         } else {
@@ -74,5 +81,27 @@ extension UIImage {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
+    }
+    
+    /// 将图片压缩到指定大小，单位 kb
+    public func compressionQuality(size: Int) -> Data? {
+        guard size > 0 else {
+            return jpegData(compressionQuality: 0.9)
+        }
+        
+        var quality: CGFloat = 0.9
+        
+        while let data = jpegData(compressionQuality: quality) {
+            if data.count < (size * 1024) {
+                return data
+            }
+            quality -= 0.1
+            
+            if quality <= 0 {
+                return data
+            }
+        }
+        
+        return jpegData(compressionQuality: 0.9)
     }
 }

@@ -6,7 +6,6 @@
 //  Copyright © 2019 李京城. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 /// 展示多个小标签视图，支持换行和选择
@@ -49,45 +48,65 @@ class TagCell: UICollectionViewCell {
     }
 }
 
-@IBDesignable
 public class TagListView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    @IBInspectable public var tagItemSpacing: CGFloat = 10.0 {
+    @IBInspectable public var fontSize: CGFloat = 0.0 {
+        didSet {
+            tagFont = UIFont.systemFont(ofSize: fontSize)
+        }
+    }
+    
+    @IBInspectable public var tagSpacing: CGFloat = 0.0 {
+        didSet {
+            tagItemSpacing = tagSpacing
+            tagLineSpacing = tagSpacing
+        }
+    }
+    
+    @IBInspectable public var tagCornerRadius: CGFloat = 2.5
+    @IBInspectable public var tagBorderWidth: CGFloat = 0.5
+    @IBInspectable public var tagBorderColor: UIColor?
+    @IBInspectable public var textColor: UIColor?
+    @IBInspectable public var tagBackgoundColor: UIColor?
+    
+    /// 默认仅支持一行，如果需要多行展示，可以设置为 0 （目前仅支持 1 和 0）
+    public var numberOfLines = 1
+     
+    /// 是否支持选择，默认单选
+    public var supportSelected = false
+     
+    /// 在支持选择标签的情况下，可以进一步设置是否可以多选，默认只能单选
+    public var supportMultipleSelected = false
+     
+    public var tagSelectedBorderColor: UIColor = UIColor(hex: 0xDBB177)!
+    public var tagSelectedTextColor: UIColor = UIColor(hex: 0xDBB177)!
+    public var tagSelectedBackgroundColor: UIColor = UIColor.white
+    
+    /// 需要调整标签大小时，要设置此属性，根据设计稿中标签边框和内部文字的上下左右边距来调整
+    public var tagContentInset = UIEdgeInsets(top: 1.5, left: 4, bottom: 1.5, right: 4)
+    
+    public var textColors: [String: UIColor]? // 多 tag 文字颜色不同时设置这个参数，key 是要匹配的文字内容
+     
+    public var tagItemSpacing: CGFloat = 3.0 {
         didSet {
             let layout = collectionView.collectionViewLayout as? MultipleLinesFlowLayout
             layout?.minimumInteritemSpacing = tagItemSpacing
         }
     }
     
-    @IBInspectable public var tagLineSpacing: CGFloat = 10.0 {
+    public var tagLineSpacing: CGFloat = 2.0 {
         didSet {
             let layout = collectionView.collectionViewLayout as? MultipleLinesFlowLayout
             layout?.minimumLineSpacing = tagLineSpacing
         }
     }
-
-    public var tagCornerRadius: CGFloat = 10.0
-    public var tagBorderWidth: CGFloat = 0.5
-    public var tagContentInset = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
-    public var tagBorderColor = UIColor.lightGray
-    public var tagTextColor = UIColor.darkGray
-    public var tagTextColors: [String: UIColor]? // 多 tag 文字颜色不同时设置这个参数，key 是要匹配的文字内容
-    public var tagBackgroundColor = UIColor.white
     
-    /// 默认仅支持一行，如果需要多行展示，可以设置为 0 （目前仅支持 1 和 0）
-    public var numberOfLines = 1
-    
-    public var supportSelected = false
-    public var supportMultipleSelected = false
-    
-    public var tagSelectedBorderColor: UIColor = UIColor.orange
-    public var tagSelectedTextColor: UIColor = UIColor.orange
-    public var tagSelectedBackgroundColor: UIColor = UIColor.white
-    
-    public var tagFont = UIFont.systemFont(ofSize: 14) {
+    public var tagFont = UIFont.systemFont(ofSize: 14, weight: .regular) {
         didSet {
             testLabel.font = tagFont
         }
     }
+    
+    private var selectedItemHandler: ((_ index: Int) -> Void)?
 
     public lazy var collectionView: UICollectionView = {
         let layout = MultipleLinesFlowLayout()
@@ -102,7 +121,8 @@ public class TagListView: UIView, UICollectionViewDelegate, UICollectionViewData
         collectionView.isScrollEnabled = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.backgroundColor = tagBackgroundColor
+        collectionView.backgroundColor = .clear
+        collectionView.isUserInteractionEnabled = false
         collectionView.register(TagCell.self, forCellWithReuseIdentifier: TagCell.reuseIdentifier)
         
         return collectionView
@@ -119,12 +139,6 @@ public class TagListView: UIView, UICollectionViewDelegate, UICollectionViewData
     /// 标签列表内容
     public var datas: [String] = [] {
         didSet {
-            itemSizes.removeAll()
-            
-            datas.forEach { item in
-                itemSizes.append(TagListView.getTagItemSize(item, maxWidth: width, contentInset: tagContentInset, useLabel: testLabel))
-            }
-            
             reloadData()
         }
     }
@@ -141,11 +155,21 @@ public class TagListView: UIView, UICollectionViewDelegate, UICollectionViewData
 
     /// 选中数据的 index
     public var selectedDatasIndex: [Int] = []
-
+    
+    /// 控件大小监听器
+    private var observeFrame: NSKeyValueObservation?
+    
     override public func awakeFromNib() {
         super.awakeFromNib()
         
+        isUserInteractionEnabled = true
+        collectionView.isUserInteractionEnabled = true
+        
         addSubview(collectionView)
+        
+        observeFrame = collectionView.observe(\.frame) { [weak self] (collectionView, change) in
+            self?.reloadData()
+        }
     }
  
     override public func layoutSubviews() {
@@ -158,15 +182,23 @@ public class TagListView: UIView, UICollectionViewDelegate, UICollectionViewData
         }
     }
     
+    deinit {
+        observeFrame?.invalidate()
+    }
+    
     /// 刷新数据
     public func reloadData() {
         selectedDatasIndex.removeAll()
+        itemSizes.removeAll()
+        
+        datas.forEach { item in
+            itemSizes.append(TagListView.getTagItemSize(item, maxWidth: width, contentInset: tagContentInset, useLabel: testLabel))
+        }
         
         collectionView.reloadData()
     }
     
-    private var selectedItemHandler: ((_ index: Int) -> Void)?
-    
+    /// 支持选择的情况下，每次点击标签都会把当前点击标签的 index 返回，如果要拿已选中的所有标签的 indexs，请使用 selectedDatasIndex 属性
     public func selectedItemHandler(_ selectedItemHandler: @escaping (_ indexs: Int) -> Void) {
         self.selectedItemHandler = selectedItemHandler
     }
@@ -196,12 +228,12 @@ extension TagListView {
             
             selectedDatasIndex.append(indexPath.item)
         } else {
-            cell.titleLabel.textColor = tagTextColor
-            cell.borderColor = tagBorderColor
-            cell.layer.backgroundColor = tagBackgroundColor.cgColor
+            cell.titleLabel.textColor = textColor != nil ? textColor : UIColor(hex: 0x8898C2)
+            cell.borderColor = tagBorderColor != nil ? tagBorderColor : UIColor(hex: 0x8898C2)
+            cell.layer.backgroundColor = tagBackgoundColor != nil ? tagBackgoundColor?.cgColor : UIColor.white.cgColor
         }
         
-        tagTextColors?.forEach({ (key, value) in
+        textColors?.forEach({ (key, value) in
             if key == datas[indexPath.item] {
                 cell.titleLabel.textColor = value
                 cell.borderColor = value
@@ -236,6 +268,14 @@ public struct TagStyle {
     var lineSpacing: CGFloat
     var contentInset: UIEdgeInsets
     var font: UIFont
+    
+    public init(estimatedSize: CGSize, itemSpacing: CGFloat, lineSpacing: CGFloat, contentInset: UIEdgeInsets, font: UIFont) {
+        self.estimatedSize = estimatedSize
+        self.itemSpacing = itemSpacing
+        self.lineSpacing = lineSpacing
+        self.contentInset = contentInset
+        self.font = font
+    }
 }
 
 extension TagListView {

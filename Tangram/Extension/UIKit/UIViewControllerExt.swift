@@ -8,11 +8,15 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 import Rswift
 
 extension UIViewController {
     private struct AssociatedKeys {
         static var supportRotateKey = "UIViewController.supportRotateKey"
+        static var isFullScreenViewControllerKey = "UIViewController.isFullScreenViewControllerdKey"
+        static var supportPushSelfKey = "UIViewController.supportPushSelfKey"
+        static var modelParamsKey = "UIViewController.modelParamsKey"
     }
     
     /// 是否要支持屏幕旋转
@@ -21,9 +25,40 @@ extension UIViewController {
             let value = objc_getAssociatedObject(self, &AssociatedKeys.supportRotateKey) as? Bool
             return value ?? false
         }
-        
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.supportRotateKey, newValue, .OBJC_ASSOCIATION_ASSIGN)
+        }
+    }
+    
+    /// 是否可以自己 push 自己，默认 false
+    public var supportPushSelf: Bool {
+        get {
+            let value = objc_getAssociatedObject(self, &AssociatedKeys.supportPushSelfKey) as? Bool
+            return value ?? false
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.supportPushSelfKey, newValue, .OBJC_ASSOCIATION_ASSIGN)
+        }
+    }
+    
+    /// 是否是从最顶端开始做布局的页面
+    public var isFullScreenViewController: Bool {
+        get {
+            let value = objc_getAssociatedObject(self, &AssociatedKeys.isFullScreenViewControllerKey) as? Bool
+            return value ?? false
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.isFullScreenViewControllerKey, newValue, .OBJC_ASSOCIATION_ASSIGN)
+        }
+    }
+    
+    /// 页面跳转时用来传递自定义 model  对象，可解决跨组件传 model 对象问题（ obj = modelParams?["obj"] as? Model ）
+    public var modelParams: [String: Any]? {
+        get {
+            return (objc_getAssociatedObject(self, &AssociatedKeys.modelParamsKey) as? [String: Any]) ?? [:]
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.modelParamsKey, newValue, .OBJC_ASSOCIATION_COPY)
         }
     }
     
@@ -31,16 +66,16 @@ extension UIViewController {
     public var isVisible: Bool {
         return isViewLoaded && view.window != nil
     }
-    
+
     /// 自定义返回按钮的事件
     public func backBarButtonItemOnClick(_ completionHandler: @escaping () -> Void) {
         let disposeBag = DisposeBag()
         
         let item = UIBarButtonItem(image: R.image.icon_nav_back(), style: .plain, target: nil, action: nil)
-        item.imageInsets = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
-        item.rx.tap.subscribe(onNext: { _ in
+        item.imageInsets = UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 0)
+        item.rx.tap.bind { (_) in
             completionHandler()
-        }).disposed(by: disposeBag)
+        }.disposed(by: disposeBag)
         
         navigationItem.leftBarButtonItem = item
     }
@@ -54,7 +89,9 @@ extension UIViewController {
     
     /// 从 ParentViewController 上移除自己
     public func removeFromParentViewController() {
-        guard parent != nil else { return }
+        guard parent != nil else {
+            return
+        }
         
         willMove(toParent: nil)
         removeFromParent()

@@ -6,14 +6,13 @@
 //  Copyright © 2019 李京城. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 /// 多 Tab 切换用的视图，用来存储 ViewController，支持滑动
 public class SegmentBarController: UIViewController {
     private var pagecontent: [UIViewController]
     
-    public lazy var collectionView: UICollectionView = {
+    lazy public var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
@@ -31,11 +30,16 @@ public class SegmentBarController: UIViewController {
         return collectionView
     }()
     
-    /// 关联 segmentBar，用来互动
-    public weak var segmentBar: SegmentBar?
+    weak var segmentBar: SegmentBar?
+    
+    public var isScrollEnabled = true {
+        didSet {
+            collectionView.isScrollEnabled = isScrollEnabled
+        }
+    }
     
     public init(viewControllers: [UIViewController]) {
-        pagecontent = viewControllers
+        self.pagecontent = viewControllers
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -43,6 +47,8 @@ public class SegmentBarController: UIViewController {
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    private var pageContentDidChangeHandler: ((_ index: Int) -> Void)?
     
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -56,26 +62,17 @@ public class SegmentBarController: UIViewController {
         collectionView.frame = view.bounds
     }
     
-    public func scrollToItem(index: Int, animated: Bool) {
+    public func scrollToItem(index: Int) {
         guard index >= 0 && index < pagecontent.count else { return }
         
         DispatchQueue.main.async {
-            self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: [], animated: animated)
-            self.updateChildViewController(index)
+            self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: [], animated: false)
         }
     }
     
-    /// childVC 必须为当前正在展示的 VC
-    public func updateChildViewController(_ selectedIndex: Int?) {
-        guard let index = selectedIndex, index >= 0 && index < pagecontent.count else { return }
-        
-        children.forEach { vc in
-            vc.removeFromParent()
-        }
-        
-        let viewController = pagecontent[index]
-        addChild(viewController)
-        viewController.didMove(toParent: self)
+    /// 页面滑动后返回当前 index，此方法更适合 SegmentBarController 脱离 segmentBar 独立使用时用
+    public func pageContentDidChange(_ pageContentDidChangeHandler: @escaping (_ index: Int) -> Void) {
+        self.pageContentDidChangeHandler = pageContentDidChangeHandler
     }
 }
 
@@ -104,15 +101,15 @@ extension SegmentBarController: UICollectionViewDelegate, UICollectionViewDataSo
 
 extension SegmentBarController: UIScrollViewDelegate {
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        segmentBar?.selectedIndex = Int(abs(scrollView.contentOffset.x / scrollView.width))
+        let currentIndex = Int(abs(scrollView.contentOffset.x / scrollView.width))
         
-        updateChildViewController(segmentBar?.selectedIndex)
+        segmentBar?.selectedIndex = currentIndex
+        
+        pageContentDidChangeHandler?(currentIndex)
     }
     
     /// 滑动过程增加动画效果和文字渐变效果
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) { // 第一页和最后一页不用做下面处理
-        guard segmentBar != nil else { return }
-        
-        segmentBar!.segmentBarControllerDidScroll(scrollView)
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        segmentBar?.segmentBarControllerDidScroll(scrollView)
     }
 }

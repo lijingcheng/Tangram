@@ -34,11 +34,11 @@ public class StepperView: UIView {
         return addButton
     }()
     
-    private var currentNumber = 1 {
+    private var currentNumber = 0 {
         didSet {
-            if currentNumber <= 1 {
+            if currentNumber <= minNumber {
                 subtractButton.isEnabled = false
-            } else if currentNumber >= 99 {
+            } else if currentNumber >= maxNumber {
                 addButton.isEnabled = false
             } else {
                 subtractButton.isEnabled = true

@@ -6,46 +6,60 @@
 //  Copyright © 2019 李京城. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
+/// 选择日期控件
 public class DatePicker: UIView {
-    var datePicker: UIDatePicker = {
-        let datePicker = UIDatePicker(frame: CGRect(x: 0, y: 58, width: Device.width, height: 182))
+    fileprivate var datePicker: UIDatePicker = {
+        let datePicker = UIDatePicker(frame: .zero)
+        datePicker.datePickerMode = .date
+        datePicker.backgroundColor = .white
+        datePicker.minimumDate = Date(timeIntervalSince1970: -2209017600)
+        datePicker.maximumDate = Date()
+        if #available(iOS 14, *) {
+            datePicker.preferredDatePickerStyle = .wheels
+        }
 
         return datePicker
     }()
     
-    var horizontalLineView: UIView = {
+    fileprivate var horizontalLineView: UIView = {
         let horizontalLineView = UIView(frame: CGRect(x: 0, y: 57, width: Device.width, height: 0.5))
         horizontalLineView.backgroundColor = UIColor(hex: 0xE8E8E8)
         
         return horizontalLineView
     }()
 
-    var cancelButton: UIButton = {
+    fileprivate var cancelButton: UIButton = {
         let cancelButton = UIButton(type: .custom)
         cancelButton.setTitleColor(.darkGray, for: .normal)
         cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .regular)
-        cancelButton.frame = CGRect(x: 0, y: 16, width: 70, height: 40)
+        cancelButton.frame = CGRect(x: 0, y: 10, width: 70, height: 40)
         cancelButton.setTitle("取消", for: .normal)
         cancelButton.addTarget(self, action: #selector(cancel), for: .touchUpInside)
         
         return cancelButton
     }()
     
-    var confirmButton: UIButton = {
+    fileprivate var confirmButton: UIButton = {
         let confirmButton = UIButton(type: .custom)
         confirmButton.setTitleColor(.darkGray, for: .normal)
         confirmButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .regular)
-        confirmButton.frame = CGRect(x: Device.width - 70, y: 16, width: 70, height: 40)
+        confirmButton.frame = CGRect(x: Device.width - 70, y: 10, width: 70, height: 40)
         confirmButton.setTitle("确定", for: .normal)
         confirmButton.addTarget(self, action: #selector(confirm), for: .touchUpInside)
         
         return confirmButton
     }()
 
-    var confirmHandler: ((_ date: Date) -> Void)?
+    fileprivate var completionHandler: ((_ date: Date) -> Void)?
+    
+    fileprivate static let shared: DatePicker = {
+        let picker = DatePicker(frame: CGRect(x: 0, y: Device.height, width: Device.width, height: 240))
+        picker.backgroundColor = .white
+
+        return picker
+    }()
     
     public var minimumDate: Date? {
         didSet {
@@ -55,38 +69,39 @@ public class DatePicker: UIView {
     
     public var maximumDate: Date? {
         didSet {
-            datePicker.maximumDate = minimumDate
+            datePicker.maximumDate = maximumDate
         }
     }
- 
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        datePicker.frame = CGRect(x: 0, y: 58, width: Device.width, height: 182)
+    }
+    
     // MARK: -
-    
-    public func show(_ defaultDate: Date?, datePickerMode: UIDatePicker.Mode = .date, confirmHandler: @escaping (_ date: Date) -> Void) {
-        self.confirmHandler = confirmHandler
+    public static func show(_ date: Date?, completionHandler: @escaping (_ date: Date) -> Void) {
+        shared.completionHandler = completionHandler
         
-        frame = CGRect(x: 0, y: Device.height, width: Device.width, height: 240)
+        shared.addSubview(shared.datePicker)
+        shared.addSubview(shared.horizontalLineView)
+        shared.addSubview(shared.cancelButton)
+        shared.addSubview(shared.confirmButton)
         
-        datePicker.datePickerMode = datePickerMode
-        
-        if let date = defaultDate {
-            datePicker.date = date
+        if date != nil {
+            shared.datePicker.date = date!
         }
         
-        addSubview(datePicker)
-        addSubview(horizontalLineView)
-        addSubview(cancelButton)
-        addSubview(confirmButton)
-        
-        present(.bottom)
+        shared.present(.bottom)
     }
     
-    @objc func confirm() {
-        confirmHandler?(datePicker.date)
+    @objc fileprivate func confirm() {
+        completionHandler?(datePicker.date)
         
         dismiss()
     }
     
-    @objc func cancel() {
+    @objc fileprivate func cancel() {
         dismiss()
     }
 }

@@ -6,8 +6,9 @@
 //  Copyright © 2019 李京城. All rights reserved.
 //
 
-import Foundation
 import UIKit
+import RxSwift
+import RxCocoa
 
 /// 下拉刷新上拉加载
 extension UIScrollView {
@@ -36,7 +37,7 @@ extension UIScrollView {
     }
     
     /// 设置是否支持下拉刷新和上拉加载，并且一开始调用此方法时是否自动加载一次，pageIndex 是已经计算好的，可用来直接传给接口
-    public func support(pullToRefresh: Bool = false, loadMore: Bool = false, autoRefresh: Bool = true, refreshHandler: @escaping (_ pageIndex: Int) -> Void) {
+    public func support(pullToRefresh: Bool = false, loadMore: Bool = false, autoRefresh: Bool = true, bottomText: String = "", refreshHandler: @escaping (_ pageIndex: Int) -> Void) {
         if pullToRefresh {
             let pullToRefreshView = PullToRefreshView(scrollView: self)
             pullToRefreshView.refreshHandler = refreshHandler
@@ -45,7 +46,7 @@ extension UIScrollView {
         }
         
         if loadMore {
-            let loadMoreView = LoadMoreView(scrollView: self)
+            let loadMoreView = LoadMoreView(scrollView: self, bottomText: bottomText)
             loadMoreView.refreshHandler = refreshHandler
             loadMoreView.tag = 10109091
             addSubview(loadMoreView)
@@ -61,9 +62,19 @@ extension UIScrollView {
         pullToRefreshView?.startRefresh()
     }
     
+    /// 换个名字，触发刷新数据
+    public func reloadRefresh() {
+        startRefresh()
+    }
+    
     /// 结束刷新，上拉加载必须传参，否则会影响到 pageIndex 的值，下拉刷新不用传
     public func endRefresh(_ result: LoadMoreResult? = .noMoreDatas) {
         pullToRefreshView?.endRefresh()
         loadMoreView?.endRefresh(result ?? .noMoreDatas)
+    }
+    
+    /// 结束下拉刷新
+    public func endPullRefresh() {
+        pullToRefreshView?.endRefresh()
     }
 }

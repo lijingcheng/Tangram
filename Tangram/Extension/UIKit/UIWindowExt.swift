@@ -30,4 +30,17 @@ extension UIWindow {
         }
         return base
     }
+    
+    /// 移除所有 present 的自定义视图
+    public class func removePresentSubViews() {
+        guard  let window = UIApplication.shared.windows.first else { return }
+        
+        window.endEditing(true)
+        
+        window.subviews.forEach { subview in
+            if subview.tag == 1010123 || subview.tag == 1010122 { // 半黑蒙板视图和自定义视图
+                subview.removeFromSuperview()
+            }
+        }
+    }
 }

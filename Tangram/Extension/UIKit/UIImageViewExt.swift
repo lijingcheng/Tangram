@@ -10,20 +10,26 @@ import UIKit
 import Kingfisher
 
 extension UIImageView {
-    /// 加载图片前加代理
+    /// 加载图片
     public func setImageURL(_ url: String?, placeholder: UIImage? = nil, completed: @escaping (UIImage?) -> Void = { _ in }) {
-        guard let url = url else {
+        if placeholder != nil {
+            image = placeholder
+            backgroundColor = .clear
+        }
+        
+        guard let url = url, !url.isEmpty else {
             return
         }
         
-        kf.setImage(with: URL(string: url), placeholder: placeholder) { result in
+        kf.setImage(with: URL(string: url), placeholder: placeholder, completionHandler: { [weak self] result in
             switch result {
             case .success(let value):
+                self?.backgroundColor = .clear
                 completed(value.image)
             case .failure:
                 completed(nil)
             }
-        }
+        })
     }
     
     /// 给 UIImageView 加模糊效果

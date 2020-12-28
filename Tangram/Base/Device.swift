@@ -22,7 +22,7 @@ public struct Device {
     /// 获取状态栏高度
     public static var statusBarHeight: CGFloat {
         if #available(iOS 13.0, *) {
-            return UIApplication.shared.windows.first?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+            return UIApplication.shared.windows.first?.windowScene?.statusBarManager?.statusBarFrame.height ?? 20
         } else {
             return UIApplication.shared.statusBarFrame.height
         }
@@ -46,6 +46,14 @@ public struct Device {
     /// 判断是否是平板
     public static var isPad: Bool {
         return UIDevice.current.userInterfaceIdiom == .pad
+    }
+    
+    /// 屏幕顶部安全区高度
+    public static var safeAreaTopInset: CGFloat {
+        if #available(iOS 11.0, *) {
+            return UIApplication.shared.windows.first?.safeAreaInsets.top ?? 20
+        }
+        return 20
     }
     
     /// 屏幕底部安全区高度
@@ -76,12 +84,6 @@ public struct Device {
     }
     
     /// 用于 APNs 的 deviceToken
-    public static var token: String? {
-        get {
-            return UserDefaults.standard.string(forKey: "Tangram.Device.token")
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "Tangram.Device.token")
-        }
-    }
+    @UserDefault("Device.token")
+    public static var token: String?
 }

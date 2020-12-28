@@ -6,23 +6,31 @@
 //  Copyright © 2019 李京城. All rights reserved.
 //
 
-import Foundation
 import UIKit
 import RxSwift
+import RxCocoa
 
 /// 上拉加载有三种结果：失败了、还有下一页、没有下一页数据了
 public enum LoadMoreResult {
     case error, hasNextPage, noMoreDatas
 }
 
-/// 上拉加载视图，还有下一页数据时，滑到距底部 100 点时会自动加载、如果上次操作是失败情况则需要手动上拉 60 点然后再松手进行刷新
+/// 上拉加载视图，还有下一页数据时，滑到底部时会自动加载、如果上次操作是失败情况则需要手动上拉 60 点后松手进行刷新
 class LoadMoreView: UIView {
     private lazy var refreshView: RefreshView = {
         let refreshView = RefreshView(texts: [.refreshing: "正在加载", .none: "上拉刷新", .ready: "释放刷新"])
+        refreshView.isHidden = true
         
         return refreshView
     }()
-
+    
+    private lazy var bottomView: LoadMoreBottomView = {
+        let bottomView = LoadMoreBottomView(text: bottomText)
+        bottomView.isHidden = true
+        
+        return bottomView
+    }()
+    
     private weak var scrollView: UIScrollView?
     
     private var trigger: CGFloat = 60.0
@@ -36,9 +44,8 @@ class LoadMoreView: UIView {
         }
     }
     
-    private var contentInset = UIEdgeInsets(top: -1, left: -1, bottom: -1, right: -1)
-    
     var refreshHandler: ((_ pageIndex: Int) -> Void)?
+    var bottomText = ""
     
     private var refreshStatus: RefreshStatus = .none {
         didSet {
@@ -48,18 +55,22 @@ class LoadMoreView: UIView {
         }
     }
     
+    private var observeContentSize: NSKeyValueObservation?
+    
     private let disposeBag = DisposeBag()
     
     // MARK: -
-    init(scrollView: UIScrollView) {
+    init(scrollView: UIScrollView, bottomText: String = "") {
         super.init(frame: .zero)
         
         layer.masksToBounds = true
         
+        self.bottomText = bottomText
         self.scrollView = scrollView
         
         addSubview(refreshView)
-
+        addSubview(bottomView)
+        
         self.scrollView?.rx.contentOffset.filter { $0.y > 0 }.subscribe(onNext: { [weak self] contentOffset in
             DispatchQueue.main.async {
                 guard let isRefreshing = self?.isRefreshing, !isRefreshing, let refreshResult = self?.refreshResult, refreshResult != .noMoreDatas else {
@@ -89,6 +100,14 @@ class LoadMoreView: UIView {
                 }
             }
         }).disposed(by: disposeBag)
+        
+        observeContentSize = scrollView.observe(\.contentSize) { [weak self] (scrollView, change) in
+            guard let self = self else {
+                return
+            }
+            
+            self.setNeedsLayout()
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -98,35 +117,87 @@ class LoadMoreView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        if scrollView != nil, contentInset == UIEdgeInsets(top: -1, left: -1, bottom: -1, right: -1) {
-            contentInset = scrollView!.contentInset
+        if refreshResult == .noMoreDatas, !bottomText.isEmpty {
+            frame = CGRect(x: 0.0, y: scrollView?.contentSize.height ?? 0, width: scrollView?.width ?? 0, height: trigger)
         }
         
         refreshView.frame = bounds
+        bottomView.frame = bounds
     }
-
+    
     // MARK: -
     func startRefresh() {
-        guard let scrollView = scrollView, !isRefreshing else {
+        guard let scrollView = self.scrollView, !isRefreshing else {
             return
         }
         
         refreshStatus = .refreshing
         
-        UIView.animate(withDuration: (refreshResult == .hasNextPage) ? 0.0 : 0.3, animations: {
-            self.scrollView?.contentInset = UIEdgeInsets(top: self.contentInset.top, left: 0, bottom: self.contentInset.bottom + self.trigger, right: 0)
-            self.frame = CGRect(x: 0.0, y: scrollView.contentSize.height, width: scrollView.width, height: self.trigger)
-        }, completion: {(_ finished: Bool) -> Void in
-            self.refreshHandler?(scrollView.pageIndex)
-            ProgressHUD.dismiss()
-        })
+        var newContentInset = scrollView.contentInset
+        newContentInset.bottom += self.trigger
+        
+        self.scrollView?.contentInset = newContentInset
+        self.frame = CGRect(x: 0.0, y: scrollView.contentSize.height, width: scrollView.width, height: self.trigger)
+        
+        self.refreshHandler?(scrollView.pageIndex)
+        
+        ProgressHUD.dismiss()
     }
 
     func endRefresh(_ result: LoadMoreResult) {
         refreshResult = result
+        
+        if refreshResult == .noMoreDatas, !bottomText.isEmpty {
+            bottomView.isHidden = false
+            refreshView.isHidden = true
+        } else {
+            bottomView.isHidden = true
+            refreshView.isHidden = false
+            
+            frame = .zero
+            
+            if var contentInset = scrollView?.contentInset, refreshStatus == .refreshing {
+                contentInset.bottom -= self.trigger
+                scrollView?.contentInset = contentInset
+            }
+        }
+        
         refreshStatus = .none
         
-        frame = .zero
-        scrollView?.contentInset = contentInset
+        setNeedsLayout()
+    }
+    
+    deinit {
+        observeContentSize?.invalidate()
+    }
+}
+
+/// 上拉加载没数据时的底部视图
+class LoadMoreBottomView: UIView {
+    private lazy var textLabel: UILabel = {
+        let textLabel = UILabel(frame: .zero)
+        textLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        textLabel.textColor = UIColor(hex: 0x9FA4B3)
+        textLabel.textAlignment = .center
+
+        return textLabel
+    }()
+
+    init(text: String) {
+        super.init(frame: .zero)
+        
+        textLabel.text = text
+
+        addSubview(textLabel)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        textLabel.frame = CGRect(x: 0, y: 20, width: Device.width, height: 20)
     }
 }

@@ -30,6 +30,7 @@
 		F3393731238E689C00D76D4B /* MultipleLinesFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3393730238E689C00D76D4B /* MultipleLinesFlowLayout.swift */; };
 		F3393733238E7CFE00D76D4B /* TagListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3393732238E7CFE00D76D4B /* TagListView.swift */; };
 		F3689C4E230FD8D4005447BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3689C4D230FD8D4005447BA /* AppDelegate.swift */; };
+		F37457E42599723A006D3DE2 /* RxKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37457E02599723A006D3DE2 /* RxKeyboard.swift */; };
 		F38570C42317DFDF0043EBC2 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38570C32317DFDF0043EBC2 /* App.swift */; };
 		F385710B2318C7130043EBC2 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = F385710A2318C7130043EBC2 /* R.generated.swift */; };
 		F385710D2318C7250043EBC2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F385710C2318C7250043EBC2 /* Assets.xcassets */; };
@@ -44,7 +45,6 @@
 		F38BBE982330D0A800A194AE /* UIButtonExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BBE972330D0A800A194AE /* UIButtonExt.swift */; };
 		F38BBE9A2330D0B200A194AE /* UILabelExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BBE992330D0B100A194AE /* UILabelExt.swift */; };
 		F38BBE9E2330D0E400A194AE /* UIImageViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BBE9D2330D0E400A194AE /* UIImageViewExt.swift */; };
-		F38BBEA02330D10400A194AE /* UIVisualEffectViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BBE9F2330D10300A194AE /* UIVisualEffectViewExt.swift */; };
 		F38BBEA22330D16300A194AE /* UICollectionViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BBEA12330D16300A194AE /* UICollectionViewExt.swift */; };
 		F38BBEA42330D17400A194AE /* UITabBarItemExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BBEA32330D17400A194AE /* UITabBarItemExt.swift */; };
 		F38BBEA62330D18200A194AE /* UINavigationBarExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BBEA52330D18200A194AE /* UINavigationBarExt.swift */; };
@@ -66,6 +66,12 @@
 		F38BBEDA2330E0CE00A194AE /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BBED92330E0CE00A194AE /* Router.swift */; };
 		F38BBF0C2330E47400A194AE /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BBF0B2330E47400A194AE /* WebViewController.swift */; };
 		F38BC0C22332367A00A194AE /* TimerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BC0C12332367A00A194AE /* TimerExt.swift */; };
+		F3BD3C65259573CC00321FEB /* PropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3C64259573CB00321FEB /* PropertyWrapper.swift */; };
+		F3BD3C682595743800321FEB /* WaterFallFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3C672595743800321FEB /* WaterFallFlowLayout.swift */; };
+		F3BD3C6B2595744800321FEB /* CarouselFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3C6A2595744800321FEB /* CarouselFlowLayout.swift */; };
+		F3BD3D6325957C4100321FEB /* CLLocationManagerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3D6225957C4100321FEB /* CLLocationManagerExt.swift */; };
+		F3BD3D6625957C7600321FEB /* NotificationNameExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3D6525957C7600321FEB /* NotificationNameExt.swift */; };
+		F3BD3D692595874300321FEB /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3D682595874300321FEB /* TextViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,6 +101,7 @@
 		F3393732238E7CFE00D76D4B /* TagListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListView.swift; sourceTree = "<group>"; };
 		F3689C4A230FD8D4005447BA /* Tangram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tangram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3689C4D230FD8D4005447BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F37457E02599723A006D3DE2 /* RxKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxKeyboard.swift; sourceTree = "<group>"; };
 		F38570C32317DFDF0043EBC2 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		F385710A2318C7130043EBC2 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		F385710C2318C7250043EBC2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -109,7 +116,6 @@
 		F38BBE972330D0A800A194AE /* UIButtonExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExt.swift; sourceTree = "<group>"; };
 		F38BBE992330D0B100A194AE /* UILabelExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelExt.swift; sourceTree = "<group>"; };
 		F38BBE9D2330D0E400A194AE /* UIImageViewExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewExt.swift; sourceTree = "<group>"; };
-		F38BBE9F2330D10300A194AE /* UIVisualEffectViewExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIVisualEffectViewExt.swift; sourceTree = "<group>"; };
 		F38BBEA12330D16300A194AE /* UICollectionViewExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionViewExt.swift; sourceTree = "<group>"; };
 		F38BBEA32330D17400A194AE /* UITabBarItemExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITabBarItemExt.swift; sourceTree = "<group>"; };
 		F38BBEA52330D18200A194AE /* UINavigationBarExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationBarExt.swift; sourceTree = "<group>"; };
@@ -132,6 +138,12 @@
 		F38BBED92330E0CE00A194AE /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		F38BBF0B2330E47400A194AE /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		F38BC0C12332367A00A194AE /* TimerExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerExt.swift; sourceTree = "<group>"; };
+		F3BD3C64259573CB00321FEB /* PropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrapper.swift; sourceTree = "<group>"; };
+		F3BD3C672595743800321FEB /* WaterFallFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterFallFlowLayout.swift; sourceTree = "<group>"; };
+		F3BD3C6A2595744800321FEB /* CarouselFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselFlowLayout.swift; sourceTree = "<group>"; };
+		F3BD3D6225957C4100321FEB /* CLLocationManagerExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationManagerExt.swift; sourceTree = "<group>"; };
+		F3BD3D6525957C7600321FEB /* NotificationNameExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNameExt.swift; sourceTree = "<group>"; };
+		F3BD3D682595874300321FEB /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,10 +209,17 @@
 				F316D9D02318CC8B0066FD90 /* Extension */,
 				F38BBED32330E07400A194AE /* Service */,
 				F38BBED42330E08000A194AE /* Component */,
-				F3689C4D230FD8D4005447BA /* AppDelegate.swift */,
 				F38571092318C6980043EBC2 /* Supporting Files */,
 			);
 			path = Tangram;
+			sourceTree = "<group>";
+		};
+		F37457DE259971ED006D3DE2 /* Vendors */ = {
+			isa = PBXGroup;
+			children = (
+				F37457E02599723A006D3DE2 /* RxKeyboard.swift */,
+			);
+			path = Vendors;
 			sourceTree = "<group>";
 		};
 		F38570C22317DFC70043EBC2 /* Base */ = {
@@ -208,8 +227,11 @@
 			children = (
 				F38570C32317DFDF0043EBC2 /* App.swift */,
 				F316D9CC2318CC0F0066FD90 /* Device.swift */,
-				F3393730238E689C00D76D4B /* MultipleLinesFlowLayout.swift */,
+				F3BD3C64259573CB00321FEB /* PropertyWrapper.swift */,
 				F316D9CE2318CC7B0066FD90 /* UnknownCaseRepresentable.swift */,
+				F3BD3C672595743800321FEB /* WaterFallFlowLayout.swift */,
+				F3BD3C6A2595744800321FEB /* CarouselFlowLayout.swift */,
+				F3393730238E689C00D76D4B /* MultipleLinesFlowLayout.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -217,10 +239,11 @@
 		F38571092318C6980043EBC2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F3689C4D230FD8D4005447BA /* AppDelegate.swift */,
 				F38571142318C7C70043EBC2 /* LaunchScreen.storyboard */,
 				F385710A2318C7130043EBC2 /* R.generated.swift */,
-				F385710F2318C7500043EBC2 /* README.md */,
 				F38571122318C7620043EBC2 /* TangramX.podspec */,
+				F385710F2318C7500043EBC2 /* README.md */,
 				F385710C2318C7250043EBC2 /* Assets.xcassets */,
 				F38BBECF2330DB9600A194AE /* Info.plist */,
 			);
@@ -242,6 +265,8 @@
 				F38BBEBB2330D93B00A194AE /* DictionaryExt.swift */,
 				F339344B2383EB5E00D76D4B /* UserDefaultsExt.swift */,
 				F38BBEC52330D98800A194AE /* DispatchQueueExt.swift */,
+				F3BD3D6525957C7600321FEB /* NotificationNameExt.swift */,
+				F3BD3D6225957C4100321FEB /* CLLocationManagerExt.swift */,
 				F38BBEC72330D99700A194AE /* FileManagerExt.swift */,
 			);
 			path = Foundation;
@@ -258,7 +283,6 @@
 				F38BBE992330D0B100A194AE /* UILabelExt.swift */,
 				F38BBE972330D0A800A194AE /* UIButtonExt.swift */,
 				F38BBE9D2330D0E400A194AE /* UIImageViewExt.swift */,
-				F38BBE9F2330D10300A194AE /* UIVisualEffectViewExt.swift */,
 				F38BBEA12330D16300A194AE /* UICollectionViewExt.swift */,
 				F38BBEA32330D17400A194AE /* UITabBarItemExt.swift */,
 				F38BBEA52330D18200A194AE /* UINavigationBarExt.swift */,
@@ -283,6 +307,7 @@
 			children = (
 				F38BBF122330E5C600A194AE /* PullToRefresh */,
 				F38BBF2D2330E5CA00A194AE /* SegmentController */,
+				F37457DE259971ED006D3DE2 /* Vendors */,
 				F3393678238D2AB800D76D4B /* Alert.swift */,
 				F339367A238D2ABE00D76D4B /* Toast.swift */,
 				F339367C238D2AC700D76D4B /* ProgressHUD.swift */,
@@ -294,6 +319,7 @@
 				F3393682238E569B00D76D4B /* PlaceHolderTextView.swift */,
 				F3393680238D34BF00D76D4B /* TouchAreaLargenButton.swift */,
 				F38BBF0B2330E47400A194AE /* WebViewController.swift */,
+				F3BD3D682595874300321FEB /* TextViewController.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -349,7 +375,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1210;
 				ORGANIZATIONNAME = "李京城";
 				TargetAttributes = {
 					F3689C49230FD8D4005447BA = {
@@ -466,13 +492,17 @@
 				F316D9CF2318CC7B0066FD90 /* UnknownCaseRepresentable.swift in Sources */,
 				F3393731238E689C00D76D4B /* MultipleLinesFlowLayout.swift in Sources */,
 				F38BBE922330D07400A194AE /* UIColorExt.swift in Sources */,
+				F3BD3C65259573CC00321FEB /* PropertyWrapper.swift in Sources */,
+				F3BD3D6325957C4100321FEB /* CLLocationManagerExt.swift in Sources */,
 				F33935C4238D1D7F00D76D4B /* EncodableExt.swift in Sources */,
 				F38BBEBC2330D93B00A194AE /* DictionaryExt.swift in Sources */,
 				F3393675238D2A7300D76D4B /* SegmentBarController.swift in Sources */,
 				F38BBEAA2330D1AA00A194AE /* UINavigationControllerExt.swift in Sources */,
 				F38BBEC82330D99700A194AE /* FileManagerExt.swift in Sources */,
 				F38BBEA82330D18E00A194AE /* UIViewControllerExt.swift in Sources */,
+				F3BD3C6B2595744800321FEB /* CarouselFlowLayout.swift in Sources */,
 				F339344C2383EB5E00D76D4B /* UserDefaultsExt.swift in Sources */,
+				F37457E42599723A006D3DE2 /* RxKeyboard.swift in Sources */,
 				F3393673238D2A6A00D76D4B /* SegmentBar.swift in Sources */,
 				F38BBE9A2330D0B200A194AE /* UILabelExt.swift in Sources */,
 				F38BBF0C2330E47400A194AE /* WebViewController.swift in Sources */,
@@ -483,12 +513,13 @@
 				F339366B238D2A1600D76D4B /* UIScrollView+Refresh.swift in Sources */,
 				F38BBEA62330D18200A194AE /* UINavigationBarExt.swift in Sources */,
 				F38BBEB82330D91500A194AE /* DataExt.swift in Sources */,
-				F38BBEA02330D10400A194AE /* UIVisualEffectViewExt.swift in Sources */,
 				F38BBEB22330D8F300A194AE /* IntExt.swift in Sources */,
 				F38BBEAE2330D1E500A194AE /* UIWindowExt.swift in Sources */,
 				F3393681238D34BF00D76D4B /* TouchAreaLargenButton.swift in Sources */,
+				F3BD3D6625957C7600321FEB /* NotificationNameExt.swift in Sources */,
 				F38BBEBA2330D92100A194AE /* ArrayExt.swift in Sources */,
 				F3393687238E62D600D76D4B /* StepperView.swift in Sources */,
+				F3BD3D692595874300321FEB /* TextViewController.swift in Sources */,
 				F38BBEC22330D96C00A194AE /* NSObjectExt.swift in Sources */,
 				F339367B238D2ABE00D76D4B /* Toast.swift in Sources */,
 				F38BBE962330D09C00A194AE /* UIImageExt.swift in Sources */,
@@ -498,6 +529,7 @@
 				F38BBE982330D0A800A194AE /* UIButtonExt.swift in Sources */,
 				F38BBEC02330D95700A194AE /* BundleExt.swift in Sources */,
 				F38BBED82330E0C500A194AE /* Network.swift in Sources */,
+				F3BD3C682595743800321FEB /* WaterFallFlowLayout.swift in Sources */,
 				F38BBEAC2330D1B700A194AE /* UITabBarControllerExt.swift in Sources */,
 				F38BBE942330D08B00A194AE /* UITableViewExt.swift in Sources */,
 				F339366D238D2A1E00D76D4B /* PullToRefreshView.swift in Sources */,
@@ -544,6 +576,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -604,6 +637,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -645,13 +679,13 @@
 				DEVELOPMENT_TEAM = 5NJQ6UMZKW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Tangram/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tangram;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ljc.tangram;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -674,13 +708,13 @@
 				DEVELOPMENT_TEAM = 5NJQ6UMZKW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Tangram/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tangram;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ljc.tangram;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";

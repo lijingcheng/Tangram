@@ -17,7 +17,7 @@ extension Int {
             return String(format: "%g", Double(self) / 100.0)
         }
     }
-    
+
     /// 将总秒数转成 "14 : 24" 这种格式
     public func convertToTime() -> String {
         guard self > 0 else { return "00 : 00" }

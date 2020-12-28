@@ -6,9 +6,9 @@
 //  Copyright © 2019 李京城. All rights reserved.
 //
 
-import Foundation
 import UIKit
 import RxSwift
+import RxCocoa
 
 /// 下拉刷新视图，默认拉 60 点松手后就可以刷新了
 class PullToRefreshView: UIView {
@@ -85,7 +85,7 @@ class PullToRefreshView: UIView {
     
     // MARK: -
     func startRefresh() {
-        guard let scrollView = scrollView, !isRefreshing else {
+        guard let scrollView = self.scrollView, !isRefreshing else {
             return
         }
         
@@ -99,6 +99,7 @@ class PullToRefreshView: UIView {
             self.scrollView?.pageIndex = 1
             
             self.refreshHandler?(scrollView.pageIndex)
+            
             ProgressHUD.dismiss()
         })
     }

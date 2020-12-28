@@ -6,7 +6,6 @@
 //  Copyright © 2019 李京城. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 /// 返回上一页面的方式
@@ -17,17 +16,25 @@ public enum NavPopType: Int {
     case someone = 4 // 指定一个
 }
 
+public protocol TabBarItemProtocol {
+    func intValue() -> Int
+}
+
 public class Router {
-    /// 根据类名跳转
+    /// 组件之间跳转需要用这个
     public static func open(_ name: String, storyboard: String = "", bundle: Bundle = Bundle.main, params: [String: Any] = [:], animated: Bool = true, present: Bool = false, completion: (() -> Void)? = nil) {
         let viewController = Router.viewControllerWithClassName(name, storyboard: storyboard, bundle: bundle)
         
         Router.open(viewController, params: params, animated: animated, present: present, completion: completion)
     }
-    
-    /// 根据 ViewController 对象跳转
+
+    /// 组件内跳转推荐用这个，用 R.swift 可以省去指定 bundle 的操作
     public static func open(_ viewController: UIViewController?, params: [String: Any]? = [:], animated: Bool = true, present: Bool = false, completion: (() -> Void)? = nil) {
-        guard let visibleVC = UIWindow.visibleViewController(), viewController != visibleVC else { // 不允许 push 当前页面
+        guard let visibleVC = UIWindow.visibleViewController() else {
+            return
+        }
+        
+        if !visibleVC.supportPushSelf, viewController?.className == visibleVC.className {
             return
         }
         
@@ -39,19 +46,22 @@ public class Router {
                 
                 if present {
                     vc.modalPresentationStyle = .fullScreen
-                    
                     visibleVC.present(vc, animated: animated, completion: { completion?() })
                 } else {
-                    vc.hidesBottomBarWhenPushed = true
+                    if visibleVC.navigationController?.viewControllers.count == 1 {
+                        vc.hidesBottomBarWhenPushed = true
+                    } else {
+                        vc.hidesBottomBarWhenPushed = false
+                    }
                     
                     visibleVC.navigationController?.push(vc, animated: animated, completion: completion)
                 }
             }
         } else {
-            print("Error: view controller is nil")
+            print("error: view controller 为 nil")
         }
     }
-    
+
     /// 默认返回上一页，也可根据 popType 参数跳转到某一页，或根据锚点跳转到相关页面
     public static func pop(_ name: String = "", popType: NavPopType = .previous, params: [String: Any]? = [:], animated: Bool = true, present: Bool = false, completion: (() -> Void)? = nil) {
         guard let visibleVC = UIWindow.visibleViewController() else {
@@ -64,7 +74,7 @@ public class Router {
             }
             return
         }
-        
+
         guard let navigationController = visibleVC.navigationController else {
             return
         }
@@ -121,11 +131,11 @@ public class Router {
         
         DispatchQueue.main.async {
             var popVC = viewController
-            var hasExist = false
+            var hasExist = false // 用来判断要 pop 的 VC 是否在堆栈中存在
             
             if popVC != nil {
                 navigationController.viewControllers.forEach({ vc in
-                    if vc == popVC {
+                    if vc == popVC { // 这里要用对象进行比较，仅用名字的话有可能遇到名字一样但不是一个实例而导致的崩溃
                         hasExist = true
                         return
                     }
@@ -145,8 +155,33 @@ public class Router {
             }
         }
     }
+    
+    /// 切换 tabbar index
+    public static func switchTabBarSelectedIndex(index: TabBarItemProtocol) {
+        let rootVC = UIApplication.shared.windows.first?.rootViewController
+        
+        if let tabBarController = rootVC as? UITabBarController {
+            Router.pop(popType: .root, animated: false)
 
-    /// 根据类名获取 ViewController 对象，通过 storyboard 构建的 vc，storyboardId 必须和类名一样，通过 xib 构建的 vc，需要重写 init 并调用 super.init(nibName: nil, bundle: Bundle.xxx)
+            tabBarController.selectedIndex = index.intValue()
+        }
+    }
+    
+    /// ViewController 间转换加动画
+    public static func transition(_ rootViewController: UIViewController?) {
+        rootViewController?.modalTransitionStyle = .crossDissolve
+        
+        if let window = UIApplication.shared.windows.first {
+            UIView.setAnimationsEnabled(false)
+            UIView.transition(with: window, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                window.rootViewController = rootViewController
+            }, completion: { _ in
+                UIView.setAnimationsEnabled(true)
+            })
+        }
+    }
+    
+    /// 根据类名获取 ViewController 对象
     public static func viewControllerWithClassName(_ name: String, storyboard: String = "", bundle: Bundle) -> UIViewController? {
         var viewController: UIViewController?
         
@@ -159,8 +194,14 @@ public class Router {
                 bundleName = bundle.infoDictionary!["CFBundleName"] as? String
             }
             
+            // Swift 语言开发的 VC 对象需要通过 bundle + name 的方式初始化
             if let vc = NSClassFromString((bundleName! + "." + name)) as? UIViewController.Type {
                 viewController = vc.init()
+            } else {
+                // Objective-C 语言开发的 VC 对象在初始化时不需要加 bundle
+                if let vc = NSClassFromString(name) as? UIViewController.Type {
+                    viewController = vc.init()
+                }
             }
         } else {
             viewController = UIStoryboard(name: storyboard, bundle: bundle).instantiateViewController(withIdentifier: name)
@@ -168,36 +209,13 @@ public class Router {
         
         return viewController
     }
-    
-    /// 切换 tabbar index
-    public static func switchTabBarSelectedIndex(index: Int) {
-        let rootVC = UIApplication.shared.windows.first?.rootViewController
-        
-        if let tabBarController = rootVC as? UITabBarController {
-            Router.pop(popType: .root, animated: false)
-
-            tabBarController.selectedIndex = index
-        }
-    }
-    
-    /// ViewController 间转换加动画
-    public static func transition(_ rootViewController: UIViewController?) {
-        rootViewController?.modalTransitionStyle = .crossDissolve
-        
-        UIView.setAnimationsEnabled(false)
-        UIView.transition(with: UIApplication.shared.windows.first!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-            UIApplication.shared.windows.first?.rootViewController = rootViewController
-        }, completion: { _ in
-            UIView.setAnimationsEnabled(true)
-        })
-    }
 }
 
 extension UIViewController {
     private struct AssociatedKeys {
         static var anchorKey = "UIViewController.anchorKey"
     }
-    
+
     /// 设置当前 ViewController 是否是锚点，用于 pop 时直接回到此页面
     public var anchor: Bool {
         get {
@@ -209,7 +227,20 @@ extension UIViewController {
     }
     
     open override func setValue(_ value: Any?, forUndefinedKey key: String) {
-        print("Error: \(self.className) 类中不存在属性：\(key)")
+        guard let value = value else {
+            return
+        }
+        
+        let properys = Mirror(reflecting: self).children // 不包含计算属性
+        
+        properys.forEach { propery in
+            if propery.label == key {
+                self.modelParams?[key] = value
+                return
+            }
+        }
+        
+        print("\(className) 类中不存在属性：\(key)")
     }
 }
 
@@ -218,42 +249,49 @@ extension UINavigationController {
         static var transformingKey = "UINavigationController.transformingKey"
     }
     
-    /// 是否正在 push 或 pop 过程中
-    private var transforming: Bool {
-        get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.transformingKey) as? Bool ?? false
-        }
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.transformingKey, newValue, .OBJC_ASSOCIATION_ASSIGN)
-        }
-    }
-    
-    /// pop 操作，支持回调
-    func pop(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
-        guard !transforming else { return }
-        
-        CATransaction.begin()
-        CATransaction.setCompletionBlock {
-            completion?()
-            self.transforming = false
-        }
-        
-        popToViewController(viewController, animated: animated)
-        transforming = true
-        CATransaction.commit()
-    }
-    
     /// push 操作，支持回调
     func push(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
-        guard !transforming else { return }
-        
-        CATransaction.begin()
-        CATransaction.setCompletionBlock {
-            completion?()
-            self.transforming = false
-        }
         pushViewController(viewController, animated: animated)
-        transforming = true
-        CATransaction.commit()
+
+        guard animated, let coordinator = transitionCoordinator else {
+            DispatchQueue.main.async {
+                completion?()
+            }
+            return
+        }
+
+        coordinator.animate(alongsideTransition: nil) { _ in
+            completion?()
+        }
+    }
+
+    /// pop 操作，支持回调
+    func pop(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
+        popToViewController(viewController, animated: animated)
+        
+        guard animated, let coordinator = transitionCoordinator else {
+            DispatchQueue.main.async {
+                completion?()
+            }
+            return
+        }
+
+        coordinator.animate(alongsideTransition: nil) { _ in
+            completion?()
+        }
+    }
+
+    /// 根据类名获取导航堆栈中的 ViewController 对象
+    public func viewControllerWithClassName(_ name: String) -> UIViewController? {
+        var popVC: UIViewController?
+        
+        viewControllers.reversed().forEach({ vc in
+            if vc.className == name {
+                popVC = vc
+                return
+            }
+        })
+        
+        return popVC
     }
 }

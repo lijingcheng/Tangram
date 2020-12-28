@@ -6,16 +6,24 @@
 //  Copyright © 2019 李京城. All rights reserved.
 //
 
-import Foundation
 import UIKit
+
+/// Toast 视图展示位置
+public enum ToastViewPosition {
+    case center, bottom
+}
 
 /// toast 消息并显示 1.5 秒，内容为空时无效果
 public class Toast {
+    public static var toastViewBackgroundColor = UIColor(hex: 0x666C7B)?.withAlphaComponent(0.8)
+    public static var toastViewCornerRadius: CGFloat = 24.0
+    public static var toastViewPosition = ToastViewPosition.center
+    
     fileprivate var toastView: UIView = {
         let toastView = UIView(frame: .zero)
         toastView.alpha = 0
-        toastView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.8)
-        toastView.layer.cornerRadius = 24
+        toastView.backgroundColor = Toast.toastViewBackgroundColor
+        toastView.layer.cornerRadius = Toast.toastViewCornerRadius
         toastView.layer.masksToBounds = true
         
         return toastView
@@ -42,7 +50,7 @@ public class Toast {
     }()
     
     // MARK: -
-    public static func show(_ message: String, completionHandler: @escaping () -> Void = {}) {
+    public static func show(_ message: String, superView: UIView? = UIApplication.shared.keyWindow, endEditing: Bool = true, completionHandler: @escaping () -> Void = {}) {
         if message.isEmpty {
             return
         }
@@ -50,10 +58,12 @@ public class Toast {
         shared.completionHandler = completionHandler
         
         DispatchQueue.main.async {
-            UIApplication.shared.windows.first?.endEditing(true)
+            if endEditing {
+                UIApplication.shared.keyWindow?.endEditing(true)
+            }
             
             self.dismiss()
-            self.shared.showToastView(message)
+            self.shared.showToastView(message, superView: superView)
         }
     }
     
@@ -62,11 +72,11 @@ public class Toast {
     }
     
     // MARK: -
-    fileprivate func showToastView(_ statusMessage: String) {
+    fileprivate func showToastView(_ statusMessage: String, superView: UIView?) {
         textLabel.text = statusMessage
         toastView.addSubview(textLabel)
         
-        UIApplication.shared.windows.first?.addSubview(toastView)
+        superView?.addSubview(toastView)
         
         setToastViewSize()
         setToastViewPosistion(notification: nil)
@@ -82,7 +92,9 @@ public class Toast {
     }
     
     fileprivate func setToastViewSize() {
-        var toastViewWidth: CGFloat = (Device.width) - 105
+        let superViewWidth = toastView.superview?.width ?? Device.width
+        
+        var toastViewWidth: CGFloat = superViewWidth - 105
         
         let rectLabel = (textLabel.text?.boundingRect(with: CGSize(width: toastViewWidth - 30 * 2, height: 300),
                                                        options: [.usesFontLeading, .usesLineFragmentOrigin],
@@ -92,11 +104,13 @@ public class Toast {
         toastViewWidth = ceil(rectLabel.size.width) + 30 * 2
         let toastViewHeight = max(ceil(rectLabel.size.height) + 12 * 2, 48)
         
-        toastView.frame = CGRect(x: (Device.width - toastViewWidth) / 2, y: 0, width: toastViewWidth, height: toastViewHeight)
+        toastView.frame = CGRect(x: (superViewWidth - toastViewWidth) / 2, y: 0, width: toastViewWidth, height: toastViewHeight)
         textLabel.frame = CGRect(x: 30, y: (toastViewHeight - ceil(rectLabel.size.height)) / 2, width: ceil(rectLabel.size.width), height: ceil(rectLabel.size.height))
     }
     
     @objc fileprivate func setToastViewPosistion(notification: NSNotification?) {
+        let superViewHeight = toastView.superview?.height ?? Device.height
+        
         var keyboardHeight: CGFloat = 0.0
         
         if notification != nil {
@@ -109,7 +123,12 @@ public class Toast {
         }
         
         UIView.animate(withDuration: 0, delay: 0, options: [.allowUserInteraction], animations: {
-            self.toastView.y = Device.height - self.toastView.height - (keyboardHeight > 0 ? keyboardHeight : 49) - Device.safeAreaBottomInset - 15
+            switch Toast.toastViewPosition {
+            case .center:
+                self.toastView.y = (superViewHeight - self.toastView.height / 2 - (keyboardHeight > 0 ? keyboardHeight : 49) - Device.safeAreaBottomInset) / 2
+            case .bottom:
+                self.toastView.y = superViewHeight - self.toastView.height - (keyboardHeight > 0 ? keyboardHeight : 49) - Device.safeAreaBottomInset - 15
+            }
         }, completion: nil)
     }
     

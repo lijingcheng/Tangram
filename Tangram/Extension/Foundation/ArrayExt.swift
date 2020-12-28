@@ -37,6 +37,18 @@ extension Array {
         
         return String(data: jsonData, encoding: .utf8)
     }
+    
+    /// 去重
+    public func filterDuplicates<E: Equatable>(_ filter: (Element) -> E) -> [Element] {
+        var result = [Element]()
+        for value in self {
+            let key = filter(value)
+            if !result.map({ filter($0) }).contains(key) {
+                result.append(value)
+            }
+        }
+        return result
+    }
 }
 
 extension Array where Element: Equatable {

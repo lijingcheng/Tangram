@@ -6,17 +6,7 @@
 //  Copyright © 2019 李京城. All rights reserved.
 //
 
-import Foundation
 import Alamofire
-
-extension Notification.Name {
-    public struct Network {
-        /// 在访问接口的时候检测出没有网络
-        public static let noConnection = Notification.Name(rawValue: "com.tangram.notification.name.network.noConnection")
-        /// 网络状态改变
-        public static let statusChanged = Notification.Name(rawValue: "com.tangram.notification.name.network.statusChanged")
-    }
-}
 
 /// 用于展示“空数据”、“没网络”、“接口失败”异常页面
 public struct NetworkError {
@@ -26,9 +16,15 @@ public struct NetworkError {
     
     public var code: Code?
     public var msg: String?
+    public var data: [String: Any]?
+    
+    public init(code: Int, msg: String, data: [String: Any]?) {
+        self.code = Code(rawValue: code)
+        self.msg = msg
+        self.data = data
+    }
 }
 
-/// 必须通过设置 Network.shared.host = "https://api.com" 之后才能够正常发起网络请求
 public class Network {
     /// 设置个单例属性是为了让服务器时间、网络状态等属性在 app 启动时只保存一份
     public static let shared = Network()
@@ -50,6 +46,9 @@ public class Network {
     public var isReachableWiFi: Bool {
         return reachabilityManager?.isReachableOnEthernetOrWiFi ?? false
     }
+    
+    /// 网络请求管理类的通用设置对象
+    public var configuration: URLSessionConfiguration
 
     /// 管理普通请求和上传请求的 manager
     public var manager: Session
@@ -60,31 +59,22 @@ public class Network {
     /// 检测网络是否正常，当百度倒闭时需要修改此行代码
     private var reachabilityManager = NetworkReachabilityManager(host: "www.baidu.com")
     
-    /// 必须设置这个 host 才能够正常发起网络请求
-    public var host = ""
-    
     /// 超时时间，默认 10 秒
-    public var timeoutInterval = 10 {
+    public var timeoutInterval: TimeInterval = 10 {
         didSet {
-            manager.sessionConfiguration.timeoutIntervalForRequest = TimeInterval(timeoutInterval)
-            manager.sessionConfiguration.timeoutIntervalForResource = TimeInterval(timeoutInterval)
+            manager.sessionConfiguration.timeoutIntervalForRequest = timeoutInterval
+            manager.sessionConfiguration.timeoutIntervalForResource = timeoutInterval
         }
     }
     
     /// 用来标识登录状态的 authToken
-    public var authToken: String? {
-        get {
-            return UserDefaults.standard.string(forKey: "API.Auth.token")
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "API.Auth.token")
-        }
-    }
+    @UserDefault("Network.Auth.token")
+    public var authToken: String?
     
     private init() {
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = 10
-        configuration.timeoutIntervalForResource = 10
+        configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = timeoutInterval
+        configuration.timeoutIntervalForResource = timeoutInterval
         configuration.httpMaximumConnectionsPerHost = 6
         if #available(iOS 11.0, *) {
             configuration.waitsForConnectivity = true // 网络不通时 request 会等有网后再发出去
@@ -100,81 +90,102 @@ public class Network {
     
     // MARK: -
     
-    /// 发送 http 请求
+    /// 发送 http 请求，支持 mock
     @discardableResult
-    private static func request(_ path: String, method: HTTPMethod, parameters: [String: Any], finishedCallback: @escaping (_ result: [String: Any]?, _ error: NetworkError?) -> Void) -> DataRequest? {
+    public static func request(_ url: String, method: HTTPMethod, parameters: [String: Any], postJSONBody: Bool = false, mockFile: String = "", finishedCallback: @escaping (_ result: [String: Any]?, _ error: NetworkError?) -> Void) -> DataRequest? {
         do {
+            if App.isDebugMode, !mockFile.isEmpty, let filePath = Bundle.main.path(forResource: mockFile, ofType: mockFile.hasSuffix(".json") ? "" : "json") {
+                if let result = try? JSONSerialization.jsonObject(with: Data(contentsOf: URL(fileURLWithPath: filePath)), options: []) {
+                    finishedCallback(result as? [String: Any], nil)
+                } else {
+                    finishedCallback(nil, NetworkError(code: NetworkError.Code.failure.rawValue, msg: "JSON 文件格式不正确，解析失败", data: nil))
+                    print("Error: JSON 文件格式不正确，解析失败")
+                }
+                
+                return nil
+            }
+            
             if !shared.isReachable {
-                finishedCallback(nil, NetworkError(code: .offline, msg: "网络异常"))
-                NotificationCenter.default.post(name: Notification.Name.Network.noConnection, object: path)
+                finishedCallback(nil, NetworkError(code: NetworkError.Code.offline.rawValue, msg: "网络无连接，请检查网络", data: ["url": url]))
+                NotificationCenter.default.post(name: Notification.Name.Network.noConnection, object: url)
+                print("Error: \(url) 网络异常")
 
                 return nil
             }
             
-            var request = URLRequest(url: URL(string: (shared.host + path))!)
+            var request = URLRequest(url: URL(string: url)!)
             request.httpMethod = method.rawValue
             
-            if method == .post {
-                request.httpBody = parameters.toJSON()
-            }
-
             if canIgnore(request, manager: shared.manager) {
                 return nil
             }
             
-            request = try URLEncoding.default.encode(request, with: parameters)
+            if method == .post, postJSONBody {
+                request = try JSONEncoding.default.encode(request, with: parameters)
+            } else {
+                request = try URLEncoding.default.encode(request, with: parameters)
+            }
 
             return shared.manager.request(request).validate().responseJSON { response in
                 DispatchQueue.main.async {
                     switch response.result {
                     case .success(let value):
-                        finishedCallback(value as? [String: Any] ?? [:], nil)
+                        finishedCallback(value as? [String: Any], nil)
                     case .failure(let error):
-                        finishedCallback(nil, NetworkError(code: .failure, msg: error.localizedDescription))
+                        finishedCallback(nil, NetworkError(code: NetworkError.Code.failure.rawValue, msg: error.localizedDescription, data: [:]))
                         print("Error: \(response.request?.url?.path ?? "") \(error)")
                     }
                 }
             }
         } catch let error {
-            finishedCallback(nil, NetworkError(code: .failure, msg: error.localizedDescription))
-            print("Error: \(path) \(error)")
+            finishedCallback(nil, NetworkError(code: NetworkError.Code.failure.rawValue, msg: "请求失败，请稍后重试", data: ["url": url]))
+            print("Error: \(url) \(error)")
         }
         
         return nil
     }
     
-    /// 发送 upload 请求，需要限制上传大小的功能 maxSize 需要指定值，单位 kb
+    /// 发送 upload 请求，仅支持上传图片，maxSize 可限制图片上传大小(单位 kb)，gif图需要以 data 形式传入，其它图片可以是 data 或 UIImage（注：图片最好都是以 url 初始化成 data，这样文件大小不会像 UIImage 那样暴涨）
     @discardableResult
-    public static func upload(_ path: String, data: Data?, finishedCallback: @escaping (_ result: [String: Any]?, _ error: NetworkError?) -> Void) -> DataRequest? {
-        guard let uploadData = data else {
-            return nil
-        }
-        
+    public static func upload(_ url: String, parameters: [String: Any] = [:], datas: [String: Any?]?, maxSize: Int = 0, finishedCallback: @escaping (_ response: AFDataResponse<Any>?, _ error: NetworkError?) -> Void) -> DataRequest? {
         if !shared.isReachable {
-            finishedCallback(nil, NetworkError(code: .offline, msg: "网络异常"))
-            NotificationCenter.default.post(name: Notification.Name.Network.noConnection, object: path)
+            finishedCallback(nil, NetworkError(code: NetworkError.Code.offline.rawValue, msg: "网络无连接，请检查网络", data: ["url": url]))
+            NotificationCenter.default.post(name: Notification.Name.Network.noConnection, object: url)
+            print("Error: \(url) 网络异常")
             
             return nil
         }
-
-        let boundary = UUID().uuidString
         
-        var request = URLRequest(url: URL(string: (shared.host + path))!)
-        request.setValue("multipart/form-data; charset=utf-8; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        var request = URLRequest(url: URL(string: url)!)
+        request.httpMethod = "POST"
         
         if canIgnore(request, manager: shared.manager) {
             return nil
         }
         
-        return shared.manager.upload(getUploadData(uploadData, boundary: boundary), with: request).validate().responseJSON { response in
-            DispatchQueue.main.async {
-                switch response.result {
-                case .success(let value):
-                    finishedCallback(value as? [String: Any] ?? [:], nil)
-                case .failure(let error):
-                    finishedCallback(nil, NetworkError(code: .failure, msg: error.localizedDescription))
-                    print("Error: \(response.request?.url?.path ?? "") \(error)")
+        return shared.manager.upload(multipartFormData: { multipartFormData in
+            parameters.forEach { (key, value) in
+                multipartFormData.append("\(value)".data(using: .utf8)!, withName: key)
+            }
+            
+            datas?.forEach({ (key, value) in
+                if let image = value as? UIImage {
+                    if let data = image.compressionQuality(size: maxSize) {
+                        multipartFormData.append(data, withName: key, fileName: "\(key).jpg", mimeType: "image/jpg")
+                    }
+                } else if let data = value as? Data {
+                    if data.kf.imageFormat == .GIF {
+                        multipartFormData.append(data, withName: key, fileName: "\(key).gif", mimeType: "image/gif")
+                    } else {
+                        if let data2 = UIImage(data: data)?.compressionQuality(size: maxSize) {
+                            multipartFormData.append(data2, withName: key, fileName: "\(key).jpg", mimeType: "image/jpg")
+                        }
+                    }
                 }
+            })
+        }, to: url).validate().responseJSON { response in
+            DispatchQueue.main.async {
+                finishedCallback(response, nil)
             }
         }
     }
@@ -230,20 +241,6 @@ extension Network {
         }
         
         return canIgnore
-    }
-    
-    /// 需要上传的数据
-    private static func getUploadData(_ uploadData: Data, boundary: String) -> Data {
-        var data = Data()
-        data.append("--\(boundary)\r\n".data(using: .utf8)!)
-        
-        data.append("Content-Disposition:form-data; name=\"file\"; filename=\"file\"\r\n".data(using: .utf8)!)
-        data.append("Content-Type: multipart/form-data\r\n\r\n".data(using: .utf8)!)
-        data.append(uploadData)
-        
-        data.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
-        
-        return data
     }
     
     /// 取消所有请求

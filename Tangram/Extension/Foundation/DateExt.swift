@@ -175,12 +175,21 @@ extension Date {
     public func adding(_ component: Calendar.Component, value: Int) -> Date {
         return Calendar.current.date(byAdding: component, value: value, to: self)!
     }
+}
 
+extension Date {
+    /// 时间描述
     public func timePassed() -> String {
         let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: self, to: Date())
         
-        if components.day! >= 3 {
-            return string(withFormat: "MM月dd日")
+        if components.year! >= 1 {
+            return string(withFormat: "YYYY-M-d")
+        } else if components.month! >= 1 {
+            return string(withFormat: "YYYY-M-d")
+        } else if components.day! >= 28 {
+            return string(withFormat: "YYYY-M-d")
+        } else if components.day! >= 7 {
+            return "\(Int(floor(Double(components.day! / 7))))周前"
         } else if components.day! >= 1 {
             return "\(components.day!)天前"
         } else if components.hour! >= 1 {

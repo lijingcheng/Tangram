@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 extension UIView {
     /// 坐标 x
@@ -63,6 +64,8 @@ extension UIView {
         }
     }
     
+    // MARK: -
+    
     /// 设置边框颜色
     @IBInspectable public var borderColor: UIColor? {
         get {
@@ -101,10 +104,9 @@ extension UIView {
     
     /// 设置部分边框
     public func roundCorners(_ corners: UIRectCorner, radius: CGFloat) {
-        let maskLayer = CAShapeLayer()
-        maskLayer.path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius)).cgPath
-        
-        layer.mask = maskLayer
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius)).cgPath
+        layer.mask = shapeLayer
     }
     
     /// 设置部分边框（加了阴影后就需要用这种方式加边框）
@@ -128,6 +130,7 @@ extension UIView {
         layer.shadowRadius = radius
         layer.shadowOpacity = opacity
         layer.shadowColor = color.cgColor
+        
         if let radius = cornerRadius {
             layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: radius).cgPath
         }
@@ -135,8 +138,7 @@ extension UIView {
     
     /// 截屏
     public func screenshot() -> UIImage {
-        let renderer = UIGraphicsImageRenderer(bounds: bounds)
-        return renderer.image { rendererContext in
+        return UIGraphicsImageRenderer(bounds: bounds).image { rendererContext in
             layer.render(in: rendererContext.cgContext)
         }
     }
@@ -149,6 +151,21 @@ extension UIView {
     /// 删除视图下的所有 subview
     public func removeAllSubviews() {
         subviews.forEach({ $0.removeFromSuperview() })
+    }
+    
+    /// 获取 view 中的第一响应者
+    public var firstResponder: UIView? {
+        guard !isFirstResponder else {
+            return self
+        }
+
+        for subview in subviews {
+            if let firstResponder = subview.firstResponder {
+                return firstResponder
+            }
+        }
+
+        return nil
     }
     
     /// 获取当前视图所在的 ViewController
@@ -185,11 +202,11 @@ extension UIView {
 
 extension UIView {
     public enum presentStyle: Int {
-        case center, bottom
+        case center, bottom, top
     }
-
+    
     /// 自定义视图弹出效果支持从中间出来和从底下出来，背景视图支持点击消失
-    public func present(_ from: presentStyle = .center, tapBGClose: Bool = false, completionHandler: @escaping () -> Void = {}) {
+    public func present(_ from: presentStyle = .center, tapBackgroundClose: Bool = false, isFullScreenDisplay: Bool = false, useSafeArea: Bool = false, completionHandler: @escaping () -> Void = {}) {
         guard let window = UIApplication.shared.windows.first else {
             return
         }
@@ -198,25 +215,39 @@ extension UIView {
         
         tag = 1010122
         
+        if isFullScreenDisplay {
+            frame = window.bounds
+        }
+        
         let backgroundView = UIView(frame: window.bounds)
         backgroundView.backgroundColor = UIColor.black
         backgroundView.alpha = 0.0
         backgroundView.tag = 1010123
-        if tapBGClose {
+
+        // 避免多次 present 同一视图
+        let targetClassName = (parentViewController != nil) ? parentViewController?.className : self.className
+        
+        window.subviews.forEach { view in
+            if view.className == targetClassName {
+                view.removeFromSuperview()
+                window.viewWithTag(1010123)?.removeFromSuperview()
+            }
+        }
+
+        window.addSubview(backgroundView)
+        window.addSubview(self)
+
+        let disposeBag = DisposeBag()
+        RxKeyboard.instance.visibleHeight.drive(onNext: { [weak self] keyboardVisibleHeight in
+            self?.y = (Device.height - keyboardVisibleHeight - (self?.height ?? 0)) / 2
+        }).disposed(by: disposeBag)
+        
+        if tapBackgroundClose {
             backgroundView.isUserInteractionEnabled = true
             let tapGR = UITapGestureRecognizer(target: self, action: #selector(backgroundViewOnClick))
             backgroundView.addGestureRecognizer(tapGR)
         }
         
-        window.subviews.forEach { [weak self] view in // 避免多次 addSubview
-            if view.className == self?.className {
-                view.removeFromSuperview()
-                window.viewWithTag(1010123)?.removeFromSuperview()
-            }
-        }
-        
-        window.addSubviews(backgroundView, self)
-
         if from == .center {
             alpha = 0.0
             transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
@@ -228,14 +259,31 @@ extension UIView {
             }, completion: { (succes) in
                 completionHandler()
             })
-        } else {
-            y = Device.height
+        } else if from == .top {
+            y = -height
             alpha = 1
-
+            
             UIView.animate(withDuration: 0.3, animations: {
                 backgroundView.alpha = 0.4
                 
-                self.y = Device.height - self.height
+                self.y = 0
+            }, completion: { (succes) in
+                completionHandler()
+            })
+        } else {
+            y = Device.height
+            alpha = 1
+            
+            var newY = Device.height - height
+            
+            if useSafeArea, #available(iOS 11.0, *) {
+                newY -= safeAreaInsets.bottom
+            }
+            
+            UIView.animate(withDuration: 0.3, animations: {
+                backgroundView.alpha = 0.4
+                
+                self.y = newY
             }, completion: { (succes) in
                 completionHandler()
             })
@@ -244,30 +292,26 @@ extension UIView {
     
     /// 移除自定义视图
     public func dismiss(_ completionHandler: @escaping () -> Void = {}) {
-        guard  let window = UIApplication.shared.windows.first else {
+        guard let window = UIApplication.shared.windows.first else {
             return
         }
         
         window.endEditing(true)
         
         var backgroundView: UIView?
-        var currentView: UIView?
         
         window.subviews.forEach { subview in
             if subview.tag == 1010123 {
                 backgroundView = subview
             }
-            if subview.tag == 1010122 {
-                currentView = subview
-            }
         }
         
         UIView.animate(withDuration: 0.3, animations: {
             backgroundView?.alpha = 0
-            currentView?.alpha = 0
+            self.alpha = 0
         }, completion: { completed in
             backgroundView?.removeFromSuperview()
-            currentView?.removeFromSuperview()
+            self.removeFromSuperview()
             
             completionHandler()
         })
@@ -275,5 +319,53 @@ extension UIView {
     
     @objc private func backgroundViewOnClick() {
         dismiss()
+    }
+}
+
+extension UIView {
+    typealias GradientPoints = (startPoint: CGPoint, endPoint: CGPoint)
+
+    public enum GradientOrientation {
+        case horizontal
+        case vertical
+        case topLeftBottomRight
+        case topRightBottomLeft
+        
+        var startPoint: CGPoint {
+            return points.startPoint
+        }
+        
+        var endPoint: CGPoint {
+            return points.endPoint
+        }
+        
+        var points: GradientPoints {
+            switch self {
+            case .topRightBottomLeft:
+                return (CGPoint(x: 0.0, y: 1.0), CGPoint(x: 1.0, y: 0.0))
+            case .topLeftBottomRight:
+                return (CGPoint(x: 0.0, y: 0.0), CGPoint(x: 1, y: 1))
+            case .horizontal:
+                return (CGPoint(x: 0.0, y: 0.5), CGPoint(x: 1.0, y: 0.5))
+            case .vertical:
+                return (CGPoint(x: 0.0, y: 0.0), CGPoint(x: 0.0, y: 1.0))
+            }
+        }
+    }
+    
+    /// 给视图添加渐变色的代码需要放到 layoutSubviews 或 viewWillLayoutSubviews 中，否则 layer 的 frame 会有问题
+    public func applyGradient(_ colors: [UIColor], orientation: GradientOrientation) {
+        for layer in layer.sublayers ?? [] where layer.className == "CAGradientLayer" {
+            layer.removeFromSuperlayer()
+        }
+        
+        let gradient: CAGradientLayer = CAGradientLayer()
+        gradient.frame = bounds
+        gradient.colors = colors.map { $0.cgColor }
+        gradient.startPoint = orientation.startPoint
+        gradient.endPoint = orientation.endPoint
+        gradient.locations = nil
+        
+        layer.insertSublayer(gradient, at: 0)
     }
 }

@@ -6,7 +6,6 @@
 //  Copyright © 2019 李京城. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 /// 支持不同状态下设置文案
@@ -54,6 +53,8 @@ class RefreshView: UIView {
                     }
                 }
             }
+            
+            setNeedsLayout()
         }
     }
 

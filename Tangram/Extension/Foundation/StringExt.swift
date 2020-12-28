@@ -32,10 +32,40 @@ extension String {
     public var urlDecode: String {
         return removingPercentEncoding!
     }
+    
+    /// 将字符串复制到前贴板
+    public func copyToPasteboard() {
+        return UIPasteboard.general.string = self
+    }
 
     /// 是否是手机号（1打头的11位数字）
     public var isPhoneNumber: Bool {
         return NSPredicate(format: "SELF MATCHES %@", "^1[0-9]{10}$").evaluate(with: self)
+    }
+    
+    /// 是否是邮箱
+    public var isEmail: Bool {
+        return NSPredicate(format: "SELF MATCHES %@", "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}").evaluate(with: self)
+    }
+    
+    /// 是否包含  Emoji
+    public var containsEmoji: Bool {
+        for scalar in unicodeScalars {
+            switch scalar.value {
+            case 0x1F600...0x1F64F, // Emoticons
+                 0x1F300...0x1F5FF, // Misc Symbols and Pictographs
+                 0x1F680...0x1F6FF, // Transport and Map
+                 0x2600...0x26FF,   // Misc symbols
+                 0x2700...0x27BF,   // Dingbats
+                 0xFE00...0xFE0F,   // Variation Selectors
+                 0x1F900...0x1F9FF, // Supplemental Symbols and Pictographs
+                 0x1F1E6...0x1F1FF: // Flags
+                return true
+            default:
+                continue
+            }
+        }
+        return false
     }
     
     /// 136****3119, 星号也可设置成别的字符
@@ -60,6 +90,25 @@ extension String {
         let dateFormatter = Date.formatter
         dateFormatter.dateFormat = format
         return dateFormatter.date(from: self)
+    }
+    
+    /// 生成二维码
+    public func generateQRImage() -> UIImage? {
+        let qrFilter = CIFilter(name: "CIQRCodeGenerator")!
+        qrFilter.setValue(data(using: .utf8, allowLossyConversion: false), forKey: "inputMessage")
+        qrFilter.setValue("H", forKey: "inputCorrectionLevel")
+        
+        let colorFilter = CIFilter(name: "CIFalseColor")!
+        colorFilter.setDefaults()
+        colorFilter.setValue(qrFilter.outputImage, forKey: "inputImage")
+        colorFilter.setValue(CIColor(red: 0, green: 0, blue: 0), forKey: "inputColor0")
+        colorFilter.setValue(CIColor(red: 1, green: 1, blue: 1), forKey: "inputColor1")
+         
+        if let outputImage = colorFilter.outputImage {
+            return UIImage(ciImage: outputImage.transformed(by: CGAffineTransform(scaleX: 5, y: 5)))
+        }
+        
+        return nil
     }
     
     /// 转成 JSON 对象

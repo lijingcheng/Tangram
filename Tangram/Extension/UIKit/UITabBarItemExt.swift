@@ -10,7 +10,7 @@ import UIKit
 
 extension UITabBarItem {
     /// 设置 TabBarItem 上有新消息时的标识
-    public func tinyRedDot(_ show: Bool) {
+    public func tinyRedDot(_ show: Bool, color: UIColor? = .red) {
         let views = value(forKey: "view") as? UIView
         
         views?.subviews.forEach { (subView) in
@@ -20,7 +20,7 @@ extension UITabBarItem {
                 if show {
                     let dotView = UIView(frame: CGRect(x: subView.width, y: 0, width: 8, height: 8))
                     dotView.tag = 108801
-                    dotView.backgroundColor = .red
+                    dotView.backgroundColor = color
                     dotView.cornerRadius = 4
                     
                     subView.addSubview(dotView)
