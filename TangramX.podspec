@@ -15,7 +15,6 @@ s.resource_bundles = { 'Tangram' => ['Tangram/Assets.xcassets'] }
 
 s.dependency 'Alamofire', '5.4.1'
 s.dependency 'Kingfisher', '5.15.8'
-s.dependency 'SwiftyJSON', '5.0.0'
 s.dependency 'SnapKit', '5.0.1'
 s.dependency 'R.swift', '5.3.1'
 s.dependency 'RxSwift', '6.0.0-rc.2'

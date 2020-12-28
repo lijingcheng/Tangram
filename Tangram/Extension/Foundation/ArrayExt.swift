@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SwiftyJSON
 
 extension Array {
     /// 根据类型将字典转成指定对象

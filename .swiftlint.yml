@@ -6,6 +6,7 @@ included: # 执行 linting 时包含的路径。
 excluded: # 执行 linting 时忽略的路径。 优先级比 included 高。
 - Carthage
 - Pods
+- Tangram/Component/Vendors
 
 disabled_rules: # 执行时排除掉的规则
 - trailing_whitespace # Lines should not have trailing whitespace.

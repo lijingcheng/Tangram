@@ -31,6 +31,7 @@
 		F3393733238E7CFE00D76D4B /* TagListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3393732238E7CFE00D76D4B /* TagListView.swift */; };
 		F3689C4E230FD8D4005447BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3689C4D230FD8D4005447BA /* AppDelegate.swift */; };
 		F37457E42599723A006D3DE2 /* RxKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37457E02599723A006D3DE2 /* RxKeyboard.swift */; };
+		F3745A162599A874006D3DE2 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3745A152599A873006D3DE2 /* SwiftyJSON.swift */; };
 		F38570C42317DFDF0043EBC2 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38570C32317DFDF0043EBC2 /* App.swift */; };
 		F385710B2318C7130043EBC2 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = F385710A2318C7130043EBC2 /* R.generated.swift */; };
 		F385710D2318C7250043EBC2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F385710C2318C7250043EBC2 /* Assets.xcassets */; };
@@ -102,6 +103,7 @@
 		F3689C4A230FD8D4005447BA /* Tangram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tangram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3689C4D230FD8D4005447BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F37457E02599723A006D3DE2 /* RxKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxKeyboard.swift; sourceTree = "<group>"; };
+		F3745A152599A873006D3DE2 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		F38570C32317DFDF0043EBC2 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		F385710A2318C7130043EBC2 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		F385710C2318C7250043EBC2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -217,6 +219,7 @@
 		F37457DE259971ED006D3DE2 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				F3745A152599A873006D3DE2 /* SwiftyJSON.swift */,
 				F37457E02599723A006D3DE2 /* RxKeyboard.swift */,
 			);
 			path = Vendors;
@@ -484,6 +487,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3745A162599A874006D3DE2 /* SwiftyJSON.swift in Sources */,
 				F3393671238D2A3500D76D4B /* RefreshView.swift in Sources */,
 				F339366F238D2A2A00D76D4B /* LoadMoreView.swift in Sources */,
 				F38BBE902330D06A00A194AE /* UIViewExt.swift in Sources */,

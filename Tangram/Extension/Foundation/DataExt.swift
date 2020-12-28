@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SwiftyJSON
 
 extension Data {
     /// 追加数据
