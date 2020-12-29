@@ -55,8 +55,6 @@ class LoadMoreView: UIView {
         }
     }
     
-    private var observeContentSize: NSKeyValueObservation?
-    
     private let disposeBag = DisposeBag()
     
     // MARK: -
@@ -101,13 +99,9 @@ class LoadMoreView: UIView {
             }
         }).disposed(by: disposeBag)
         
-        observeContentSize = scrollView.observe(\.contentSize) { [weak self] (scrollView, change) in
-            guard let self = self else {
-                return
-            }
-            
-            self.setNeedsLayout()
-        }
+        scrollView.rx.observeWeakly(UIScrollView.self, "contentSize").subscribe(onNext: { [weak self] change in
+            self?.setNeedsLayout()
+        }).disposed(by: disposeBag)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -165,10 +159,6 @@ class LoadMoreView: UIView {
         refreshStatus = .none
         
         setNeedsLayout()
-    }
-    
-    deinit {
-        observeContentSize?.invalidate()
     }
 }
 
