@@ -19,7 +19,7 @@ extension FileManager {
             resourceValues.isExcludedFromBackup = true
             try url.setResourceValues(resourceValues)
         } catch {
-            print("Error: failed to set resource value")
+            print("Error: failed to set resource value.")
         }
         
         return url.appendingPathComponent(fileName).path

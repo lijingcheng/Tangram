@@ -57,8 +57,6 @@ public class Router {
                     visibleVC.navigationController?.push(vc, animated: animated, completion: completion)
                 }
             }
-        } else {
-            print("error: view controller 为 nil")
         }
     }
 
@@ -240,7 +238,7 @@ extension UIViewController {
             }
         }
         
-        print("\(className) 类中不存在属性：\(key)")
+        print("\(className) 类中不存在属性：\(key).")
     }
 }
 

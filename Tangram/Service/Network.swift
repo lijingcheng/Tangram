@@ -92,14 +92,13 @@ public class Network {
     
     /// 发送 http 请求，支持 mock
     @discardableResult
-    public static func request(_ url: String, method: HTTPMethod, parameters: [String: Any], postJSONBody: Bool = false, mockFile: String = "", finishedCallback: @escaping (_ result: [String: Any]?, _ error: NetworkError?) -> Void) -> DataRequest? {
+    public static func request(_ url: String, method: HTTPMethod, parameters: [String: Any], postJSONBody: Bool = false, mockFile: String = "", finishedCallback: @escaping (_ result: Any?, _ error: NetworkError?) -> Void) -> DataRequest? {
         do {
             if App.isDebugMode, !mockFile.isEmpty, let filePath = Bundle.main.path(forResource: mockFile, ofType: mockFile.hasSuffix(".json") ? "" : "json") {
                 if let result = try? JSONSerialization.jsonObject(with: Data(contentsOf: URL(fileURLWithPath: filePath)), options: []) {
-                    finishedCallback(result as? [String: Any], nil)
+                    finishedCallback(result, nil)
                 } else {
                     finishedCallback(nil, NetworkError(code: NetworkError.Code.failure.rawValue, msg: "JSON 文件格式不正确，解析失败", data: nil))
-                    print("Error: JSON 文件格式不正确，解析失败")
                 }
                 
                 return nil
@@ -108,7 +107,6 @@ public class Network {
             if !shared.isReachable {
                 finishedCallback(nil, NetworkError(code: NetworkError.Code.offline.rawValue, msg: "网络无连接，请检查网络", data: ["url": url]))
                 NotificationCenter.default.post(name: Notification.Name.Network.noConnection, object: url)
-                print("Error: \(url) 网络异常")
 
                 return nil
             }
@@ -130,16 +128,14 @@ public class Network {
                 DispatchQueue.main.async {
                     switch response.result {
                     case .success(let value):
-                        finishedCallback(value as? [String: Any], nil)
+                        finishedCallback(value, nil)
                     case .failure(let error):
                         finishedCallback(nil, NetworkError(code: NetworkError.Code.failure.rawValue, msg: error.localizedDescription, data: [:]))
-                        print("Error: \(response.request?.url?.path ?? "") \(error)")
                     }
                 }
             }
-        } catch let error {
+        } catch _ {
             finishedCallback(nil, NetworkError(code: NetworkError.Code.failure.rawValue, msg: "请求失败，请稍后重试", data: ["url": url]))
-            print("Error: \(url) \(error)")
         }
         
         return nil
@@ -147,11 +143,10 @@ public class Network {
     
     /// 发送 upload 请求，仅支持上传图片，maxSize 可限制图片上传大小(单位 kb)，gif图需要以 data 形式传入，其它图片可以是 data 或 UIImage（注：图片最好都是以 url 初始化成 data，这样文件大小不会像 UIImage 那样暴涨）
     @discardableResult
-    public static func upload(_ url: String, parameters: [String: Any] = [:], datas: [String: Any?]?, maxSize: Int = 0, finishedCallback: @escaping (_ response: AFDataResponse<Any>?, _ error: NetworkError?) -> Void) -> DataRequest? {
+    public static func upload(_ url: String, parameters: [String: Any] = [:], datas: [String: Any?]?, maxSize: Int = 0, finishedCallback: @escaping (_ result: Any?, _ error: NetworkError?) -> Void) -> DataRequest? {
         if !shared.isReachable {
             finishedCallback(nil, NetworkError(code: NetworkError.Code.offline.rawValue, msg: "网络无连接，请检查网络", data: ["url": url]))
             NotificationCenter.default.post(name: Notification.Name.Network.noConnection, object: url)
-            print("Error: \(url) 网络异常")
             
             return nil
         }
@@ -185,7 +180,12 @@ public class Network {
             })
         }, to: url).validate().responseJSON { response in
             DispatchQueue.main.async {
-                finishedCallback(response, nil)
+                switch response.result {
+                case .success(let value):
+                    finishedCallback(value, nil)
+                case .failure(let error):
+                    finishedCallback(nil, NetworkError(code: NetworkError.Code.failure.rawValue, msg: error.localizedDescription, data: [:]))
+                }
             }
         }
     }
@@ -219,9 +219,8 @@ public class Network {
                 switch response.result {
                 case .success:
                     finishedCallback(true)
-                case .failure(let error):
+                case .failure:
                     finishedCallback(false)
-                    print("Error: \(response.request?.url?.path ?? "") \(error)")
                 }
             }
         }

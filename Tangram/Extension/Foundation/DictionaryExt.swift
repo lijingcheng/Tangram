@@ -15,7 +15,7 @@ extension Dictionary {
         do {
             data = try JSONDecoder().decode(type, from: (toJSONString()?.data(using: .utf8))!)
         } catch let error {
-            print("Error: decode fail \(error)")
+            print("Error: decode fail \(error).")
         }
         
         return data

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name         = 'TangramX'
-s.version      = '0.0.3'
+s.version      = '0.0.4'
 s.author       = { 'lijingcheng' => 'bj_lijingcheng@163.com' }
 s.license      = { :type => 'MIT', :file => 'LICENSE' }
 s.homepage     = 'https://github.com/lijingcheng/Tangram'
