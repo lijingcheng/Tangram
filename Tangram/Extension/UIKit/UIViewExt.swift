@@ -109,21 +109,6 @@ extension UIView {
         layer.mask = shapeLayer
     }
     
-    /// 设置部分边框（加了阴影后就需要用这种方式加边框）
-    public func roundedCornersWhenHasShadow(_ cornersToRound: UIRectCorner, cornerRadius: CGSize, color: UIColor) {
-        let maskLayer = CAShapeLayer()
-        maskLayer.frame = bounds
-        maskLayer.path = UIBezierPath(roundedRect: bounds, byRoundingCorners: cornersToRound, cornerRadii: cornerRadius).cgPath
-        
-        let roundedLayer = CALayer()
-        roundedLayer.backgroundColor = color.cgColor
-        roundedLayer.frame = bounds
-        roundedLayer.mask = maskLayer
-        
-        layer.insertSublayer(roundedLayer, at: 0)
-        backgroundColor = .clear
-    }
-    
     /// 加阴影
     public func addShadow(offset: CGSize, radius: CGFloat = 3, color: UIColor, opacity: Float, cornerRadius: CGFloat? = nil) {
         layer.shadowOffset = offset
@@ -132,6 +117,7 @@ extension UIView {
         layer.shadowColor = color.cgColor
         
         if let radius = cornerRadius {
+            layer.masksToBounds = false
             layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: radius).cgPath
         }
     }

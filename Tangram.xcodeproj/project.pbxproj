@@ -29,6 +29,7 @@
 		F3393687238E62D600D76D4B /* StepperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3393686238E62D600D76D4B /* StepperView.swift */; };
 		F3393731238E689C00D76D4B /* MultipleLinesFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3393730238E689C00D76D4B /* MultipleLinesFlowLayout.swift */; };
 		F3393733238E7CFE00D76D4B /* TagListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3393732238E7CFE00D76D4B /* TagListView.swift */; };
+		F34C848825AD53A700B1BA8C /* SegmentControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34C848725AD53A700B1BA8C /* SegmentControl.swift */; };
 		F3689C4E230FD8D4005447BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3689C4D230FD8D4005447BA /* AppDelegate.swift */; };
 		F37457E42599723A006D3DE2 /* RxKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37457E02599723A006D3DE2 /* RxKeyboard.swift */; };
 		F3745A162599A874006D3DE2 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3745A152599A873006D3DE2 /* SwiftyJSON.swift */; };
@@ -100,6 +101,7 @@
 		F3393686238E62D600D76D4B /* StepperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperView.swift; sourceTree = "<group>"; };
 		F3393730238E689C00D76D4B /* MultipleLinesFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleLinesFlowLayout.swift; sourceTree = "<group>"; };
 		F3393732238E7CFE00D76D4B /* TagListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListView.swift; sourceTree = "<group>"; };
+		F34C848725AD53A700B1BA8C /* SegmentControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentControl.swift; sourceTree = "<group>"; };
 		F3689C4A230FD8D4005447BA /* Tangram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tangram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3689C4D230FD8D4005447BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F37457E02599723A006D3DE2 /* RxKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxKeyboard.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 				F3393684238E5B0200D76D4B /* DatePicker.swift */,
 				F339367E238D2AD300D76D4B /* BannerView.swift */,
 				F3393732238E7CFE00D76D4B /* TagListView.swift */,
+				F34C848725AD53A700B1BA8C /* SegmentControl.swift */,
 				F3393686238E62D600D76D4B /* StepperView.swift */,
 				F3393682238E569B00D76D4B /* PlaceHolderTextView.swift */,
 				F3393680238D34BF00D76D4B /* TouchAreaLargenButton.swift */,
@@ -383,7 +386,7 @@
 				TargetAttributes = {
 					F3689C49230FD8D4005447BA = {
 						CreatedOnToolsVersion = 11.0;
-						LastSwiftMigration = 1100;
+						LastSwiftMigration = 1230;
 					};
 				};
 			};
@@ -540,6 +543,7 @@
 				F38BBEDA2330E0CE00A194AE /* Router.swift in Sources */,
 				F3393733238E7CFE00D76D4B /* TagListView.swift in Sources */,
 				F385710B2318C7130043EBC2 /* R.generated.swift in Sources */,
+				F34C848825AD53A700B1BA8C /* SegmentControl.swift in Sources */,
 				F3393683238E569B00D76D4B /* PlaceHolderTextView.swift in Sources */,
 				F3393685238E5B0200D76D4B /* DatePicker.swift in Sources */,
 				F3393679238D2AB800D76D4B /* Alert.swift in Sources */,
@@ -605,7 +609,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -660,7 +664,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -683,7 +687,7 @@
 				DEVELOPMENT_TEAM = 5NJQ6UMZKW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Tangram/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -712,7 +716,7 @@
 				DEVELOPMENT_TEAM = 5NJQ6UMZKW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Tangram/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

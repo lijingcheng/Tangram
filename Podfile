@@ -11,9 +11,9 @@ use_modular_headers!
 target 'Tangram' do
     pod 'SwiftLint', '0.42.0', :configurations => ['Debug']
     pod 'Alamofire', '5.4.1'
-    pod 'Kingfisher', '5.15.8'
+    pod 'Kingfisher', '6.0.1'
     pod 'SnapKit', '5.0.1'
     pod 'R.swift', '5.3.1'
-    pod 'RxSwift', '6.0.0-rc.2'
-    pod 'RxCocoa', '6.0.0-rc.2'
+    pod 'RxSwift', '6.0.0'
+    pod 'RxCocoa', '6.0.0'
 end

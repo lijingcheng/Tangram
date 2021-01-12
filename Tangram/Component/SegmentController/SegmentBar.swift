@@ -16,6 +16,9 @@ public class SegmentBar: UICollectionView {
     /// 设置未选中 Tab 颜色
     public var unselectedTintColor = UIColor(hex: 0x9B9DA5)!
     
+    /// 用来设置背景渐变色
+    public var backgroundColors: [UIColor]?
+    
     /// 当前 Tab 的 scale
     public var selectedItemScale: CGFloat = 1.0
     
@@ -29,7 +32,14 @@ public class SegmentBar: UICollectionView {
     
     /// 设置 Tab 下面的线的宽
     public var itemLineWidth: CGFloat = 70
-
+    
+    /// 设置当前 item 下短线条的颜色
+    public var itemLineColor = UIColor(hex: 0x30333B)! {
+        didSet {
+            itemLineView.backgroundColor = itemLineColor
+        }
+    }
+    
     lazy var itemLineView: UIView = {
         let itemLineView = UIView(frame: .zero)
         itemLineView.cornerRadius = 1.0
@@ -197,6 +207,10 @@ public class SegmentBar: UICollectionView {
             selectedItemBackgroundImageView.image = rightItemBackgroundImage
         } else {
             selectedItemBackgroundImageView.image = centerItemBackgroundImage
+        }
+        
+        if let colors = backgroundColors {
+            applyGradient(colors, orientation: .vertical)
         }
     }
 
