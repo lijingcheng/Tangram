@@ -19,6 +19,15 @@ public class SegmentBar: UICollectionView {
     /// 用来设置背景渐变色
     public var backgroundColors: [UIColor]?
     
+    /// 是否隐藏 segmentBar 底下的线
+    public var hiddenBottomLine = false {
+        didSet {
+            if hiddenBottomLine {
+                barBottomLineLayer.removeFromSuperlayer()
+            }
+        }
+    }
+    
     /// 当前 Tab 的 scale
     public var selectedItemScale: CGFloat = 1.0
     
