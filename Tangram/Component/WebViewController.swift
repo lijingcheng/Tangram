@@ -58,6 +58,8 @@ public class WebViewController: UIViewController {
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = WKUserContentController()
         configuration.applicationNameForUserAgent = App.Web.userAgent
+        configuration.allowsInlineMediaPlayback = true
+        configuration.mediaTypesRequiringUserActionForPlayback = []
         
         var webViewY: CGFloat = 0
         if #available(iOS 11.0, *) {
