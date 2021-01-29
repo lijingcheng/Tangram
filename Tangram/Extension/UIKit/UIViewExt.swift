@@ -117,8 +117,8 @@ extension UIView {
         layer.shadowColor = color.cgColor
         
         if let radius = cornerRadius {
+            self.cornerRadius = radius
             layer.masksToBounds = false
-            layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: radius).cgPath
         }
     }
     
