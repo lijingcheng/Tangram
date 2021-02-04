@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name         = 'TangramX'
-s.version      = '0.0.5'
+s.version      = '0.0.6'
 s.author       = { 'lijingcheng' => 'bj_lijingcheng@163.com' }
 s.license      = { :type => 'MIT', :file => 'LICENSE' }
 s.homepage     = 'https://github.com/lijingcheng/Tangram'
@@ -14,7 +14,7 @@ s.source_files = 'R.generated.swift', 'Tangram/Base/*.swift', 'Tangram/Extension
 s.resource_bundles = { 'Tangram' => ['Tangram/Assets.xcassets'] }
 
 s.dependency 'Alamofire', '5.4.1'
-s.dependency 'Kingfisher', '6.0.1'
+s.dependency 'Kingfisher', '6.1.0'
 s.dependency 'SnapKit', '5.0.1'
 s.dependency 'R.swift', '5.3.1'
 s.dependency 'RxSwift', '6.0.0'
