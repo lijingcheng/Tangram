@@ -32,7 +32,13 @@ public class WebViewController: UIViewController {
     @objc public var needSafeAreaBottom: ObjCBool = false
     
     /// for h5
-    @objc public var needReloadWebView: ObjCBool = false
+    @objc public var needReloadWebView: ObjCBool = false {
+        didSet {
+            if needReloadWebView.boolValue {
+                webView.reload()
+            }
+        }
+    }
     
     /// 是否支持侧滑返回
     @objc public var canPopGestureRecognizer: ObjCBool = true
@@ -178,15 +184,6 @@ public class WebViewController: UIViewController {
         if !(parent is UINavigationController) {
             webView.frame = CGRect(x: 0, y: 0, width: view.width, height: view.height - (needSafeAreaBottom.boolValue ? Device.safeAreaBottomInset : 0))
             progressView.y = view.y
-        }
-    }
-    
-    override public func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        if needReloadWebView.boolValue {
-            webView.reload()
-            needReloadWebView = false
         }
     }
     
