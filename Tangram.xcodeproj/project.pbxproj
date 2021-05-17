@@ -33,6 +33,7 @@
 		F3689C4E230FD8D4005447BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3689C4D230FD8D4005447BA /* AppDelegate.swift */; };
 		F37457E42599723A006D3DE2 /* RxKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37457E02599723A006D3DE2 /* RxKeyboard.swift */; };
 		F3745A162599A874006D3DE2 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3745A152599A873006D3DE2 /* SwiftyJSON.swift */; };
+		F3778E5D265223F500A06594 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3778E5C265223F500A06594 /* ProgressView.swift */; };
 		F38570C42317DFDF0043EBC2 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38570C32317DFDF0043EBC2 /* App.swift */; };
 		F385710B2318C7130043EBC2 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = F385710A2318C7130043EBC2 /* R.generated.swift */; };
 		F385710D2318C7250043EBC2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F385710C2318C7250043EBC2 /* Assets.xcassets */; };
@@ -106,6 +107,7 @@
 		F3689C4D230FD8D4005447BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F37457E02599723A006D3DE2 /* RxKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxKeyboard.swift; sourceTree = "<group>"; };
 		F3745A152599A873006D3DE2 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
+		F3778E5C265223F500A06594 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		F38570C32317DFDF0043EBC2 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		F385710A2318C7130043EBC2 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		F385710C2318C7250043EBC2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 				F3393678238D2AB800D76D4B /* Alert.swift */,
 				F339367A238D2ABE00D76D4B /* Toast.swift */,
 				F339367C238D2AC700D76D4B /* ProgressHUD.swift */,
+				F3778E5C265223F500A06594 /* ProgressView.swift */,
 				F38571162318C8890043EBC2 /* CountDown.swift */,
 				F3393684238E5B0200D76D4B /* DatePicker.swift */,
 				F339367E238D2AD300D76D4B /* BannerView.swift */,
@@ -543,6 +546,7 @@
 				F38BBEDA2330E0CE00A194AE /* Router.swift in Sources */,
 				F3393733238E7CFE00D76D4B /* TagListView.swift in Sources */,
 				F385710B2318C7130043EBC2 /* R.generated.swift in Sources */,
+				F3778E5D265223F500A06594 /* ProgressView.swift in Sources */,
 				F34C848825AD53A700B1BA8C /* SegmentControl.swift in Sources */,
 				F3393683238E569B00D76D4B /* PlaceHolderTextView.swift in Sources */,
 				F3393685238E5B0200D76D4B /* DatePicker.swift in Sources */,
