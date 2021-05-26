@@ -306,6 +306,35 @@ extension UIView {
     @objc private func backgroundViewOnClick() {
         dismiss()
     }
+    
+    /// 临时去掉 present 效果
+    public func undoPresentEffect() {
+        guard let window = UIApplication.shared.windows.first else { return }
+        
+        window.endEditing(true)
+        
+        window.subviews.forEach { subview in
+            if subview.tag == 1010123 {
+                subview.alpha = 0
+            }
+        }
+        
+        alpha = 0
+    }
+    
+    /// 恢复 present 效果
+    public func resumePresentEffect() {
+        guard let window = UIApplication.shared.windows.first else { return }
+        
+        window.endEditing(true)
+        
+        window.subviews.forEach { subview in
+            if subview.tag == 1010123 {
+                subview.alpha = 0.4
+            }
+        }
+        alpha = 1
+    }
 }
 
 extension UIView {
