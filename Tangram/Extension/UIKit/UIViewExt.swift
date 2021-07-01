@@ -193,7 +193,7 @@ extension UIView {
     
     /// 自定义视图弹出效果支持从中间出来和从底下出来，背景视图支持点击消失
     public func present(_ from: presentStyle = .center, tapBackgroundClose: Bool = false, isFullScreenDisplay: Bool = false, useSafeArea: Bool = false, completionHandler: @escaping () -> Void = {}) {
-        guard let window = UIApplication.shared.windows.first else {
+        guard let window = UIApplication.shared.windows.first, !window.subviews.contains(self) else {
             return
         }
         
@@ -209,16 +209,6 @@ extension UIView {
         backgroundView.backgroundColor = UIColor.black
         backgroundView.alpha = 0.0
         backgroundView.tag = 1010123
-
-        // 避免多次 present 同一视图
-        let targetClassName = (parentViewController != nil) ? parentViewController?.className : self.className
-        
-        window.subviews.forEach { view in
-            if view.className == targetClassName {
-                view.removeFromSuperview()
-                window.viewWithTag(1010123)?.removeFromSuperview()
-            }
-        }
 
         window.addSubview(backgroundView)
         window.addSubview(self)
