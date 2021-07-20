@@ -69,6 +69,7 @@
 		F38BBEDA2330E0CE00A194AE /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BBED92330E0CE00A194AE /* Router.swift */; };
 		F38BBF0C2330E47400A194AE /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BBF0B2330E47400A194AE /* WebViewController.swift */; };
 		F38BC0C22332367A00A194AE /* TimerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BC0C12332367A00A194AE /* TimerExt.swift */; };
+		F3A09F7C26A66A7C00A19DDB /* TextBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A09F7B26A66A7C00A19DDB /* TextBannerView.swift */; };
 		F3BD3C65259573CC00321FEB /* PropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3C64259573CB00321FEB /* PropertyWrapper.swift */; };
 		F3BD3C682595743800321FEB /* WaterFallFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3C672595743800321FEB /* WaterFallFlowLayout.swift */; };
 		F3BD3C6B2595744800321FEB /* CarouselFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3C6A2595744800321FEB /* CarouselFlowLayout.swift */; };
@@ -144,6 +145,7 @@
 		F38BBED92330E0CE00A194AE /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		F38BBF0B2330E47400A194AE /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		F38BC0C12332367A00A194AE /* TimerExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerExt.swift; sourceTree = "<group>"; };
+		F3A09F7B26A66A7C00A19DDB /* TextBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBannerView.swift; sourceTree = "<group>"; };
 		F3BD3C64259573CB00321FEB /* PropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrapper.swift; sourceTree = "<group>"; };
 		F3BD3C672595743800321FEB /* WaterFallFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterFallFlowLayout.swift; sourceTree = "<group>"; };
 		F3BD3C6A2595744800321FEB /* CarouselFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselFlowLayout.swift; sourceTree = "<group>"; };
@@ -322,6 +324,7 @@
 				F38571162318C8890043EBC2 /* CountDown.swift */,
 				F3393684238E5B0200D76D4B /* DatePicker.swift */,
 				F339367E238D2AD300D76D4B /* BannerView.swift */,
+				F3A09F7B26A66A7C00A19DDB /* TextBannerView.swift */,
 				F3393732238E7CFE00D76D4B /* TagListView.swift */,
 				F34C848725AD53A700B1BA8C /* SegmentControl.swift */,
 				F3393686238E62D600D76D4B /* StepperView.swift */,
@@ -498,6 +501,7 @@
 				F339366F238D2A2A00D76D4B /* LoadMoreView.swift in Sources */,
 				F38BBE902330D06A00A194AE /* UIViewExt.swift in Sources */,
 				F3689C4E230FD8D4005447BA /* AppDelegate.swift in Sources */,
+				F3A09F7C26A66A7C00A19DDB /* TextBannerView.swift in Sources */,
 				F38BBEA42330D17400A194AE /* UITabBarItemExt.swift in Sources */,
 				F316D9CF2318CC7B0066FD90 /* UnknownCaseRepresentable.swift in Sources */,
 				F3393731238E689C00D76D4B /* MultipleLinesFlowLayout.swift in Sources */,
