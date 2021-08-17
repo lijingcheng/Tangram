@@ -71,6 +71,15 @@ extension FileManager {
         }
     }
     
+    /// 返回文件大小
+    public func sizeOfFile(_ path: String) -> Int64? {
+        guard let attrs = try? attributesOfItem(atPath: path) else {
+            return nil
+        }
+        
+        return attrs[.size] as? Int64
+    }
+    
     // MARK: -
     private static func caches(_ folderName: String) -> URL {
         let caches = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!

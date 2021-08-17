@@ -60,26 +60,31 @@ extension UIImage {
         
         return UIGraphicsGetImageFromCurrentImageContext()!
     }
-    
     /// 给图片加圆角
     public func withRoundedCorners(radius: CGFloat? = nil) -> UIImage? {
         let maxRadius = min(size.width, size.height) / 2
-        let cornerRadius: CGFloat
-        
-        if let radius = radius, radius > 0 && radius <= maxRadius {
-            cornerRadius = radius
-        } else {
-            cornerRadius = maxRadius
+        let cornerRadius: CGFloat = {
+            guard let radius = radius, radius > 0 else { return maxRadius }
+            return min(radius, maxRadius)
+        }()
+
+        let render = UIGraphicsImageRenderer(size: size)
+        return render.image { (_: UIGraphicsImageRendererContext) in
+            let rect = CGRect(origin: .zero, size: size)
+            UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).addClip()
+            draw(in: rect)
         }
-        
-        UIGraphicsBeginImageContextWithOptions(size, false, scale)
-        
-        let rect = CGRect(origin: .zero, size: size)
-        UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).addClip()
-        draw(in: rect)
-        
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
+    }
+    
+    /// 生成模糊图片
+    public func blur(radius: CGFloat) -> UIImage? {
+        guard let inputImage = CIImage(image: self) else { return nil }
+        let blurFilter = CIFilter.gaussianBlur()
+        blurFilter.inputImage = inputImage
+        blurFilter.radius = Float(radius)
+        guard let outputImage = blurFilter.outputImage else { return nil }
+        guard let cgImage = CIContext().createCGImage(outputImage, from: outputImage.extent) else { return nil }
+        let image = UIImage(cgImage: cgImage, scale: scale, orientation: imageOrientation)
         return image
     }
     
