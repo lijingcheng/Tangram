@@ -98,11 +98,9 @@ public extension App {
     
     struct Data {
         /// 纬度
-        @UserDefault("App.Data.latitude")
         public static var latitude: Double?
         
         /// 经度
-        @UserDefault("App.Data.longitude")
         public static var longitude: Double?
         
         /// 城市 Id

@@ -17,6 +17,11 @@ extension Int {
             return String(format: "%g", Double(self) / 100.0)
         }
     }
+    
+    /// 转换金额：分  ->  元，最多两位小数，金额以 , 分隔（例：500,000.35）
+    public func convertToYuanWithFormat() -> String {
+        return NumberFormatter.localizedString(from: NSNumber(value: Double(self) / 100), number: .decimal)
+    }
 
     /// 将总秒数转成 "14 : 24" 这种格式
     public func convertToTime() -> String {

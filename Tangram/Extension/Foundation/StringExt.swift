@@ -29,7 +29,7 @@ extension String {
     
     /// 将URL中的“%3A%2F%2F”转成正常字符
     public var urlDecode: String {
-        return removingPercentEncoding!
+        return removingPercentEncoding ?? self
     }
     
     /// 将字符串复制到前贴板
