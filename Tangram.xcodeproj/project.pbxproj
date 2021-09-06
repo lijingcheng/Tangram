@@ -76,6 +76,7 @@
 		F3BD3D6325957C4100321FEB /* CLLocationManagerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3D6225957C4100321FEB /* CLLocationManagerExt.swift */; };
 		F3BD3D6625957C7600321FEB /* NotificationNameExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3D6525957C7600321FEB /* NotificationNameExt.swift */; };
 		F3BD3D692595874300321FEB /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3D682595874300321FEB /* TextViewController.swift */; };
+		F3C7562D26E5F94900565D89 /* DecodingContainerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C7562C26E5F94900565D89 /* DecodingContainerExt.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -152,6 +153,7 @@
 		F3BD3D6225957C4100321FEB /* CLLocationManagerExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationManagerExt.swift; sourceTree = "<group>"; };
 		F3BD3D6525957C7600321FEB /* NotificationNameExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNameExt.swift; sourceTree = "<group>"; };
 		F3BD3D682595874300321FEB /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
+		F3C7562C26E5F94900565D89 /* DecodingContainerExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodingContainerExt.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -276,6 +278,7 @@
 				F38BBEC52330D98800A194AE /* DispatchQueueExt.swift */,
 				F3BD3D6525957C7600321FEB /* NotificationNameExt.swift */,
 				F3BD3D6225957C4100321FEB /* CLLocationManagerExt.swift */,
+				F3C7562C26E5F94900565D89 /* DecodingContainerExt.swift */,
 				F38BBEC72330D99700A194AE /* FileManagerExt.swift */,
 			);
 			path = Foundation;
@@ -521,6 +524,7 @@
 				F38BBE9A2330D0B200A194AE /* UILabelExt.swift in Sources */,
 				F38BBF0C2330E47400A194AE /* WebViewController.swift in Sources */,
 				F38BC0C22332367A00A194AE /* TimerExt.swift in Sources */,
+				F3C7562D26E5F94900565D89 /* DecodingContainerExt.swift in Sources */,
 				F339367F238D2AD300D76D4B /* BannerView.swift in Sources */,
 				F38BBEB62330D90B00A194AE /* DateExt.swift in Sources */,
 				F38570C42317DFDF0043EBC2 /* App.swift in Sources */,
