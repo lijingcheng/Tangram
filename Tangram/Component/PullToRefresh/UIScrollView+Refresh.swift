@@ -77,4 +77,12 @@ extension UIScrollView {
     public func endPullRefresh() {
         pullToRefreshView?.endRefresh()
     }
+    
+    /// 重置下拉刷新和上拉加载功能，可以在调用 support 后用此方法禁用下拉刷新功能
+    public func reset() {
+        pullToRefreshView?.removeFromSuperview()
+        loadMoreView?.removeFromSuperview()
+        
+        pageIndex = 1
+    }
 }

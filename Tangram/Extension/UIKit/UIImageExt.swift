@@ -76,18 +76,6 @@ extension UIImage {
         }
     }
     
-    /// 生成模糊图片
-    public func blur(radius: CGFloat) -> UIImage? {
-        guard let inputImage = CIImage(image: self) else { return nil }
-        let blurFilter = CIFilter.gaussianBlur()
-        blurFilter.inputImage = inputImage
-        blurFilter.radius = Float(radius)
-        guard let outputImage = blurFilter.outputImage else { return nil }
-        guard let cgImage = CIContext().createCGImage(outputImage, from: outputImage.extent) else { return nil }
-        let image = UIImage(cgImage: cgImage, scale: scale, orientation: imageOrientation)
-        return image
-    }
-    
     /// 将图片压缩到指定大小，单位 kb
     public func compressionQuality(size: Int) -> Data? {
         guard size > 0 else {

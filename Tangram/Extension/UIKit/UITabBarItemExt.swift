@@ -18,7 +18,7 @@ extension UITabBarItem {
                 subView.viewWithTag(108801)?.removeFromSuperview()
                 
                 if show {
-                    let dotView = UIView(frame: CGRect(x: subView.width, y: 0, width: 8, height: 8))
+                    let dotView = UIView(frame: CGRect(x: (subView.width > 0) ? subView.width : 30, y: 0, width: 8, height: 8))
                     dotView.tag = 108801
                     dotView.backgroundColor = color
                     dotView.cornerRadius = 4
