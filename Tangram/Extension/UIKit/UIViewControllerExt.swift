@@ -17,6 +17,8 @@ extension UIViewController {
         static var isFullScreenViewControllerKey = "UIViewController.isFullScreenViewControllerdKey"
         static var supportPushSelfKey = "UIViewController.supportPushSelfKey"
         static var modelParamsKey = "UIViewController.modelParamsKey"
+        static var supportPopGestureRecognizerKey = "UIViewController.supportPopGestureRecognizerKey"
+        static var callbackDatasKey = "UIViewController.callbackDatasKey"
     }
     
     /// 是否要支持屏幕旋转
@@ -60,6 +62,26 @@ extension UIViewController {
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.modelParamsKey, newValue, .OBJC_ASSOCIATION_COPY)
         }
+    }
+    
+    /// 是否支持侧滑返回手势，默认 true
+    public var supportPopGestureRecognizer: Bool {
+        get {
+            let value = objc_getAssociatedObject(self, &AssociatedKeys.supportPopGestureRecognizerKey) as? Bool
+            return value ?? true
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.supportPopGestureRecognizerKey, newValue, .OBJC_ASSOCIATION_ASSIGN)
+        }
+    }
+    
+    /// 用于跨组件场景下在 VC 之间回传数据
+    public var callbackDatas: PublishSubject<[String: Any]?>? {
+        if objc_getAssociatedObject(self, &AssociatedKeys.callbackDatasKey) == nil {
+            objc_setAssociatedObject(self, &AssociatedKeys.callbackDatasKey, PublishSubject<[String: Any]?>(), .OBJC_ASSOCIATION_RETAIN)
+        }
+        
+        return objc_getAssociatedObject(self, &AssociatedKeys.callbackDatasKey) as? PublishSubject<[String: Any]?>
     }
     
     /// 是否正在显示
