@@ -8,14 +8,16 @@
 
 import UIKit
 
+public enum PageControlAlignment: Int {
+    case left, center, right
+}
+
 /// 轮播图，图片默认三秒一换
 class BannerCell: UICollectionViewCell {
     static var reuseIdentifier = "bannerCellId"
     
     lazy var imageView: UIImageView = {
         let imageView = UIImageView(frame: .zero)
-        imageView.clipsToBounds = true
-        imageView.backgroundColor = UIColor(hex: 0xEDEEEF)
         
         return imageView
     }()
@@ -23,6 +25,8 @@ class BannerCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        contentView.backgroundColor = UIColor(hex: 0xEDEEEF)
+        contentView.clipsToBounds = true
         contentView.addSubview(imageView)
     }
     
@@ -44,19 +48,19 @@ class BannerCell: UICollectionViewCell {
 }
 
 /// BannerPageControl 样式
-public enum BannerPageControlStyle {
+public enum BannerPageControlStyle: Int {
     case dot, text, none
 }
 
 public class BannerView: UIView {
     /// 默认图不要传整张大图，而是传显示在控件中间的小图
-    public var placeholder: UIImage?
+    @objc public var placeholder: UIImage?
     
     /// 图片滚动间隔，默认三秒
     public var interval = 3
     
     /// 是否自动滚动，默认为 true
-    public var autoRolling = true
+    @objc public var autoRolling = true
     
     /// 是否循环滚动，默认为 true
     public var supportCircularlyRolling = true
@@ -65,7 +69,10 @@ public class BannerView: UIView {
     public var itemSize: CGSize?
     
     /// 图片加圆角
-    public var itemCornerRadius: CGFloat = 0
+    @objc public var itemCornerRadius: CGFloat = 0
+    
+    /// 图片的填充方式（默认 .scaleAspectFill）
+    public var imageContentMode: ContentMode = .scaleAspectFill
     
     /// 两侧图片的大小会随 scale 更改比例
     public var sideItemScale: CGFloat = 1 {
@@ -82,7 +89,7 @@ public class BannerView: UIView {
     }
     
     /// 图片间隔
-    public var sideItemSpacing: CGFloat = 0 {
+    @objc public var sideItemSpacing: CGFloat = 0 {
         didSet {
             useCarouselFlowLayout()
         }
@@ -102,7 +109,10 @@ public class BannerView: UIView {
         }
     }
     
-    public var items: [String] = [] {
+    /// PageControl 控件在 Banner 上的位置
+    public var pageControlAlignment: PageControlAlignment = .left
+    
+    @objc public var items: [Any] = [] {
         didSet {
             if supportCircularlyRolling, items.count > 1 {
                 var newItems = items
@@ -113,12 +123,30 @@ public class BannerView: UIView {
         }
     }
     
-    private lazy var pageControl: UIPageControl = {
-        let pageControl = UIPageControl(frame: .zero)
-        pageControl.hidesForSinglePage = true
-        
-        return pageControl
+    private lazy var pageControl: PageControl = {
+        return PageControl(frame: .zero)
     }()
+    
+    /// PageControl 当前选中图标
+    public var indicatorImage: UIImage? {
+        didSet {
+            pageControl.indicatorImage = indicatorImage
+        }
+    }
+
+    /// PageControl 默认图标
+    public var preferredIndicatorImage: UIImage? {
+        didSet {
+            pageControl.preferredIndicatorImage = preferredIndicatorImage
+        }
+    }
+    
+    /// PageControl item 间距
+    public var itemSpacing = 2.5 {
+        didSet {
+            pageControl.itemSpacing = itemSpacing
+        }
+    }
     
     private lazy var pagePromptView: PagePromptView = {
         let pagePromptView = PagePromptView(frame: .zero)
@@ -205,7 +233,19 @@ public class BannerView: UIView {
         collectionView.frame = bounds
         
         if pageControlStyle == .dot {
-            pageControl.frame = CGRect(x: 0, y: height - 30, width: width, height: 30)
+            let size = pageControl.sizeForNumberOfPages()
+            var x: CGFloat = 0
+            
+            switch pageControlAlignment {
+            case .left:
+                x = 10
+            case .right:
+                x = (width - size.width) - 10
+            case .center:
+                x = (width - size.width) / 2
+            }
+            
+            pageControl.frame = CGRect(x: x, y: height - size.height - 8, width: min(size.width, width), height: size.height)
         } else if pageControlStyle == .text {
             pagePromptView.frame = CGRect(x: width - 75, y: height - 30, width: 56, height: 22)
         }
@@ -218,7 +258,7 @@ public class BannerView: UIView {
     // MARK: - public method
     
     /// 设置数据后刷新视图
-    public func reloadData() {
+    @objc public func reloadData() {
         collectionView.reloadData {
             if self.items.count > 1 {
                 if self.supportCircularlyRolling {
@@ -231,7 +271,7 @@ public class BannerView: UIView {
     }
     
     /// 点击 item 后触发
-    public func selectedItemHandler(_ selectedItemHandler: @escaping (_ index: Int) -> Void) {
+    @objc public func selectedItemHandler(_ selectedItemHandler: @escaping (_ index: Int) -> Void) {
         self.selectedItemHandler = selectedItemHandler
     }
     
@@ -321,13 +361,20 @@ extension BannerView: UICollectionViewDataSource, UICollectionViewDelegate, UICo
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BannerCell.reuseIdentifier, for: indexPath) as! BannerCell
-        cell.imageView.cornerRadius = itemCornerRadius
-        cell.imageView.setImageURL(items[indexPath.item], placeholder: placeholder) { image in
-            guard image != nil else {
-                return
-            }
+        cell.contentView.cornerRadius = itemCornerRadius
+        
+        if let url = items[indexPath.item] as? String {
+            cell.imageView.contentMode = .center
+            cell.imageView.setImageURL(url, placeholder: placeholder) { [weak self] image in
+                guard image != nil else {
+                    return
+                }
 
-            cell.imageView.contentMode = .scaleAspectFill // 默认模式会破坏图片比例，目前保持图片比例不变，并且填充视图
+                cell.imageView.contentMode = self?.imageContentMode ?? .scaleAspectFill // 默认模式会破坏图片比例，目前保持图片比例不变，并且填充视图
+            }
+        } else if let image = items[indexPath.item] as? UIImage {
+            cell.imageView.image = image
+            cell.imageView.contentMode = imageContentMode
         }
         
         return cell

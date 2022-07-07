@@ -34,6 +34,8 @@ public class ProgressHUD {
         hudView.layer.borderColor = UIColor(hex: 0xE5E5E5)?.cgColor
         hudView.layer.borderWidth = 0.5
         hudView.layer.cornerRadius = 7.5
+        hudView.layer.zPosition = 10000
+        
         // 圆角与阴影并存时需要这样特殊处理下
         let subLayer = CALayer()
         subLayer.frame = hudView.layer.bounds

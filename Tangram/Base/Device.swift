@@ -73,16 +73,6 @@ public struct Device {
         #endif
     }
     
-    /// 获取设备名字
-    public static var name: String {
-        return UIDevice.current.name
-    }
-    
-    /// 获取设备系统版本
-    public static var version: String {
-        return UIDevice.current.systemVersion
-    }
-    
     /// 用于 APNs 的 deviceToken
     @UserDefault("Device.token")
     public static var token: String?

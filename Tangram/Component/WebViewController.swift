@@ -31,11 +31,14 @@ public class WebViewController: UIViewController {
     /// 底部是否需要适配 iPhoneX
     @objc public var needSafeAreaBottom: ObjCBool = false
     
+    /// 是否内嵌在其它 VC 中 （例：SegmentBarController）
+    @objc public var isIncludedViewController: ObjCBool = false
+    
     /// for h5
     @objc public var needReloadWebView: ObjCBool = false {
         didSet {
             if needReloadWebView.boolValue {
-                webView.reload()
+                reload()
             }
         }
     }
@@ -49,6 +52,9 @@ public class WebViewController: UIViewController {
     /// 是否隐藏进度条
     @objc public var hiddenProgressView: ObjCBool = false
     
+    /// 是否支持展示异常视图
+    @objc public var supportExceptionView: ObjCBool = true
+    
     /// 使用 webVC 时，如果有业务逻辑上的处理，可以设置这个 delegate，然后把业务代码写在自己的类里
     @objc public weak var delegate: WKNavigationDelegate? {
         didSet {
@@ -58,6 +64,9 @@ public class WebViewController: UIViewController {
     
     /// WebView 加载完成
     private var loadDidFinishHandler: ((_ contentHeight: Double) -> Void)?
+    
+    /// WebView 加载失败
+    private var loadDidFailHandler: ((_ error: Error) -> Void)?
 
     /// 显示网页内容
     lazy fileprivate var webView: WKWebView = {
@@ -87,7 +96,7 @@ public class WebViewController: UIViewController {
     /// 展示网页加载进度
     lazy fileprivate var progressView: UIProgressView = {
         let progressView = UIProgressView(frame: CGRect(x: 0, y: webView.y, width: Device.width, height: 2))
-        progressView.progressTintColor = UIColor(hex: 0x9FA4B3)
+        progressView.progressTintColor = UIColor(hex: 0x004696)
         progressView.trackTintColor = .clear
         
         return progressView
@@ -96,46 +105,49 @@ public class WebViewController: UIViewController {
     /// 网页加载进度监听器
     private var observeProgress: NSKeyValueObservation?
     
+    /// 网页 contentHeight 监听器
+    private var observeContentHeight: NSKeyValueObservation?
+    
+    /// 临时存放 webView 的内容高度，会在加载过程中多次改变
+    private var contentHeight: CGFloat = 0
+    
     override public func viewDidLoad() {
         super.viewDidLoad()
         
         extendedLayoutIncludesOpaqueBars = true
+        supportPopGestureRecognizer = canPopGestureRecognizer.boolValue
         
         navigationItem.title = navigationItemTitle
         
         view.backgroundColor = UIColor(hex: 0xF3F4F5)
         
-        let backBarButtonItem = UIBarButtonItem(image: R.image.icon_nav_back(), style: .plain, target: self, action: #selector(back))
-        backBarButtonItem.imageInsets = UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 0)
-        
-        let closeBarButtonItem = UIBarButtonItem(image: R.image.icon_nav_close(), style: .plain, target: self, action: #selector(close))
-        closeBarButtonItem.imageInsets = UIEdgeInsets(top: 0, left: -18, bottom: 0, right: 0)
-        
-        navigationItem.leftBarButtonItems = [backBarButtonItem, closeBarButtonItem]
-        
-        if hideBackBarButton.boolValue {
-            closeBarButtonItem.imageInsets = UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 0)
-            navigationItem.leftBarButtonItems = [closeBarButtonItem]
-        }
-        
-        if hideCloseBarButton.boolValue {
+        // 设置 leftBarButtonItems
+        if !hideBackBarButton.boolValue {
+            let backBarButtonItem = UIBarButtonItem(image: R.image.icon_nav_back(), style: .plain, target: self, action: #selector(back))
+            backBarButtonItem.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            
             navigationItem.leftBarButtonItems = [backBarButtonItem]
+        }
+
+        if !hideCloseBarButton.boolValue {
+            let closeBarButtonItem = UIBarButtonItem(image: R.image.icon_nav_close(), style: .plain, target: self, action: #selector(close))
+            
+            if let leftBarButtonItems = navigationItem.leftBarButtonItems, !leftBarButtonItems.isEmpty {
+                closeBarButtonItem.imageInsets = UIEdgeInsets(top: 0, left: -18, bottom: 0, right: 0)
+                
+                navigationItem.leftBarButtonItems?.append(closeBarButtonItem)
+            } else {
+                closeBarButtonItem.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+                
+                navigationItem.leftBarButtonItems = [closeBarButtonItem]
+            }
         }
         
         view.addSubview(webView)
         view.addSubview(progressView)
         
         if htmlString.isEmpty {
-            if let url = URL(string: url.urlEncoded) {
-                var request = URLRequest(url: url)
-                
-                if !httpBody.isEmpty {
-                    request.httpMethod = "POST"
-                    request.httpBody = httpBody.data(using: .utf8)
-                }
-                
-                webView.load(request)
-            }
+            reload()
         } else {
             webView.loadHTMLString(htmlString, baseURL: URL(fileURLWithPath: url))
         }
@@ -144,10 +156,25 @@ public class WebViewController: UIViewController {
         if !hiddenProgressView.boolValue {
             observeProgress = webView.observe(\.estimatedProgress) { [weak self] (webView, change) in
                 let estimatedProgress = Float(webView.estimatedProgress)
+                
                 if let currentProgress = self?.progressView.progress, estimatedProgress > currentProgress {
                     self?.progressView.setProgress(estimatedProgress, animated: true)
                     self?.progressView.isHidden = (estimatedProgress == 1)
                 }
+            }
+        }
+        
+        observeContentHeight = webView.observe(\.scrollView.contentSize) { [weak self] (webView, change) in
+            guard let self = self else {
+                return
+            }
+            
+            // contentHeight < 10 不认为 webview 加载出来了，尽量减少不必要的回调
+            let height = ceil(webView.scrollView.contentSize.height)
+            
+            if height != self.contentHeight, height > 10 {
+                self.contentHeight = height
+                self.loadDidFinishHandler?(height)
             }
         }
     }
@@ -171,10 +198,9 @@ public class WebViewController: UIViewController {
                 return
             }
             
+            self.webView.configuration.userContentController.removeScriptMessageHandler(forName: name)
             self.webView.configuration.userContentController.add(self, name: name)
         }
-        
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = canPopGestureRecognizer.boolValue
     }
     
     override public func viewWillLayoutSubviews() {
@@ -194,14 +220,14 @@ public class WebViewController: UIViewController {
             webView.stopLoading()
         }
         
-        App.Web.messageHandlers.forEach { name in
-            webView.configuration.userContentController.removeScriptMessageHandler(forName: name)
+        if !isIncludedViewController.boolValue {
+            App.Web.messageHandlers.forEach { name in
+                webView.configuration.userContentController.removeScriptMessageHandler(forName: name)
+            }
+            
+            webView.navigationDelegate = nil
+            webView.uiDelegate = nil
         }
-        
-        webView.navigationDelegate = nil
-        webView.uiDelegate = nil
-        
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     
     override public func didReceiveMemoryWarning() {
@@ -217,6 +243,7 @@ public class WebViewController: UIViewController {
         
         webView.navigationDelegate = nil
         observeProgress?.invalidate()
+        observeContentHeight?.invalidate()
     }
     
     // MARK: -
@@ -237,12 +264,36 @@ public class WebViewController: UIViewController {
     }
     
     public func reload() {
-        webView.reload()
+        if Network.shared.isReachable {
+            hideExceptionView()
+            
+            contentHeight = 0
+            
+            if let url = URL(string: url) {
+                var request = URLRequest(url: url)
+                
+                if !httpBody.isEmpty {
+                    request.httpMethod = "POST"
+                    request.httpBody = httpBody.data(using: .utf8)
+                }
+                
+                webView.load(request)
+            }
+        } else {
+            showExceptionView(eventHandler: {
+                self.reload()
+            })
+        }
     }
     
-    /// 点击 item 后触发
+    /// webView 加载完成
     public func loadDidFinishHandler(_ loadDidFinishHandler: @escaping (_ contentHeight: Double) -> Void) {
         self.loadDidFinishHandler = loadDidFinishHandler
+    }
+    
+    /// webView 加载失败
+    public func loadDidFailHandler(_ loadDidFailHandler: @escaping (_ error: Error) -> Void) {
+        self.loadDidFailHandler = loadDidFailHandler
     }
 }
 
@@ -252,7 +303,7 @@ extension WebViewController: WKNavigationDelegate {
     // 发送请求前调用，决定是否跳转
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let url = navigationAction.request.url, url.scheme == "tel" {
-            App.call(url.absoluteString)
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
             
             decisionHandler(.cancel)
         } else {
@@ -275,30 +326,42 @@ extension WebViewController: WKNavigationDelegate {
     
     // 页面加载完成
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        progressView.setProgress(0, animated: true)
-        
-        if loadDidFinishHandler != nil {
-            webView.evaluateJavaScript("document.body.scrollHeight") { [weak self] (result, error) in
-                if let contentHeight = result as? Double {
-                    self?.loadDidFinishHandler?(ceil(contentHeight))
-                }
-            }
-        }
+        progressView.setProgress(0, animated: false)
     }
     
-    // 页面加载失败
+    // 页面加载过程中再次重定向跳转时触发
     public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        progressView.setProgress(0, animated: true)
+        guard (error as NSError).code != NSURLErrorCancelled else {
+            return
+        }
+        
+        progressView.setProgress(0, animated: false)
+        
+        loadDidFailHandler?(error)
+        
+        showExceptionView(eventHandler: {
+            self.reload()
+        })
     }
     
     // 页面加载内容过程中发生错误时触发
     public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        progressView.setProgress(0, animated: true)
+        guard (error as NSError).code != NSURLErrorCancelled else {
+            return
+        }
+        
+        progressView.setProgress(0, animated: false)
+        
+        loadDidFailHandler?(error)
+        
+        showExceptionView(eventHandler: {
+            self.reload()
+        })
     }
     
     // 内存占用过大时页面会白屏，会触发此方法
     public func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-        webView.reload()
+        reload()
     }
 }
 
@@ -350,5 +413,108 @@ extension WebViewController: WKScriptMessageHandler {
     // 接收 H5 发送的消息
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         NotificationCenter.default.post(name: Notification.Name.Web.didReceiveScriptMessage, object: message)
+    }
+}
+
+extension WebViewController {
+    func showExceptionView(eventHandler: @escaping () -> Void = {}) {
+        guard supportExceptionView.boolValue else {
+            return
+        }
+        
+        hideExceptionView()
+
+        let exceptionView = WebExceptionView()
+        exceptionView.eventHandler = eventHandler
+        view.addSubview(exceptionView)
+    }
+
+    func hideExceptionView() {
+        view.viewWithTag(67887654)?.removeFromSuperview()
+    }
+}
+
+class WebExceptionView: UIView {
+    let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = R.image.icon_loading_fail()
+        
+        return imageView
+    }()
+
+    let textLabel: UILabel = {
+        let textLabel = UILabel()
+        textLabel.text = "加载失败，请重试"
+        textLabel.textAlignment = .center
+        textLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        textLabel.textColor = UIColor(hex: 0x9FA4B3)
+        
+        return textLabel
+    }()
+    
+    let eventButton: UIButton = {
+        let eventButton = UIButton(type: .custom)
+        eventButton.layer.cornerRadius = 7.5
+        eventButton.layer.borderWidth = 0.5
+        eventButton.setTitle("点击重试", for: .normal)
+        eventButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+
+        eventButton.layer.borderColor = UIColor(hex: 0x20A0DA)?.cgColor
+        eventButton.setTitleColor(UIColor(hex: 0x20A0DA), for: .normal)
+        eventButton.backgroundColor = .white
+     
+        return eventButton
+    }()
+    
+    var eventHandler: (() -> Void)?
+    
+    public init() {
+        super.init(frame: .zero)
+        
+        tag = 67887654
+        
+        eventButton.addTarget(self, action: #selector(restartRequest), for: .touchUpInside)
+        
+        addSubview(imageView)
+        addSubview(textLabel)
+        addSubview(eventButton)
+    }
+
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        
+        snp.remakeConstraints { (make) -> Void in
+            make.center.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(150)
+        }
+        
+        imageView.snp.remakeConstraints { (make) -> Void in
+            make.top.equalTo(0)
+            make.centerX.equalToSuperview()
+            make.width.height.equalTo(80)
+        }
+        
+        textLabel.snp.remakeConstraints { (make) -> Void in
+            make.left.right.equalToSuperview().inset(0)
+            make.top.equalTo(90)
+            make.height.equalTo(20)
+        }
+        
+        eventButton.snp.remakeConstraints { (make) -> Void in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(120)
+            make.width.equalTo(100)
+            make.height.equalTo(30)
+        }
+    }
+    
+    @objc func restartRequest( _ sender: Any) {
+        eventHandler?()
     }
 }

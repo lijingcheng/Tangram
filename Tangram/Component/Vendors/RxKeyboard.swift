@@ -6,7 +6,7 @@
 //  Copyright © 2016 Suyeol Jeon. All rights reserved.
 //
 
-// lijigncheng: RxKeyboard: 2.0.0
+// lijigncheng: RxKeyboard: 2.0.0 https://github.com/RxSwiftCommunity/RxKeyboard
 
 #if os(iOS)
 import UIKit

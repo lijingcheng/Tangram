@@ -10,9 +10,9 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-/// 上拉加载有三种结果：失败了、还有下一页、没有下一页数据了
+/// 上拉加载的结果：失败了、还有下一页、没有下一页数据了、第一页都没数据
 public enum LoadMoreResult {
-    case error, hasNextPage, noMoreDatas
+    case error, hasNextPage, noMoreDatas, emptyData
 }
 
 /// 上拉加载视图，还有下一页数据时，滑到底部时会自动加载、如果上次操作是失败情况则需要手动上拉 60 点后松手进行刷新
@@ -35,7 +35,7 @@ class LoadMoreView: UIView {
     
     private var trigger: CGFloat = 60.0
     private var isRefreshing = false
-    private var refreshResult: LoadMoreResult = .noMoreDatas {
+    private var refreshResult: LoadMoreResult = .emptyData {
         didSet {
             // 上次操作失败或没有数据时不会增加 pageIndex
             if refreshResult == .hasNextPage {
@@ -44,7 +44,8 @@ class LoadMoreView: UIView {
         }
     }
     
-    var refreshHandler: ((_ pageIndex: Int) -> Void)?
+    var refreshIndexPagingHandler: ((_ pageIndex: Int) -> Void)?
+    var refreshStampPagingHandler: ((_ pageStamp: String) -> Void)?
     var bottomText = ""
     
     private var refreshStatus: RefreshStatus = .none {
@@ -71,7 +72,7 @@ class LoadMoreView: UIView {
         
         self.scrollView?.rx.contentOffset.filter { $0.y > 0 }.subscribe(onNext: { [weak self] contentOffset in
             DispatchQueue.main.async {
-                guard let isRefreshing = self?.isRefreshing, !isRefreshing, let refreshResult = self?.refreshResult, refreshResult != .noMoreDatas else {
+                guard let isRefreshing = self?.isRefreshing, !isRefreshing, let refreshResult = self?.refreshResult, refreshResult != .noMoreDatas, refreshResult != .emptyData else {
                     return
                 } // 没数据时直接 return
 
@@ -133,13 +134,18 @@ class LoadMoreView: UIView {
         self.scrollView?.contentInset = newContentInset
         self.frame = CGRect(x: 0.0, y: scrollView.contentSize.height, width: scrollView.width, height: self.trigger)
         
-        self.refreshHandler?(scrollView.pageIndex)
+        self.refreshIndexPagingHandler?(scrollView.pageIndex)
+        self.refreshStampPagingHandler?(scrollView.pageStamp)
         
         ProgressHUD.dismiss()
     }
 
-    func endRefresh(_ result: LoadMoreResult) {
+    func endRefresh(_ result: LoadMoreResult, pageStamp: String) {
         refreshResult = result
+        
+        if result == .hasNextPage {
+            scrollView?.pageStamp = pageStamp
+        }
         
         if refreshResult == .noMoreDatas, !bottomText.isEmpty {
             bottomView.isHidden = false
@@ -147,13 +153,13 @@ class LoadMoreView: UIView {
         } else {
             bottomView.isHidden = true
             refreshView.isHidden = false
-            
-            frame = .zero
-            
-            if var contentInset = scrollView?.contentInset, refreshStatus == .refreshing {
-                contentInset.bottom -= self.trigger
-                scrollView?.contentInset = contentInset
-            }
+        }
+        
+        frame = .zero
+        
+        if var contentInset = scrollView?.contentInset, refreshStatus == .refreshing {
+            contentInset.bottom -= self.trigger
+            scrollView?.contentInset = contentInset
         }
         
         refreshStatus = .none

@@ -155,12 +155,19 @@ public class Router {
     }
     
     /// 切换 tabbar index
-    public static func switchTabBarSelectedIndex(index: TabBarItemProtocol, completion: (() -> Void)? = nil) {
+    public static func switchTabBarSelectedIndex(index: TabBarItemProtocol, params: [String: Any] = [:], completion: (() -> Void)? = nil) {
         let rootVC = UIApplication.shared.windows.first?.rootViewController
             
         if let tabBarController = rootVC as? UITabBarController {
             Router.pop(popType: .root, animated: false) {
                 tabBarController.selectedIndex = index.intValue()
+                
+                if let navigationController = tabBarController.selectedViewController as? UINavigationController {
+                    navigationController.visibleViewController?.setValuesForKeys(params)
+                    
+                    tabBarController.delegate?.tabBarController?(tabBarController, didSelect: navigationController)
+                }
+                
                 completion?()
             }
         }

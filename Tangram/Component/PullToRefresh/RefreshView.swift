@@ -74,12 +74,7 @@ class RefreshView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        if status == .refreshing {
-            imageView.frame = CGRect(x: (width - 85) / 2 + 5, y: (height - 11) / 2, width: 11, height: 11)
-        } else {
-            imageView.frame = CGRect(x: (width - 85) / 2 + 5, y: (height - 13) / 2, width: 8, height: 13)
-        }
-
+        imageView.frame = CGRect(x: (width - 80) / 2, y: (height - 12) / 2, width: 12, height: 12)
         textLabel.frame = CGRect(x: imageView.x + imageView.width + 8, y: (height - 20) / 2, width: 60, height: 20)
     }
 }

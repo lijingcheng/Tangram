@@ -7,10 +7,17 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 /// 支持 placeHolder 并可以设置其颜色的 UITextView
 public class PlaceHolderTextView: UITextView {
-
+    /// 最多输入多少字
+    public var max: Int?
+    
+    /// 当前已输入多少字
+    public var current = PublishSubject<Int>()
+    
     @IBInspectable public var placeHolder: String? {
         didSet {
             setNeedsDisplay()
@@ -37,6 +44,14 @@ public class PlaceHolderTextView: UITextView {
         if let notificationObject = notification.object as? PlaceHolderTextView {
             if notificationObject === self {
                 setNeedsDisplay()
+                
+                if let max = max, max > 0 {
+                    if text.count > max {
+                        text = String(text.prefix(max))
+                    }
+                    
+                    current.onNext(text.count)
+                }
             }
         }
     }

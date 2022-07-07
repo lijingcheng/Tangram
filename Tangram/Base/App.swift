@@ -7,7 +7,11 @@
 //
 
 import UIKit
-import Kingfisher
+
+/// App 运行环境
+public enum BuildChannel: String {
+    case debug, release, staging, production
+}
 
 public struct App {
     /// Apple Store 中的 appId
@@ -21,6 +25,9 @@ public struct App {
     
     /// App 的 universalLink
     public static var universalLink = ""
+    
+    /// App logo
+    public static var logo: UIImage?
     
     /// 版本号
     public static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
@@ -38,17 +45,13 @@ public struct App {
     public static let isDebugMode = false
     #endif
     
-    /// 图片代理地址
-    public static var imageProxy: String? {
-        get {
-            return UserDefaults.standard.string(forKey: "App.imageProxy")
+    /// App 当前运行环境
+    public static var channel: BuildChannel {
+        if let buildChannel = Bundle.main.infoDictionary?["BuildChannel"] as? String {
+            return BuildChannel(rawValue: buildChannel) ?? .debug
         }
-        set {
-            if let url = newValue, let host = URL(string: url)?.host {
-                ImageDownloader.default.trustedHosts?.insert(host)
-                UserDefaults.standard.set(url, forKey: "App.imageProxy")
-            }
-        }
+        
+        return .debug
     }
     
     // MARK: -
@@ -71,9 +74,29 @@ public struct App {
             return true
         }
     }
+    
+    /// 获取 UUID
+    public static func getUUID() -> String {
+        if let uuid = UserDefaults.standard.string(forKey: "App_UUID") {
+            return uuid
+        }
+        
+        let keychain = Keychain(service: App.bundleId ?? "")
+        
+        if let uuid = try? keychain.getString("App_UUID") {
+            return uuid
+        }
+        
+        let uuid = UUID().uuidString.lowercased().replacingOccurrences(of: "-", with: "")
+        
+        keychain["App_UUID"] = uuid
+        UserDefaults.standard.set(uuid, forKey: "App_UUID")
+        
+        return uuid
+    }
 }
 
-public extension App {
+extension App {
     struct Web {
         /// 供 H5 调用的 Native 方法名
         public static var messageHandlers: [String] = []

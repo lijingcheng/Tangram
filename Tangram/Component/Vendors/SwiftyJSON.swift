@@ -20,7 +20,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-// lijigncheng: version: 5.0.0
+// lijigncheng: version: 5.0.0 https://github.com/SwiftyJSON/SwiftyJSON
 
 import Foundation
 
@@ -526,7 +526,7 @@ extension JSON: Swift.ExpressibleByFloatLiteral {
 
 extension JSON: Swift.ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (String, Any)...) {
-        let dictionary = elements.reduce(into: [String: Any](), { $0[$1.0] = $1.1 })
+        let dictionary = elements.reduce(into: [String: Any](), { $0[$1.0] = $1.1})
         self.init(dictionary)
     }
 }
@@ -990,7 +990,7 @@ extension JSON {
             if let newValue = newValue {
                 object = NSNumber(value: Int(newValue))
             } else {
-                object = NSNull()
+                object =  NSNull()
             }
         }
     }
@@ -1012,7 +1012,7 @@ extension JSON {
             if let newValue = newValue {
                 object = NSNumber(value: newValue)
             } else {
-                object = NSNull()
+                object =  NSNull()
             }
         }
     }
@@ -1034,7 +1034,7 @@ extension JSON {
             if let newValue = newValue {
                 object = NSNumber(value: newValue)
             } else {
-                object = NSNull()
+                object =  NSNull()
             }
         }
     }
@@ -1056,7 +1056,7 @@ extension JSON {
             if let newValue = newValue {
                 object = NSNumber(value: newValue)
             } else {
-                object = NSNull()
+                object =  NSNull()
             }
         }
     }
@@ -1078,7 +1078,7 @@ extension JSON {
             if let newValue = newValue {
                 object = NSNumber(value: newValue)
             } else {
-                object = NSNull()
+                object =  NSNull()
             }
         }
     }
@@ -1100,7 +1100,7 @@ extension JSON {
             if let newValue = newValue {
                 object = NSNumber(value: newValue)
             } else {
-                object = NSNull()
+                object =  NSNull()
             }
         }
     }
@@ -1122,7 +1122,7 @@ extension JSON {
             if let newValue = newValue {
                 object = NSNumber(value: newValue)
             } else {
-                object = NSNull()
+                object =  NSNull()
             }
         }
     }
@@ -1144,7 +1144,7 @@ extension JSON {
             if let newValue = newValue {
                 object = NSNumber(value: newValue)
             } else {
-                object = NSNull()
+                object =  NSNull()
             }
         }
     }

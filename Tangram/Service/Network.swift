@@ -123,14 +123,17 @@ public class Network {
             } else {
                 request = try URLEncoding.default.encode(request, with: parameters)
             }
-
-            return shared.manager.request(request).validate().responseJSON { response in
+            
+            return shared.manager.request(request).validate().responseData { response in
                 DispatchQueue.main.async {
-                    switch response.result {
-                    case .success(let value):
-                        finishedCallback(value, nil)
-                    case .failure(let error):
-                        finishedCallback(nil, NetworkError(code: NetworkError.Code.failure.rawValue, msg: error.localizedDescription, data: [:]))
+                    if let error = response.error {
+                        finishedCallback(AFDataResponse<Any>(request: response.request, response: response.response, data: nil, metrics: response.metrics, serializationDuration: response.serializationDuration, result: Result.failure(error)), nil)
+                    } else {
+                        if let responseData = response.data, let data = try? JSONSerialization.jsonObject(with: responseData, options: []) {
+                            finishedCallback(AFDataResponse(request: response.request, response: response.response, data: responseData, metrics: response.metrics, serializationDuration: response.serializationDuration, result: Result.success(data)), nil)
+                        } else {
+                            finishedCallback(AFDataResponse(request: response.request, response: response.response, data: nil, metrics: response.metrics, serializationDuration: response.serializationDuration, result: Result.success([:])), nil)
+                        }
                     }
                 }
             }
@@ -178,13 +181,16 @@ public class Network {
                     }
                 }
             })
-        }, to: url).validate().responseJSON { response in
+        }, to: url).validate().responseData { response in
             DispatchQueue.main.async {
-                switch response.result {
-                case .success(let value):
-                    finishedCallback(value, nil)
-                case .failure(let error):
-                    finishedCallback(nil, NetworkError(code: NetworkError.Code.failure.rawValue, msg: error.localizedDescription, data: [:]))
+                if let error = response.error {
+                    finishedCallback(AFDataResponse<Any>(request: response.request, response: response.response, data: nil, metrics: response.metrics, serializationDuration: response.serializationDuration, result: Result.failure(error)), nil)
+                } else {
+                    if let responseData = response.data, let data = try? JSONSerialization.jsonObject(with: responseData, options: []) {
+                        finishedCallback(AFDataResponse(request: response.request, response: response.response, data: responseData, metrics: response.metrics, serializationDuration: response.serializationDuration, result: Result.success(data)), nil)
+                    } else {
+                        finishedCallback(AFDataResponse(request: response.request, response: response.response, data: nil, metrics: response.metrics, serializationDuration: response.serializationDuration, result: Result.success([:])), nil)
+                    }
                 }
             }
         }

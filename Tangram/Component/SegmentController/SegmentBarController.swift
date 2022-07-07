@@ -8,6 +8,10 @@
 
 import UIKit
 
+@objc public protocol SegmentBarControllerDelegate: NSObjectProtocol {
+    @objc func scrollViewDidScroll(_ scrollView: UIScrollView)
+}
+
 /// 多 Tab 切换用的视图，用来存储 ViewController，支持滑动
 public class SegmentBarController: UIViewController {
     private var pagecontent: [UIViewController]
@@ -32,11 +36,16 @@ public class SegmentBarController: UIViewController {
     
     weak var segmentBar: SegmentBar?
     
+    public weak var delegate: SegmentBarControllerDelegate?
+    
     public var isScrollEnabled = true {
         didSet {
             collectionView.isScrollEnabled = isScrollEnabled
         }
     }
+    
+    /// 是否是用户手动滑动 segmentBarController，如果是点击 segmentBar 触发此值为 false
+    private var isDraggingScroll = false
     
     public init(viewControllers: [UIViewController]) {
         self.pagecontent = viewControllers
@@ -53,6 +62,12 @@ public class SegmentBarController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         
+        if #available(iOS 11.0, *) {
+            collectionView.contentInsetAdjustmentBehavior = .never
+        } else {
+            automaticallyAdjustsScrollViewInsets = false
+        }
+        
         view.addSubview(collectionView)
     }
     
@@ -62,15 +77,15 @@ public class SegmentBarController: UIViewController {
         collectionView.frame = view.bounds
     }
     
-    public func scrollToItem(index: Int) {
+    public func scrollToItem(index: Int, animated: Bool = true) {
         guard index >= 0 && index < pagecontent.count else { return }
         
         DispatchQueue.main.async {
-            self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: [], animated: false)
+            self.collectionView.setContentOffset(CGPoint(x: Int(self.collectionView.width) * index, y: 0), animated: animated)
         }
     }
     
-    /// 页面滑动后返回当前 index，此方法更适合 SegmentBarController 脱离 segmentBar 独立使用时用
+    /// 页面滑动后返回当前 index，此方法更适合脱离 segmentBar 独立使用时用
     public func pageContentDidChange(_ pageContentDidChangeHandler: @escaping (_ index: Int) -> Void) {
         self.pageContentDidChangeHandler = pageContentDidChangeHandler
     }
@@ -100,16 +115,27 @@ extension SegmentBarController: UICollectionViewDelegate, UICollectionViewDataSo
 }
 
 extension SegmentBarController: UIScrollViewDelegate {
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isDraggingScroll = true
+    }
+    
+    /// 滑动过程增加动画效果和文字渐变效果
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) { // 第一页和最后一页不用做下面处理
+        
+        if isDraggingScroll {
+            segmentBar?.segmentBarControllerDidScroll(scrollView)
+        }
+        
+        delegate?.scrollViewDidScroll(scrollView)
+    }
+    
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let currentIndex = Int(abs(scrollView.contentOffset.x / scrollView.width))
         
         segmentBar?.selectedIndex = currentIndex
         
         pageContentDidChangeHandler?(currentIndex)
-    }
-    
-    /// 滑动过程增加动画效果和文字渐变效果
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        segmentBar?.segmentBarControllerDidScroll(scrollView)
+        
+        isDraggingScroll = false
     }
 }

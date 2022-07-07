@@ -12,7 +12,6 @@ public class StepperView: UIView {
     private var subtractButton: UIButton = {
         let subtractButton = UIButton(type: .custom)
         subtractButton.setTitle("-", for: .normal)
-        subtractButton.addTarget(self, action: #selector(subtract), for: .touchUpInside)
         
         return subtractButton
     }()
@@ -29,7 +28,6 @@ public class StepperView: UIView {
     private var addButton: UIButton = {
         let addButton = UIButton(type: .custom)
         addButton.setTitle("+", for: .normal)
-        addButton.addTarget(self, action: #selector(add), for: .touchUpInside)
         
         return addButton
     }()
@@ -55,6 +53,9 @@ public class StepperView: UIView {
     
     override public func awakeFromNib() {
         super.awakeFromNib()
+        
+        addButton.addTarget(self, action: #selector(add), for: .touchUpInside)
+        subtractButton.addTarget(self, action: #selector(subtract), for: .touchUpInside)
         
         addSubview(subtractButton)
         addSubview(numberLabel)

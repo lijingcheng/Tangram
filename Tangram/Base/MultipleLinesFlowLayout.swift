@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// 适用于多行控件布局的 layout 类（例 TagListView），需要在外部设置 itemSize
+/// 适用于多行控件布局的 layout 类，需要在外部设置 itemSize
 class MultipleLinesFlowLayout: UICollectionViewFlowLayout {
     weak var delegate: UICollectionViewDelegateFlowLayout!
 
@@ -20,7 +20,9 @@ class MultipleLinesFlowLayout: UICollectionViewFlowLayout {
         
         contentHeight = 0
         itemAttributes.removeAll()
- 
+        
+        let contentInset = collectionView?.contentInset ?? .zero
+        
         var originX: CGFloat = 0
         var originY: CGFloat = 0
         
@@ -35,7 +37,7 @@ class MultipleLinesFlowLayout: UICollectionViewFlowLayout {
                 contentHeight += itemSize.height
             }
             
-            if (originX + itemSize.width) > collectionView!.width {
+            if (originX + itemSize.width + contentInset.left + contentInset.right) > collectionView!.width {
                 originX = 0
                 originY += (minimumLineSpacing + itemSize.height)
                 contentHeight += (minimumLineSpacing + itemSize.height)

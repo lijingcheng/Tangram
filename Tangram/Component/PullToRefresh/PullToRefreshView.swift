@@ -24,7 +24,8 @@ class PullToRefreshView: UIView {
     private var isRefreshing = false
     private var contentInset = UIEdgeInsets(top: -1, left: -1, bottom: -1, right: -1)
     
-    var refreshHandler: ((_ pageIndex: Int) -> Void)?
+    var refreshIndexPagingHandler: ((_ pageIndex: Int) -> Void)?
+    var refreshStampPagingHandler: ((_ pageStamp: String) -> Void)?
     
     private var refreshStatus: RefreshStatus = .none {
         didSet {
@@ -97,8 +98,10 @@ class PullToRefreshView: UIView {
             self.frame = CGRect(x: 0.0, y: scrollView.contentOffset.y, width: scrollView.width, height: self.trigger)
         }, completion: {(_ finished: Bool) -> Void in
             self.scrollView?.pageIndex = 1
+            self.scrollView?.pageStamp = ""
             
-            self.refreshHandler?(scrollView.pageIndex)
+            self.refreshIndexPagingHandler?(scrollView.pageIndex)
+            self.refreshStampPagingHandler?(scrollView.pageStamp)
             
             ProgressHUD.dismiss()
         })

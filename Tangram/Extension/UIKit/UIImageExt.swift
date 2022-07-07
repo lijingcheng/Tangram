@@ -60,20 +60,28 @@ extension UIImage {
         
         return UIGraphicsGetImageFromCurrentImageContext()!
     }
+    
     /// 给图片加圆角
     public func withRoundedCorners(radius: CGFloat? = nil) -> UIImage? {
         let maxRadius = min(size.width, size.height) / 2
-        let cornerRadius: CGFloat = {
-            guard let radius = radius, radius > 0 else { return maxRadius }
-            return min(radius, maxRadius)
-        }()
-
-        let render = UIGraphicsImageRenderer(size: size)
-        return render.image { (_: UIGraphicsImageRendererContext) in
-            let rect = CGRect(origin: .zero, size: size)
-            UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).addClip()
-            draw(in: rect)
+        let cornerRadius: CGFloat
+       
+        if let radius = radius, radius > 0 && radius <= maxRadius {
+            cornerRadius = radius
+        } else {
+            cornerRadius = maxRadius
         }
+        
+        UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale)
+        
+        let rect = CGRect(origin: .zero, size: size)
+        UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).addClip()
+        draw(in: rect)
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return image
     }
     
     /// 将图片压缩到指定大小，单位 kb

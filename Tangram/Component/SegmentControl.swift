@@ -10,8 +10,11 @@ import UIKit
 
 /// 自定义 SegmentControl
 public class SegmentControl: UICollectionView {
-    /// 字体
-    public var font = UIFont.systemFont(ofSize: 15, weight: .medium)
+    /// 设置当前 Item 文字字体
+    public var selectedTextFont = UIFont.systemFont(ofSize: 16, weight: .medium)
+    
+    /// 设置未选中 Item 文字字体
+    public var unselectedTextFont = UIFont.systemFont(ofSize: 16, weight: .regular)
     
     /// 设置当前 Item 文字颜色
     public var selectedTextColor = UIColor(hex: 0xFFFFFF)!
@@ -23,6 +26,20 @@ public class SegmentControl: UICollectionView {
     public var selectedViewColor = UIColor(hex: 0x20A0DA)! {
         didSet {
             selectedView.backgroundColor = selectedViewColor
+        }
+    }
+    
+    /// 设置当前 Item 边框宽
+    public var selectedViewBorderWidth: CGFloat = 0.0 {
+        didSet {
+            selectedView.borderWidth = selectedViewBorderWidth
+        }
+    }
+    
+    /// 设置当前 Item 边框颜色
+    public var selectedViewBorderColor = UIColor(hex: 0x20A0DA)! {
+        didSet {
+            selectedView.borderColor = selectedViewBorderColor
         }
     }
     
@@ -131,12 +148,12 @@ extension SegmentControl: UICollectionViewDelegate, UICollectionViewDataSource, 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SegmentControlItem", for: indexPath) as! SegmentControlItem
         cell.titleLabel.text = titles[indexPath.item]
-        cell.titleLabel.font = font
+        cell.titleLabel.font = (selectedIndex == indexPath.item) ? selectedTextFont : unselectedTextFont
         cell.titleLabel.textColor = (selectedIndex == indexPath.item) ? selectedTextColor : unselectedTextColor
         
         return cell
     }
-
+    
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard selectedIndex != indexPath.item else {
             return

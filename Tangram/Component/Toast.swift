@@ -10,7 +10,7 @@ import UIKit
 
 /// Toast 视图展示位置
 public enum ToastViewPosition {
-    case center, bottom
+    case unknown, center, bottom
 }
 
 /// toast 消息并显示 1.5 秒，内容为空时无效果
@@ -50,7 +50,7 @@ public class Toast {
     }()
     
     // MARK: -
-    public static func show(_ message: String, superView: UIView? = UIApplication.shared.keyWindow, endEditing: Bool = true, completionHandler: @escaping () -> Void = {}) {
+    public static func show(_ message: String, position: ToastViewPosition? = ToastViewPosition.unknown, superView: UIView? = UIApplication.shared.keyWindow, endEditing: Bool = true, completionHandler: @escaping () -> Void = {}) {
         if message.isEmpty {
             return
         }
@@ -63,7 +63,12 @@ public class Toast {
             }
             
             self.dismiss()
-            self.shared.showToastView(message, superView: superView)
+            
+            if let position = position, position != .unknown {
+                self.shared.showToastView(message, position: position, superView: superView)
+            } else {
+                self.shared.showToastView(message, position: Toast.toastViewPosition, superView: superView)
+            }
         }
     }
     
@@ -72,15 +77,14 @@ public class Toast {
     }
     
     // MARK: -
-    fileprivate func showToastView(_ statusMessage: String, superView: UIView?) {
+    fileprivate func showToastView(_ statusMessage: String, position: ToastViewPosition, superView: UIView?) {
         textLabel.text = statusMessage
         toastView.addSubview(textLabel)
         
         superView?.addSubview(toastView)
         
         setToastViewSize()
-        setToastViewPosistion(notification: nil)
-        registerForKeyboardNotificatoins()
+        setToastViewPosistion(position)
         
         UIView.animate(withDuration: 0.3, delay: 0, options: [.allowUserInteraction, .curveLinear], animations: {
             self.toastView.alpha = 1
@@ -108,28 +112,15 @@ public class Toast {
         textLabel.frame = CGRect(x: 30, y: (toastViewHeight - ceil(rectLabel.size.height)) / 2, width: ceil(rectLabel.size.width), height: ceil(rectLabel.size.height))
     }
     
-    @objc fileprivate func setToastViewPosistion(notification: NSNotification?) {
+    fileprivate func setToastViewPosistion(_ position: ToastViewPosition) {
         let superViewHeight = toastView.superview?.height ?? Device.height
         
-        var keyboardHeight: CGFloat = 0.0
-        
-        if notification != nil {
-            if let keyboardFrame: NSValue = notification?.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-                let keyboardRectangle = keyboardFrame.cgRectValue
-                if notification!.name == UIResponder.keyboardWillShowNotification || notification!.name == UIResponder.keyboardDidShowNotification {
-                    keyboardHeight = keyboardRectangle.height
-                }
-            }
+        switch position {
+        case .center:
+            self.toastView.y = (superViewHeight - self.toastView.height / 2 - 49 - Device.safeAreaBottomInset) / 2
+        default:
+            self.toastView.y = superViewHeight - self.toastView.height - 49 - Device.safeAreaBottomInset - 15
         }
-        
-        UIView.animate(withDuration: 0, delay: 0, options: [.allowUserInteraction], animations: {
-            switch Toast.toastViewPosition {
-            case .center:
-                self.toastView.y = (superViewHeight - self.toastView.height / 2 - (keyboardHeight > 0 ? keyboardHeight : 49) - Device.safeAreaBottomInset) / 2
-            case .bottom:
-                self.toastView.y = superViewHeight - self.toastView.height - (keyboardHeight > 0 ? keyboardHeight : 49) - Device.safeAreaBottomInset - 15
-            }
-        }, completion: nil)
     }
     
     fileprivate func hideToastView(_ duration: Double) {
@@ -156,12 +147,5 @@ public class Toast {
         
         completionHandler?()
         completionHandler = {}
-    }
-    
-    fileprivate func registerForKeyboardNotificatoins() {
-        NotificationCenter.default.addObserver(self, selector: #selector(setToastViewPosistion), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(setToastViewPosistion), name: UIResponder.keyboardDidHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(setToastViewPosistion), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(setToastViewPosistion), name: UIResponder.keyboardDidShowNotification, object: nil)
     }
 }

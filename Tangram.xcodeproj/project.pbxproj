@@ -3,11 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		55AFFE4A88E71C388CDD6EE7 /* libPods-Tangram.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C30A44796B7699419F8E6F2 /* libPods-Tangram.a */; };
+		2C5AC0525E9DA8E73B8AF840 /* Pods_Tangram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FF1A429D1D3B01BF79947FE /* Pods_Tangram.framework */; };
 		F316D9CD2318CC0F0066FD90 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = F316D9CC2318CC0F0066FD90 /* Device.swift */; };
 		F316D9CF2318CC7B0066FD90 /* UnknownCaseRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F316D9CE2318CC7B0066FD90 /* UnknownCaseRepresentable.swift */; };
 		F339344C2383EB5E00D76D4B /* UserDefaultsExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F339344B2383EB5E00D76D4B /* UserDefaultsExt.swift */; };
@@ -70,18 +70,26 @@
 		F38BBF0C2330E47400A194AE /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BBF0B2330E47400A194AE /* WebViewController.swift */; };
 		F38BC0C22332367A00A194AE /* TimerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BC0C12332367A00A194AE /* TimerExt.swift */; };
 		F3A09F7C26A66A7C00A19DDB /* TextBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A09F7B26A66A7C00A19DDB /* TextBannerView.swift */; };
+		F3AFCFCE2757080300741249 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AFCFCD2757080200741249 /* BaseViewController.swift */; };
 		F3BD3C65259573CC00321FEB /* PropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3C64259573CB00321FEB /* PropertyWrapper.swift */; };
 		F3BD3C682595743800321FEB /* WaterFallFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3C672595743800321FEB /* WaterFallFlowLayout.swift */; };
 		F3BD3C6B2595744800321FEB /* CarouselFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3C6A2595744800321FEB /* CarouselFlowLayout.swift */; };
 		F3BD3D6325957C4100321FEB /* CLLocationManagerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3D6225957C4100321FEB /* CLLocationManagerExt.swift */; };
 		F3BD3D6625957C7600321FEB /* NotificationNameExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3D6525957C7600321FEB /* NotificationNameExt.swift */; };
 		F3BD3D692595874300321FEB /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD3D682595874300321FEB /* TextViewController.swift */; };
+		F3C013C52874260800276332 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C013C22874260700276332 /* Keychain.swift */; };
+		F3C013C62874260800276332 /* MarqueeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C013C32874260800276332 /* MarqueeLabel.swift */; };
+		F3C013C928742B4D00276332 /* BaseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C013C828742B4D00276332 /* BaseViewModel.swift */; };
+		F3C013CB2876BF2600276332 /* GuideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C013CA2876BF2600276332 /* GuideViewController.swift */; };
+		F3C013CD2876BF6000276332 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C013CC2876BF6000276332 /* MenuView.swift */; };
+		F3C013CF2876BF7C00276332 /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C013CE2876BF7B00276332 /* CircleProgressView.swift */; };
+		F3C013D12876D7AD00276332 /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C013D02876D7AD00276332 /* PageControl.swift */; };
 		F3C7562D26E5F94900565D89 /* DecodingContainerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C7562C26E5F94900565D89 /* DecodingContainerExt.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1171D6959A610F3CC694E034 /* Pods-Tangram.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tangram.release.xcconfig"; path = "Target Support Files/Pods-Tangram/Pods-Tangram.release.xcconfig"; sourceTree = "<group>"; };
-		6C30A44796B7699419F8E6F2 /* libPods-Tangram.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tangram.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FF1A429D1D3B01BF79947FE /* Pods_Tangram.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tangram.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		83A675B1E5F8973DC59A3696 /* Pods-Tangram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tangram.debug.xcconfig"; path = "Target Support Files/Pods-Tangram/Pods-Tangram.debug.xcconfig"; sourceTree = "<group>"; };
 		F316D9CC2318CC0F0066FD90 /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		F316D9CE2318CC7B0066FD90 /* UnknownCaseRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownCaseRepresentable.swift; sourceTree = "<group>"; };
@@ -147,12 +155,20 @@
 		F38BBF0B2330E47400A194AE /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		F38BC0C12332367A00A194AE /* TimerExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerExt.swift; sourceTree = "<group>"; };
 		F3A09F7B26A66A7C00A19DDB /* TextBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBannerView.swift; sourceTree = "<group>"; };
+		F3AFCFCD2757080200741249 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		F3BD3C64259573CB00321FEB /* PropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrapper.swift; sourceTree = "<group>"; };
 		F3BD3C672595743800321FEB /* WaterFallFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterFallFlowLayout.swift; sourceTree = "<group>"; };
 		F3BD3C6A2595744800321FEB /* CarouselFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselFlowLayout.swift; sourceTree = "<group>"; };
 		F3BD3D6225957C4100321FEB /* CLLocationManagerExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationManagerExt.swift; sourceTree = "<group>"; };
 		F3BD3D6525957C7600321FEB /* NotificationNameExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNameExt.swift; sourceTree = "<group>"; };
 		F3BD3D682595874300321FEB /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
+		F3C013C22874260700276332 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
+		F3C013C32874260800276332 /* MarqueeLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarqueeLabel.swift; sourceTree = "<group>"; };
+		F3C013C828742B4D00276332 /* BaseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewModel.swift; sourceTree = "<group>"; };
+		F3C013CA2876BF2600276332 /* GuideViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideViewController.swift; sourceTree = "<group>"; };
+		F3C013CC2876BF6000276332 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		F3C013CE2876BF7B00276332 /* CircleProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressView.swift; sourceTree = "<group>"; };
+		F3C013D02876D7AD00276332 /* PageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
 		F3C7562C26E5F94900565D89 /* DecodingContainerExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodingContainerExt.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -161,7 +177,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				55AFFE4A88E71C388CDD6EE7 /* libPods-Tangram.a in Frameworks */,
+				2C5AC0525E9DA8E73B8AF840 /* Pods_Tangram.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,7 +187,7 @@
 		948812CF545593C5B806AB81 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				6C30A44796B7699419F8E6F2 /* libPods-Tangram.a */,
+				1FF1A429D1D3B01BF79947FE /* Pods_Tangram.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -227,6 +243,8 @@
 		F37457DE259971ED006D3DE2 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				F3C013C22874260700276332 /* Keychain.swift */,
+				F3C013C32874260800276332 /* MarqueeLabel.swift */,
 				F3745A152599A873006D3DE2 /* SwiftyJSON.swift */,
 				F37457E02599723A006D3DE2 /* RxKeyboard.swift */,
 			);
@@ -240,6 +258,8 @@
 				F316D9CC2318CC0F0066FD90 /* Device.swift */,
 				F3BD3C64259573CB00321FEB /* PropertyWrapper.swift */,
 				F316D9CE2318CC7B0066FD90 /* UnknownCaseRepresentable.swift */,
+				F3C013C828742B4D00276332 /* BaseViewModel.swift */,
+				F3AFCFCD2757080200741249 /* BaseViewController.swift */,
 				F3BD3C672595743800321FEB /* WaterFallFlowLayout.swift */,
 				F3BD3C6A2595744800321FEB /* CarouselFlowLayout.swift */,
 				F3393730238E689C00D76D4B /* MultipleLinesFlowLayout.swift */,
@@ -324,17 +344,21 @@
 				F339367A238D2ABE00D76D4B /* Toast.swift */,
 				F339367C238D2AC700D76D4B /* ProgressHUD.swift */,
 				F3778E5C265223F500A06594 /* ProgressView.swift */,
+				F3C013CE2876BF7B00276332 /* CircleProgressView.swift */,
 				F38571162318C8890043EBC2 /* CountDown.swift */,
 				F3393684238E5B0200D76D4B /* DatePicker.swift */,
+				F3C013D02876D7AD00276332 /* PageControl.swift */,
 				F339367E238D2AD300D76D4B /* BannerView.swift */,
 				F3A09F7B26A66A7C00A19DDB /* TextBannerView.swift */,
 				F3393732238E7CFE00D76D4B /* TagListView.swift */,
 				F34C848725AD53A700B1BA8C /* SegmentControl.swift */,
+				F3C013CC2876BF6000276332 /* MenuView.swift */,
 				F3393686238E62D600D76D4B /* StepperView.swift */,
 				F3393682238E569B00D76D4B /* PlaceHolderTextView.swift */,
 				F3393680238D34BF00D76D4B /* TouchAreaLargenButton.swift */,
 				F38BBF0B2330E47400A194AE /* WebViewController.swift */,
 				F3BD3D682595874300321FEB /* TextViewController.swift */,
+				F3C013CA2876BF2600276332 /* GuideViewController.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -456,13 +480,13 @@
 		};
 		F38570C52317E28A0043EBC2 /* R.swift */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$TEMP_DIR/rswift-lastrun",
 			);
 			name = R.swift;
 			outputFileListPaths = (
@@ -472,7 +496,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/R.generated.swift\"\nsed -i '' -e \"s/Bundle(for: R.Class.self)/Bundle.tangram/g\" \"$SRCROOT/R.generated.swift\"\n";
+			shellScript = "\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/R.generated.swift\" --hostingBundle Tangram\n";
 		};
 		F38570C62317E2DA0043EBC2 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -501,7 +525,9 @@
 			files = (
 				F3745A162599A874006D3DE2 /* SwiftyJSON.swift in Sources */,
 				F3393671238D2A3500D76D4B /* RefreshView.swift in Sources */,
+				F3C013CD2876BF6000276332 /* MenuView.swift in Sources */,
 				F339366F238D2A2A00D76D4B /* LoadMoreView.swift in Sources */,
+				F3C013CB2876BF2600276332 /* GuideViewController.swift in Sources */,
 				F38BBE902330D06A00A194AE /* UIViewExt.swift in Sources */,
 				F3689C4E230FD8D4005447BA /* AppDelegate.swift in Sources */,
 				F3A09F7C26A66A7C00A19DDB /* TextBannerView.swift in Sources */,
@@ -513,6 +539,7 @@
 				F3BD3D6325957C4100321FEB /* CLLocationManagerExt.swift in Sources */,
 				F33935C4238D1D7F00D76D4B /* EncodableExt.swift in Sources */,
 				F38BBEBC2330D93B00A194AE /* DictionaryExt.swift in Sources */,
+				F3C013C928742B4D00276332 /* BaseViewModel.swift in Sources */,
 				F3393675238D2A7300D76D4B /* SegmentBarController.swift in Sources */,
 				F38BBEAA2330D1AA00A194AE /* UINavigationControllerExt.swift in Sources */,
 				F38BBEC82330D99700A194AE /* FileManagerExt.swift in Sources */,
@@ -525,19 +552,24 @@
 				F38BBF0C2330E47400A194AE /* WebViewController.swift in Sources */,
 				F38BC0C22332367A00A194AE /* TimerExt.swift in Sources */,
 				F3C7562D26E5F94900565D89 /* DecodingContainerExt.swift in Sources */,
+				F3C013CF2876BF7C00276332 /* CircleProgressView.swift in Sources */,
 				F339367F238D2AD300D76D4B /* BannerView.swift in Sources */,
 				F38BBEB62330D90B00A194AE /* DateExt.swift in Sources */,
 				F38570C42317DFDF0043EBC2 /* App.swift in Sources */,
 				F339366B238D2A1600D76D4B /* UIScrollView+Refresh.swift in Sources */,
 				F38BBEA62330D18200A194AE /* UINavigationBarExt.swift in Sources */,
+				F3C013D12876D7AD00276332 /* PageControl.swift in Sources */,
 				F38BBEB82330D91500A194AE /* DataExt.swift in Sources */,
 				F38BBEB22330D8F300A194AE /* IntExt.swift in Sources */,
 				F38BBEAE2330D1E500A194AE /* UIWindowExt.swift in Sources */,
 				F3393681238D34BF00D76D4B /* TouchAreaLargenButton.swift in Sources */,
+				F3C013C52874260800276332 /* Keychain.swift in Sources */,
+				F3AFCFCE2757080300741249 /* BaseViewController.swift in Sources */,
 				F3BD3D6625957C7600321FEB /* NotificationNameExt.swift in Sources */,
 				F38BBEBA2330D92100A194AE /* ArrayExt.swift in Sources */,
 				F3393687238E62D600D76D4B /* StepperView.swift in Sources */,
 				F3BD3D692595874300321FEB /* TextViewController.swift in Sources */,
+				F3C013C62874260800276332 /* MarqueeLabel.swift in Sources */,
 				F38BBEC22330D96C00A194AE /* NSObjectExt.swift in Sources */,
 				F339367B238D2ABE00D76D4B /* Toast.swift in Sources */,
 				F38BBE962330D09C00A194AE /* UIImageExt.swift in Sources */,

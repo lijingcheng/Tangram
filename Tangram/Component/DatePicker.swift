@@ -36,7 +36,6 @@ public class DatePicker: UIView {
         cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .regular)
         cancelButton.frame = CGRect(x: 0, y: 10, width: 70, height: 40)
         cancelButton.setTitle("取消", for: .normal)
-        cancelButton.addTarget(self, action: #selector(cancel), for: .touchUpInside)
         
         return cancelButton
     }()
@@ -47,7 +46,6 @@ public class DatePicker: UIView {
         confirmButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .regular)
         confirmButton.frame = CGRect(x: Device.width - 70, y: 10, width: 70, height: 40)
         confirmButton.setTitle("确定", for: .normal)
-        confirmButton.addTarget(self, action: #selector(confirm), for: .touchUpInside)
         
         return confirmButton
     }()
@@ -82,6 +80,9 @@ public class DatePicker: UIView {
     // MARK: -
     public static func show(_ date: Date?, completionHandler: @escaping (_ date: Date) -> Void) {
         shared.completionHandler = completionHandler
+        
+        shared.confirmButton.addTarget(self, action: #selector(confirm), for: .touchUpInside)
+        shared.cancelButton.addTarget(self, action: #selector(cancel), for: .touchUpInside)
         
         shared.addSubview(shared.datePicker)
         shared.addSubview(shared.horizontalLineView)

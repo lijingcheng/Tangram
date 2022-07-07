@@ -10,7 +10,7 @@ import UIKit
 /// This `R` struct is generated and contains references to static resources.
 struct R: Rswift.Validatable {
   fileprivate static let applicationLocale = hostingBundle.preferredLocalizations.first.flatMap { Locale(identifier: $0) } ?? Locale.current
-  fileprivate static let hostingBundle = Bundle.tangram
+  fileprivate static let hostingBundle = Bundle(for: R.Class.self).path(forResource: "Tangram", ofType: "bundle").flatMap(Bundle.init(path:)) ?? Bundle(for: R.Class.self)
 
   /// Find first language and bundle for which the table exists
   fileprivate static func localeBundle(tableName: String, preferredLanguages: [String]) -> (Foundation.Locale, Foundation.Bundle)? {
@@ -127,8 +127,14 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.image` struct is generated, and contains static references to 5 images.
+  /// This `R.image` struct is generated, and contains static references to 8 images.
   struct image {
+    /// Image `icon_dot_selected`.
+    static let icon_dot_selected = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon_dot_selected")
+    /// Image `icon_dot_unselected`.
+    static let icon_dot_unselected = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon_dot_unselected")
+    /// Image `icon_loading_fail`.
+    static let icon_loading_fail = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon_loading_fail")
     /// Image `icon_nav_back`.
     static let icon_nav_back = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon_nav_back")
     /// Image `icon_nav_close`.
@@ -139,6 +145,27 @@ struct R: Rswift.Validatable {
     static let icon_pull_arrow = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon_pull_arrow")
     /// Image `icon_pull_hud`.
     static let icon_pull_hud = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon_pull_hud")
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "icon_dot_selected", bundle: ..., traitCollection: ...)`
+    static func icon_dot_selected(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.icon_dot_selected, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "icon_dot_unselected", bundle: ..., traitCollection: ...)`
+    static func icon_dot_unselected(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.icon_dot_unselected, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "icon_loading_fail", bundle: ..., traitCollection: ...)`
+    static func icon_loading_fail(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.icon_loading_fail, compatibleWith: traitCollection)
+    }
+    #endif
 
     #if os(iOS) || os(tvOS)
     /// `UIImage(named: "icon_nav_back", bundle: ..., traitCollection: ...)`

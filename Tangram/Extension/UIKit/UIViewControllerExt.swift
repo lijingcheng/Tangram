@@ -94,7 +94,7 @@ extension UIViewController {
         let disposeBag = DisposeBag()
         
         let item = UIBarButtonItem(image: R.image.icon_nav_back(), style: .plain, target: nil, action: nil)
-        item.imageInsets = UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 0)
+        item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         item.rx.tap.bind { (_) in
             completionHandler()
         }.disposed(by: disposeBag)

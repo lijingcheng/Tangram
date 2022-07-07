@@ -23,6 +23,7 @@ public class Alert {
         UIApplication.shared.windows.first?.endEditing(true)
         
         let alertController = UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
+        alertController.modalPresentationStyle = .overFullScreen
         
         let cancelAction = UIAlertAction(title: cancelButtonTitle, style: .cancel) { (action) in
             completionHandler(Alert.Event.cancel.rawValue)

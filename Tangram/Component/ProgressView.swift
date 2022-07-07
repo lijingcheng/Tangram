@@ -52,6 +52,9 @@ public class ProgressView: UIView {
     override public func layoutSubviews() {
         super.layoutSubviews()
         
+        trackView.cornerRadius = cornerRadius
+        backgroundView.cornerRadius = cornerRadius
+        
         backgroundView.frame = self.bounds
         trackView.frame = CGRect(x: 0, y: 0, width: max(0, min(self.width, self.width * CGFloat(progress))), height: self.height)
     }
