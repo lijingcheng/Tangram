@@ -9,13 +9,13 @@ s.summary      = 'Too big, Too strong, Too fast, Too good!!!'
 
 s.static_framework = true
 s.swift_version = '5.5'
-s.ios.deployment_target = '10.0'
+s.ios.deployment_target = '12.0'
 s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
 s.source_files = 'R.generated.swift', 'Tangram/Base/*.swift', 'Tangram/Extension/**/*.swift', 'Tangram/Service/*.swift', 'Tangram/Component/**/*.swift'
 s.resource_bundles = { 'Tangram' => ['Tangram/Assets.xcassets'] }
 
 s.dependency 'Alamofire', '5.6.1'
-s.dependency 'Kingfisher', '6.1.0'
+s.dependency 'Kingfisher', '7.3.0'
 s.dependency 'SnapKit', '5.6.0'
 s.dependency 'R.swift', '6.1.0'
 s.dependency 'RxSwift', '6.5.0'
