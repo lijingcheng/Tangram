@@ -6,22 +6,10 @@
 //  Copyright © 2019 李京城. All rights reserved.
 //
 
-import Foundation
 import UIKit
 import CommonCrypto
 
 extension String {
-    /// md5
-    public func md5() -> String {
-        let data = Data(self.utf8)
-        let hash = data.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> [UInt8] in
-            var hash = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
-            CC_MD5(bytes.baseAddress, CC_LONG(data.count), &hash)
-            return hash
-        }
-        return hash.map { String(format: "%02x", $0) }.joined()
-    }
-    
     /// 将URL中的"特殊字符"转成“%3A%2F%2F”
     public var urlEncoded: String {
         return addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
@@ -35,11 +23,6 @@ extension String {
     /// 将字符串复制到前贴板
     public func copyToPasteboard() {
         return UIPasteboard.general.string = self
-    }
-
-    /// 是否是手机号（1打头的11位数字）
-    public var isPhoneNumber: Bool {
-        return NSPredicate(format: "SELF MATCHES %@", "^1[0-9]{10}$").evaluate(with: self)
     }
     
     /// 是否是邮箱
@@ -67,15 +50,20 @@ extension String {
         return false
     }
     
+    /// 是否是手机号（1打头的11位数字）
+    public var isPhoneNumber: Bool {
+        return NSPredicate(format: "SELF MATCHES %@", "^1[0-9]{10}$").evaluate(with: self)
+    }
+    
     /// 136****3119, 星号也可设置成别的字符
-    public func cover(_ separator: String = "****") -> String {
+    public func coverPhoneNumber(_ separator: String = "****") -> String {
         guard isPhoneNumber else { return self }
         
         return (self as NSString).replacingCharacters(in: NSRange(location: 3, length: 4), with: separator)
     }
     
     /// 136 9134 3119, 空格也可设置成别的
-    public func format(_ separator: String = " ") -> String {
+    public func formatPhoneNumber(_ separator: String = " ") -> String {
         guard self.isPhoneNumber else { return self }
         
         let index1 = index(startIndex, offsetBy: 3)

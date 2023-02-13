@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SnapKit
 
 /// HUD 样式，支持浅色和深色
 public enum ProgressHUDStyle {
@@ -47,14 +46,10 @@ public class ProgressHUD {
     }()
     
     fileprivate var ringView: UIImageView = {
-        var ringImage = R.image.icon_progress_hud()
+        var ringImage = UIImage(named: "icon_progress_hud", in: .tangram, compatibleWith: nil)
         
         if let ringColor = ProgressHUD.ringColor {
-            if #available(iOS 13.0, *) {
-                ringImage = ringImage?.withTintColor(ringColor)
-            } else {
-                ringImage = ringImage?.filled(ringColor)
-            }
+            ringImage = ringImage?.withTintColor(ringColor)
         }
         
         let ringView = UIImageView(image: ringImage)
@@ -83,7 +78,7 @@ public class ProgressHUD {
     public static func show(_ text: String = "", style: ProgressHUDStyle = .light, isModal: Bool = false, endEditing: Bool = true, inView: UIView? = nil) {
         DispatchQueue(label: "ProgressHUD").sync {
             if endEditing {
-                UIApplication.shared.keyWindow?.endEditing(true)
+                UIApplication.shared.keyWindou?.endEditing(true)
             }
             
             self.dismiss()
@@ -99,7 +94,7 @@ public class ProgressHUD {
     
     // MARK: -
     fileprivate func showHUDView(_ text: String, style: ProgressHUDStyle, isModal: Bool, inView: UIView? = nil) {
-        if isModal, let window = UIApplication.shared.windows.first {
+        if isModal, let window = UIApplication.shared.keyWindou {
             backgroundView.frame = window.bounds
             window.addSubview(backgroundView)
             
@@ -148,6 +143,7 @@ public class ProgressHUD {
         var hudViewHeight: CGFloat = 64
         
         let maxWidth = hudView.superview?.width ?? 0
+        let maxHeight = hudView.superview?.height ?? 0
         
         if textLabel?.superview != nil {
             let rectLabel = (textLabel?.text?.boundingRect(with: CGSize(width: maxWidth - 105 - padding * 2, height: 100),
@@ -161,12 +157,7 @@ public class ProgressHUD {
             textLabel?.frame = CGRect(x: padding, y: padding * 2 + ringSize, width: ceil(rectLabel.size.width), height: ceil(rectLabel.size.height))
         }
         
-        hudView.snp.remakeConstraints { (make) -> Void in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
-            make.width.equalTo(hudViewWidth)
-            make.height.equalTo(hudViewHeight)
-        }
+        hudView.frame = CGRect(x: (maxWidth - hudViewWidth) / 2, y: (maxHeight - hudViewHeight) / 2, width: hudViewWidth, height: hudViewHeight)
         
         ringView.frame = CGRect(x: (hudViewWidth - ringSize) / 2, y: 16, width: ringSize, height: ringSize)
     }

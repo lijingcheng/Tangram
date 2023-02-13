@@ -308,11 +308,7 @@ public class SegmentBar: UIView {
     override public func didMoveToSuperview() {
         super.didMoveToSuperview()
         
-        if #available(iOS 11.0, *) {
-            collectionView.contentInsetAdjustmentBehavior = .never
-        } else {
-            parentViewController?.automaticallyAdjustsScrollViewInsets = false
-        }
+        collectionView.contentInsetAdjustmentBehavior = .never
     }
     
     override public func layoutSubviews() {
@@ -432,7 +428,7 @@ extension SegmentBar: UICollectionViewDelegate, UICollectionViewDataSource, UICo
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "segmentBarItemId", for: indexPath) as! SegmentBarItemView
         cell.titleLabel.frame = CGRect(x: 0, y: 0, width: widthForItemAt(indexPath.item), height: height)
         cell.titleLabel.font = (selectedIndex == indexPath.item) ? (selectedTextFont ?? SegmentBar.appearance.selectedTextFont) : (unselectedTextFont ?? SegmentBar.appearance.unselectedTextFont)
-        cell.titleLabel.transform = (selectedIndex == indexPath.item) ? CGAffineTransform(scaleX: selectedItemScale, y: selectedItemScale): .identity
+        cell.titleLabel.transform = (selectedIndex == indexPath.item) ? CGAffineTransform(scaleX: selectedItemScale, y: selectedItemScale) : .identity
         cell.titleLabel.textColor = (selectedIndex == indexPath.item) ? (selectedTintColor ?? SegmentBar.appearance.selectedTintColor) : (unselectedTintColor ?? SegmentBar.appearance.unselectedTintColor)
         
         if let segmentBarItem = items?[indexPath.item] {

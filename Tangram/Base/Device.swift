@@ -21,11 +21,7 @@ public struct Device {
     
     /// 获取状态栏高度
     public static var statusBarHeight: CGFloat {
-        if #available(iOS 13.0, *) {
-            return UIApplication.shared.windows.first?.windowScene?.statusBarManager?.statusBarFrame.height ?? 20
-        } else {
-            return UIApplication.shared.statusBarFrame.height
-        }
+        return UIApplication.shared.keyWindou?.windowScene?.statusBarManager?.statusBarFrame.height ?? 20
     }
     
     /// 获取导航栏高度
@@ -50,18 +46,12 @@ public struct Device {
     
     /// 屏幕顶部安全区高度
     public static var safeAreaTopInset: CGFloat {
-        if #available(iOS 11.0, *) {
-            return UIApplication.shared.windows.first?.safeAreaInsets.top ?? 20
-        }
-        return 20
+        return UIApplication.shared.keyWindou?.safeAreaInsets.top ?? 20
     }
     
     /// 屏幕底部安全区高度
     public static var safeAreaBottomInset: CGFloat {
-        if #available(iOS 11.0, *) {
-            return UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0
-        }
-        return 0
+        return UIApplication.shared.keyWindou?.safeAreaInsets.bottom ?? 0
     }
     
     /// 判断是否是模拟器
@@ -71,6 +61,16 @@ public struct Device {
         #else
         return false
         #endif
+    }
+    
+    /// 获取设备名字
+    public static var name: String {
+        return UIDevice.current.name
+    }
+    
+    /// 获取设备系统版本
+    public static var version: String {
+        return UIDevice.current.systemVersion
     }
     
     /// 用于 APNs 的 deviceToken

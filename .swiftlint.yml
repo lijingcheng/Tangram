@@ -33,11 +33,11 @@ type_body_length:
 - 600 # warning
 - 1200 # error
 function_body_length:
-- 80
-- 160
+- 150
+- 200
 # 或者也可以同时进行显式设置
 file_length:
-- 600
-- 1200
+- 1500
+- 2500
 
 reporter: "xcode" # 报告类型 (xcode, json, csv, checkstyle, junit, html, emoji)

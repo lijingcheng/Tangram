@@ -52,9 +52,6 @@ public class WebViewController: UIViewController {
     /// 是否隐藏进度条
     @objc public var hiddenProgressView: ObjCBool = false
     
-    /// 是否支持展示异常视图
-    @objc public var supportExceptionView: ObjCBool = true
-    
     /// 使用 webVC 时，如果有业务逻辑上的处理，可以设置这个 delegate，然后把业务代码写在自己的类里
     @objc public weak var delegate: WKNavigationDelegate? {
         didSet {
@@ -76,19 +73,13 @@ public class WebViewController: UIViewController {
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
         
-        var webViewY: CGFloat = 0
-        if #available(iOS 11.0, *) {
-            webViewY = Device.statusBarHeight + Device.navigationBarHeight
-        }
+        var webViewY: CGFloat = Device.safeAreaTopInset + Device.navigationBarHeight
 
-        let webView = WKWebView(frame: CGRect(x: 0, y: webViewY, width: Device.width, height: Device.height - Device.statusBarHeight - Device.navigationBarHeight - (needSafeAreaBottom.boolValue ? Device.safeAreaBottomInset : 0)), configuration: configuration)
+        let webView = WKWebView(frame: CGRect(x: 0, y: webViewY, width: Device.width, height: Device.height - Device.safeAreaTopInset - Device.navigationBarHeight - (needSafeAreaBottom.boolValue ? Device.safeAreaBottomInset : 0)), configuration: configuration)
         webView.allowsBackForwardNavigationGestures = true
         webView.backgroundColor = UIColor(hex: 0xF3F4F5)
         webView.scrollView.isScrollEnabled = isScrollEnabled.boolValue
-        
-        if #available(iOS 11.0, *) {
-            webView.scrollView.contentInsetAdjustmentBehavior = .never
-        }
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         
         return webView
     }()
@@ -115,6 +106,7 @@ public class WebViewController: UIViewController {
         super.viewDidLoad()
         
         extendedLayoutIncludesOpaqueBars = true
+        supportPushSelf = true
         supportPopGestureRecognizer = canPopGestureRecognizer.boolValue
         
         navigationItem.title = navigationItemTitle
@@ -123,14 +115,14 @@ public class WebViewController: UIViewController {
         
         // 设置 leftBarButtonItems
         if !hideBackBarButton.boolValue {
-            let backBarButtonItem = UIBarButtonItem(image: R.image.icon_nav_back(), style: .plain, target: self, action: #selector(back))
+            let backBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_nav_back", in: .tangram, compatibleWith: nil), style: .plain, target: self, action: #selector(back))
             backBarButtonItem.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             
             navigationItem.leftBarButtonItems = [backBarButtonItem]
         }
 
         if !hideCloseBarButton.boolValue {
-            let closeBarButtonItem = UIBarButtonItem(image: R.image.icon_nav_close(), style: .plain, target: self, action: #selector(close))
+            let closeBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_nav_close", in: .tangram, compatibleWith: nil), style: .plain, target: self, action: #selector(close))
             
             if let leftBarButtonItems = navigationItem.leftBarButtonItems, !leftBarButtonItems.isEmpty {
                 closeBarButtonItem.imageInsets = UIEdgeInsets(top: 0, left: -18, bottom: 0, right: 0)
@@ -256,33 +248,21 @@ public class WebViewController: UIViewController {
     }
     
     @objc private func close() {
-        Router.pop {
-            if self.hideBackBarButton.boolValue {
-                NotificationCenter.default.post(name: Notification.Name.Web.didClose, object: nil)
-            }
-        }
+        Router.pop()
     }
     
     public func reload() {
-        if Network.shared.isReachable {
-            hideExceptionView()
+        contentHeight = 0
+        
+        if let url = URL(string: url) {
+            var request = URLRequest(url: url)
             
-            contentHeight = 0
-            
-            if let url = URL(string: url) {
-                var request = URLRequest(url: url)
-                
-                if !httpBody.isEmpty {
-                    request.httpMethod = "POST"
-                    request.httpBody = httpBody.data(using: .utf8)
-                }
-                
-                webView.load(request)
+            if !httpBody.isEmpty {
+                request.httpMethod = "POST"
+                request.httpBody = httpBody.data(using: .utf8)
             }
-        } else {
-            showExceptionView(eventHandler: {
-                self.reload()
-            })
+            
+            webView.load(request)
         }
     }
     
@@ -338,10 +318,6 @@ extension WebViewController: WKNavigationDelegate {
         progressView.setProgress(0, animated: false)
         
         loadDidFailHandler?(error)
-        
-        showExceptionView(eventHandler: {
-            self.reload()
-        })
     }
     
     // 页面加载内容过程中发生错误时触发
@@ -353,10 +329,6 @@ extension WebViewController: WKNavigationDelegate {
         progressView.setProgress(0, animated: false)
         
         loadDidFailHandler?(error)
-        
-        showExceptionView(eventHandler: {
-            self.reload()
-        })
     }
     
     // 内存占用过大时页面会白屏，会触发此方法
@@ -394,7 +366,7 @@ extension WebViewController: WKUIDelegate {
             alertController.popoverPresentationController?.sourceRect = CGRect(x: Device.width / 2, y: Device.height, width: 1, height: 1)
         }
         
-        Router.open(alertController, present: true)
+        present(alertController, animated: true)
     }
     
     // 创建新 webView，当要跳转的页面是要新开页面时需要特殊处理一下（_blank）
@@ -413,108 +385,5 @@ extension WebViewController: WKScriptMessageHandler {
     // 接收 H5 发送的消息
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         NotificationCenter.default.post(name: Notification.Name.Web.didReceiveScriptMessage, object: message)
-    }
-}
-
-extension WebViewController {
-    func showExceptionView(eventHandler: @escaping () -> Void = {}) {
-        guard supportExceptionView.boolValue else {
-            return
-        }
-        
-        hideExceptionView()
-
-        let exceptionView = WebExceptionView()
-        exceptionView.eventHandler = eventHandler
-        view.addSubview(exceptionView)
-    }
-
-    func hideExceptionView() {
-        view.viewWithTag(67887654)?.removeFromSuperview()
-    }
-}
-
-class WebExceptionView: UIView {
-    let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = R.image.icon_loading_fail()
-        
-        return imageView
-    }()
-
-    let textLabel: UILabel = {
-        let textLabel = UILabel()
-        textLabel.text = "加载失败，请重试"
-        textLabel.textAlignment = .center
-        textLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        textLabel.textColor = UIColor(hex: 0x9FA4B3)
-        
-        return textLabel
-    }()
-    
-    let eventButton: UIButton = {
-        let eventButton = UIButton(type: .custom)
-        eventButton.layer.cornerRadius = 7.5
-        eventButton.layer.borderWidth = 0.5
-        eventButton.setTitle("点击重试", for: .normal)
-        eventButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-
-        eventButton.layer.borderColor = UIColor(hex: 0x20A0DA)?.cgColor
-        eventButton.setTitleColor(UIColor(hex: 0x20A0DA), for: .normal)
-        eventButton.backgroundColor = .white
-     
-        return eventButton
-    }()
-    
-    var eventHandler: (() -> Void)?
-    
-    public init() {
-        super.init(frame: .zero)
-        
-        tag = 67887654
-        
-        eventButton.addTarget(self, action: #selector(restartRequest), for: .touchUpInside)
-        
-        addSubview(imageView)
-        addSubview(textLabel)
-        addSubview(eventButton)
-    }
-
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    override public func layoutSubviews() {
-        super.layoutSubviews()
-        
-        snp.remakeConstraints { (make) -> Void in
-            make.center.equalToSuperview()
-            make.width.equalToSuperview()
-            make.height.equalTo(150)
-        }
-        
-        imageView.snp.remakeConstraints { (make) -> Void in
-            make.top.equalTo(0)
-            make.centerX.equalToSuperview()
-            make.width.height.equalTo(80)
-        }
-        
-        textLabel.snp.remakeConstraints { (make) -> Void in
-            make.left.right.equalToSuperview().inset(0)
-            make.top.equalTo(90)
-            make.height.equalTo(20)
-        }
-        
-        eventButton.snp.remakeConstraints { (make) -> Void in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(120)
-            make.width.equalTo(100)
-            make.height.equalTo(30)
-        }
-    }
-    
-    @objc func restartRequest( _ sender: Any) {
-        eventHandler?()
     }
 }

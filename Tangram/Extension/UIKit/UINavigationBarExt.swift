@@ -10,14 +10,10 @@ import UIKit
 
 extension UINavigationBar {
     public func backgroundStyle(color: UIColor) {
-        if #available(iOS 13.0, *) {
-            let appearance = standardAppearance
-            appearance.backgroundColor = color
-            
-            standardAppearance = appearance
-            scrollEdgeAppearance = appearance
-        } else {
-            setBackgroundImage(UIImage(color: color, size: CGSize(width: Device.width, height: 1)), for: .default)
-        }
+        let appearance = standardAppearance
+        appearance.backgroundColor = color
+        
+        standardAppearance = appearance
+        scrollEdgeAppearance = appearance
     }
 }

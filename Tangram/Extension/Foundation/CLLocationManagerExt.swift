@@ -16,7 +16,7 @@ extension CLLocationManager {
             return false
         }
         
-        switch CLLocationManager.authorizationStatus() {
+        switch CLLocationManager().authorizationStatus {
         case .restricted:
             return false
         case .denied:

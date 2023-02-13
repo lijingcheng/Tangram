@@ -76,9 +76,7 @@ public class Network {
         configuration.timeoutIntervalForRequest = timeoutInterval
         configuration.timeoutIntervalForResource = timeoutInterval
         configuration.httpMaximumConnectionsPerHost = 6
-        if #available(iOS 11.0, *) {
-            configuration.waitsForConnectivity = true // 网络不通时 request 会等有网后再发出去
-        }
+        configuration.waitsForConnectivity = true // 网络不通时 request 会等有网后再发出去
         
         manager = Session(configuration: configuration)
         downloadManager = Session(configuration: configuration)
@@ -174,9 +172,15 @@ public class Network {
                 } else if let data = value as? Data {
                     if data.kf.imageFormat == .GIF {
                         multipartFormData.append(data, withName: key, fileName: "\(key).gif", mimeType: "image/gif")
+                    } else if data.kf.imageFormat == .PNG {
+                        multipartFormData.append(data, withName: key, fileName: "\(key).png", mimeType: "image/png")
                     } else {
-                        if let data2 = UIImage(data: data)?.compressionQuality(size: maxSize) {
-                            multipartFormData.append(data2, withName: key, fileName: "\(key).jpg", mimeType: "image/jpg")
+                        if data.count < (maxSize * 1024) {
+                            multipartFormData.append(data, withName: key, fileName: "\(key).jpg", mimeType: "image/jpg")
+                        } else {
+                            if let data2 = UIImage(data: data)?.compressionQuality(size: maxSize) {
+                                multipartFormData.append(data2, withName: key, fileName: "\(key).jpg", mimeType: "image/jpg")
+                            }
                         }
                     }
                 }

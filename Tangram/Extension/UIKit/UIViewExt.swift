@@ -192,18 +192,14 @@ extension UIView {
     }
     
     /// 自定义视图弹出效果支持从中间出来和从底下出来，背景视图支持点击消失
-    public func present(_ from: presentStyle = .center, tapBackgroundClose: Bool = false, isFullScreenDisplay: Bool = false, useSafeArea: Bool = false, completionHandler: @escaping () -> Void = {}) {
-        guard let window = UIApplication.shared.windows.first, !window.subviews.contains(self) else {
+    public func present(_ from: presentStyle = .center, tapBackgroundClose: Bool = false, completionHandler: @escaping () -> Void = {}) {
+        guard let window = UIApplication.shared.keyWindou, !window.subviews.contains(self) else {
             return
         }
         
         window.endEditing(true)
         
         tag = 1010122
-        
-        if isFullScreenDisplay {
-            frame = window.bounds
-        }
         
         let backgroundView = UIView(frame: window.bounds)
         backgroundView.backgroundColor = UIColor.black
@@ -212,11 +208,6 @@ extension UIView {
 
         window.addSubview(backgroundView)
         window.addSubview(self)
-
-        let disposeBag = DisposeBag()
-        RxKeyboard.instance.visibleHeight.drive(onNext: { [weak self] keyboardVisibleHeight in
-            self?.y = (Device.height - keyboardVisibleHeight - (self?.height ?? 0)) / 2
-        }).disposed(by: disposeBag)
         
         if tapBackgroundClose {
             backgroundView.isUserInteractionEnabled = true
@@ -250,16 +241,10 @@ extension UIView {
             y = Device.height
             alpha = 1
             
-            var newY = Device.height - height
-            
-            if useSafeArea, #available(iOS 11.0, *) {
-                newY -= safeAreaInsets.bottom
-            }
-            
             UIView.animate(withDuration: 0.3, animations: {
                 backgroundView.alpha = 0.4
                 
-                self.y = newY
+                self.y = Device.height - self.height - self.safeAreaInsets.bottom
             }, completion: { (succes) in
                 completionHandler()
             })
@@ -268,7 +253,7 @@ extension UIView {
     
     /// 移除自定义视图
     public func dismiss(_ completionHandler: @escaping () -> Void = {}) {
-        guard let window = UIApplication.shared.windows.first else {
+        guard let window = UIApplication.shared.keyWindou else {
             return
         }
         
@@ -295,35 +280,6 @@ extension UIView {
     
     @objc private func backgroundViewOnClick() {
         dismiss()
-    }
-    
-    /// 临时去掉 present 效果
-    public func undoPresentEffect() {
-        guard let window = UIApplication.shared.windows.first else { return }
-        
-        window.endEditing(true)
-        
-        window.subviews.forEach { subview in
-            if subview.tag == 1010123 {
-                subview.alpha = 0
-            }
-        }
-        
-        alpha = 0
-    }
-    
-    /// 恢复 present 效果
-    public func resumePresentEffect() {
-        guard let window = UIApplication.shared.windows.first else { return }
-        
-        window.endEditing(true)
-        
-        window.subviews.forEach { subview in
-            if subview.tag == 1010123 {
-                subview.alpha = 0.4
-            }
-        }
-        alpha = 1
     }
 }
 

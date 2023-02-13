@@ -14,6 +14,8 @@ extension Notification.Name {
         public static let didSuccess = Notification.Name(rawValue: "com.tangram.notification.name.location.didSuccess")
         /// 定位失败
         public static let didFailure = Notification.Name(rawValue: "com.tangram.notification.name.location.didFailure")
+        /// 需要重新定位
+        public static let needReload = Notification.Name(rawValue: "com.tangram.notification.name.location.needReload")
     }
     
     public struct User {
@@ -21,10 +23,6 @@ extension Notification.Name {
         public static let didLogin = Notification.Name(rawValue: "com.tangram.notification.name.user.didLogin")
         /// 退出成功
         public static let didLogout = Notification.Name(rawValue: "com.tangram.notification.name.user.didLogout")
-        /// 用户信息变更
-        public static let didInfoChange = Notification.Name(rawValue: "com.tangram.notification.name.user.didInfoChange")
-        /// 用户登录状态失效
-        public static let tokenInvalid = Notification.Name(rawValue: "com.tangram.notification.name.user.tokenInvalid")
     }
     
     public struct Network {
@@ -37,7 +35,10 @@ extension Notification.Name {
     public struct Web {
         /// 接收到 H5 发送过来的消息
         public static let didReceiveScriptMessage = Notification.Name(rawValue: "com.tangram.notification.name.web.didReceiveScriptMessage")
-        /// 点击关闭按钮关掉 webview
-        public static let didClose = Notification.Name(rawValue: "com.tangram.notification.name.web.didClose")
+    }
+    
+    public struct Event {
+        /// 首页加载成功
+        public static let appLoadFinish = Notification.Name(rawValue: "com.tangram.notification.name.event.appLoadFinish")
     }
 }

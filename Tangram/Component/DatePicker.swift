@@ -16,9 +16,7 @@ public class DatePicker: UIView {
         datePicker.backgroundColor = .white
         datePicker.minimumDate = Date(timeIntervalSince1970: -2209017600)
         datePicker.maximumDate = Date()
-        if #available(iOS 14, *) {
-            datePicker.preferredDatePickerStyle = .wheels
-        }
+        datePicker.preferredDatePickerStyle = .wheels
 
         return datePicker
     }()

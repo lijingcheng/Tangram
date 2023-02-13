@@ -22,14 +22,14 @@ public protocol TabBarItemProtocol {
 
 public class Router {
     /// 组件之间跳转需要用这个
-    public static func open(_ name: String, storyboard: String = "", bundle: Bundle = Bundle.main, params: [String: Any] = [:], animated: Bool = true, present: Bool = false, completion: (() -> Void)? = nil) {
+    public static func open(_ name: String, storyboard: String = "", bundle: Bundle = Bundle.main, params: [String: Any] = [:], animated: Bool = true, completion: (() -> Void)? = nil) {
         let viewController = Router.viewControllerWithClassName(name, storyboard: storyboard, bundle: bundle)
         
-        Router.open(viewController, params: params, animated: animated, present: present, completion: completion)
+        Router.open(viewController, params: params, animated: animated, completion: completion)
     }
 
     /// 组件内跳转推荐用这个，用 R.swift 可以省去指定 bundle 的操作
-    public static func open(_ viewController: UIViewController?, params: [String: Any]? = [:], animated: Bool = true, present: Bool = false, completion: (() -> Void)? = nil) {
+    public static func open(_ viewController: UIViewController?, params: [String: Any]? = [:], animated: Bool = true, completion: (() -> Void)? = nil) {
         guard let visibleVC = UIWindow.visibleViewController() else {
             return
         }
@@ -44,36 +44,16 @@ public class Router {
                     vc.setValuesForKeys(data)
                 }
                 
-                if present {
-                    vc.modalPresentationStyle = .fullScreen
-                    visibleVC.present(vc, animated: animated, completion: { completion?() })
-                } else {
-                    if visibleVC.navigationController?.viewControllers.count == 1 {
-                        vc.hidesBottomBarWhenPushed = true
-                    } else {
-                        vc.hidesBottomBarWhenPushed = false
-                    }
-                    
-                    visibleVC.navigationController?.push(vc, animated: animated, completion: completion)
-                }
+                vc.hidesBottomBarWhenPushed = (visibleVC.navigationController?.viewControllers.count == 1)
+                
+                visibleVC.navigationController?.push(vc, animated: animated, completion: completion)
             }
         }
     }
 
     /// 默认返回上一页，也可根据 popType 参数跳转到某一页，或根据锚点跳转到相关页面
-    public static func pop(_ name: String = "", popType: NavPopType = .previous, params: [String: Any]? = [:], animated: Bool = true, present: Bool = false, completion: (() -> Void)? = nil) {
-        guard let visibleVC = UIWindow.visibleViewController() else {
-            return
-        }
-        
-        if present {
-            DispatchQueue.main.async {
-                visibleVC.dismiss(animated: animated, completion: completion)
-            }
-            return
-        }
-
-        guard let navigationController = visibleVC.navigationController else {
+    public static func pop(_ name: String = "", popType: NavPopType = .previous, params: [String: Any]? = [:], animated: Bool = true, completion: (() -> Void)? = nil) {
+        guard let navigationController = UIWindow.visibleViewController()?.navigationController else {
             return
         }
         
@@ -109,19 +89,12 @@ public class Router {
             })
         }
         
-        Router.pop(popVC, params: params, animated: animated, present: present, completion: completion)
+        Router.pop(popVC, params: params, animated: animated, completion: completion)
     }
     
     /// 默认返回上一页，也可根据 popType 参数跳转到某一页，或根据锚点跳转到相关页面
-    public static func pop(_ viewController: UIViewController?, params: [String: Any]? = [:], animated: Bool = true, present: Bool = false, completion: (() -> Void)? = nil) {
+    public static func pop(_ viewController: UIViewController?, params: [String: Any]? = [:], animated: Bool = true, completion: (() -> Void)? = nil) {
         ProgressHUD.dismiss()
-        
-        if present {
-            DispatchQueue.main.async {
-                viewController?.dismiss(animated: animated, completion: completion)
-            }
-            return
-        }
         
         guard let navigationController = UIWindow.visibleViewController()?.navigationController else {
             return
@@ -156,7 +129,7 @@ public class Router {
     
     /// 切换 tabbar index
     public static func switchTabBarSelectedIndex(index: TabBarItemProtocol, params: [String: Any] = [:], completion: (() -> Void)? = nil) {
-        let rootVC = UIApplication.shared.windows.first?.rootViewController
+        let rootVC = UIApplication.shared.keyWindou?.rootViewController
             
         if let tabBarController = rootVC as? UITabBarController {
             Router.pop(popType: .root, animated: false) {
@@ -177,7 +150,7 @@ public class Router {
     public static func transition(_ rootViewController: UIViewController?) {
         rootViewController?.modalTransitionStyle = .crossDissolve
         
-        if let window = UIApplication.shared.windows.first {
+        if let window = UIApplication.shared.keyWindou {
             UIView.setAnimationsEnabled(false)
             UIView.transition(with: window, duration: 0.5, options: .transitionCrossDissolve, animations: {
                 window.rootViewController = rootViewController
@@ -285,19 +258,5 @@ extension UINavigationController {
         coordinator.animate(alongsideTransition: nil) { _ in
             completion?()
         }
-    }
-
-    /// 根据类名获取导航堆栈中的 ViewController 对象
-    public func viewControllerWithClassName(_ name: String) -> UIViewController? {
-        var popVC: UIViewController?
-        
-        viewControllers.reversed().forEach({ vc in
-            if vc.className == name {
-                popVC = vc
-                return
-            }
-        })
-        
-        return popVC
     }
 }

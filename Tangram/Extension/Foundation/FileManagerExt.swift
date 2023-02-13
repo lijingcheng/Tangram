@@ -39,13 +39,9 @@ extension FileManager {
     @discardableResult
     public static func writeCacheData(_ data: Any?, atPath path: String?) -> Bool {
         if let cacheData = data, let path = path {
-            if #available(iOS 12.0, *) {
-                try? NSKeyedArchiver.archivedData(withRootObject: cacheData, requiringSecureCoding: false).write(to: URL(fileURLWithPath: path))
-                
-                return true
-            } else {
-                return NSKeyedArchiver.archiveRootObject(cacheData, toFile: path)
-            }
+            try? NSKeyedArchiver.archivedData(withRootObject: cacheData, requiringSecureCoding: false).write(to: URL(fileURLWithPath: path))
+            
+            return true
         }
         
         return false
@@ -54,11 +50,7 @@ extension FileManager {
     /// 读文件
     public static func readCacheData(_ path: String?) -> Any? {
         if FileManager.default.fileExists(atPath: path ?? "") {
-            if #available(iOS 12.0, *) {
-                return try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(Data(contentsOf: URL(fileURLWithPath: path!)))
-            } else {
-                return try? NSKeyedUnarchiver.unarchiveObject(with: Data(contentsOf: URL(fileURLWithPath: path!)))
-            }
+            return try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(Data(contentsOf: URL(fileURLWithPath: path!)))
         }
         
         return nil

@@ -40,14 +40,14 @@ class PageControlCell: UICollectionViewCell {
 
 public class PageControl: UIView {
     /// 当前选中图标
-    public var indicatorImage = R.image.icon_dot_selected() {
+    public var indicatorImage = UIImage(named: "icon_dot_selected", in: .tangram, compatibleWith: nil) {
         didSet {
             collectionView.reloadData()
         }
     }
 
     /// 默认图标
-    public var preferredIndicatorImage = R.image.icon_dot_unselected() {
+    public var preferredIndicatorImage = UIImage(named: "icon_dot_unselected", in: .tangram, compatibleWith: nil) {
         didSet {
             collectionView.reloadData()
         }

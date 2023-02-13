@@ -41,11 +41,4 @@ extension UIImageView {
         addSubview(blurEffectView)
         clipsToBounds = true
     }
-    
-    /// 给 UIImageView 加模糊效果并返回新的 UIImageView
-    public func blurred(withStyle style: UIBlurEffect.Style = .light) -> UIImageView {
-        let imgView = self
-        imgView.blur(withStyle: style)
-        return imgView
-    }
 }

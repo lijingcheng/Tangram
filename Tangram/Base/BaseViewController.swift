@@ -44,15 +44,9 @@ open class BaseViewController: UIViewController {
         
         supportNavigationBarColorChange = true
         
-        if #available(iOS 13.0, *) {
-            let appearance = UINavigationBar.appearance().standardAppearance
-            navigationBarHideBottomLine = (appearance.shadowColor == nil)
-            navigationBarBackgroundColor = appearance.backgroundColor
-        } else {
-            navigationBarHideBottomLine = (UINavigationBar.appearance().shadowImage != nil)
-            navigationBarBackgroundColor = UINavigationBar.appearance().barTintColor
-        }
-        
+        let appearance = UINavigationBar.appearance().standardAppearance
+        navigationBarHideBottomLine = (appearance.shadowColor == nil)
+        navigationBarBackgroundColor = appearance.backgroundColor
         navigationBarTintColor = UINavigationBar.appearance().tintColor
         navigationBarTranslucent = UINavigationBar.appearance().isTranslucent
 
@@ -148,25 +142,16 @@ open class BaseViewController: UIViewController {
     }
 
     private func changeNavigationBarStyle(hideNavigationBarBottomLine: Bool, tintColor: UIColor, backgroundColor: UIColor) {
-        if #available(iOS 13.0, *) {
-            if let appearance = navigationController?.navigationBar.standardAppearance {
-                appearance.backgroundColor = backgroundColor
-                appearance.titleTextAttributes = [.foregroundColor: tintColor, .font: UIFont.systemFont(ofSize: 16, weight: .medium)]
-                
-                if hideNavigationBarBottomLine {
-                    appearance.shadowColor = .clear
-                }
-                
-                navigationController?.navigationBar.standardAppearance = appearance
-                navigationController?.navigationBar.scrollEdgeAppearance = appearance
-            }
-        } else {
-            navigationController?.navigationBar.setBackgroundImage(UIImage(color: backgroundColor, size: CGSize(width: Device.width, height: 1)), for: .default)
-            navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: tintColor, .font: UIFont.systemFont(ofSize: 16, weight: .medium)]
-
+        if let appearance = navigationController?.navigationBar.standardAppearance {
+            appearance.backgroundColor = backgroundColor
+            appearance.titleTextAttributes = [.foregroundColor: tintColor, .font: UIFont.systemFont(ofSize: 16, weight: .medium)]
+            
             if hideNavigationBarBottomLine {
-                UINavigationBar.appearance().shadowImage = UIImage()
+                appearance.shadowColor = .clear
             }
+            
+            navigationController?.navigationBar.standardAppearance = appearance
+            navigationController?.navigationBar.scrollEdgeAppearance = appearance
         }
         
         navigationController?.navigationBar.tintColor = tintColor

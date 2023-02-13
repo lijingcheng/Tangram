@@ -135,6 +135,9 @@ public class TagListView: UIView, UICollectionViewDelegate, UICollectionViewData
             supportReverseSelected = supportMultipleSelected
         }
     }
+    
+    /// 支持选择时，最多可以选几个，默认不限制
+    public var selectedMaxCount = Int.max
      
     public var tagSelectedBorderColor: UIColor = UIColor(hex: 0x004696)!
     public var tagSelectedTextColor: UIColor = UIColor(hex: 0x004696)!
@@ -389,7 +392,9 @@ extension TagListView {
                         selectedDatasIndex.remove(indexPath.item)
                     }
                 } else {
-                    selectedDatasIndex.append(indexPath.item)
+                    if selectedDatasIndex.count < selectedMaxCount {
+                        selectedDatasIndex.append(indexPath.item)
+                    }
                 }
             } else {
                 if selectedDatasIndex.contains(indexPath.item) {

@@ -35,10 +35,10 @@ class RefreshView: UIView {
         didSet {
             if status == .refreshing {
                 textLabel.text = texts[.refreshing]
-                imageView.image = R.image.icon_pull_hud()
+                imageView.image = UIImage(named: "icon_pull_hud", in: .tangram, compatibleWith: nil)
                 imageView.startRotate()
             } else {
-                imageView.image = R.image.icon_pull_arrow()
+                imageView.image = UIImage(named: "icon_pull_arrow", in: .tangram, compatibleWith: nil)
                 imageView.stopRotate()
 
                 if status == .none {

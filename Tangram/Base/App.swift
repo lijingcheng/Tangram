@@ -74,26 +74,6 @@ public struct App {
             return true
         }
     }
-    
-    /// 获取 UUID
-    public static func getUUID() -> String {
-        if let uuid = UserDefaults.standard.string(forKey: "App_UUID") {
-            return uuid
-        }
-        
-        let keychain = Keychain(service: App.bundleId ?? "")
-        
-        if let uuid = try? keychain.getString("App_UUID") {
-            return uuid
-        }
-        
-        let uuid = UUID().uuidString.lowercased().replacingOccurrences(of: "-", with: "")
-        
-        keychain["App_UUID"] = uuid
-        UserDefaults.standard.set(uuid, forKey: "App_UUID")
-        
-        return uuid
-    }
 }
 
 extension App {

@@ -50,7 +50,7 @@ public class Toast {
     }()
     
     // MARK: -
-    public static func show(_ message: String, position: ToastViewPosition? = ToastViewPosition.unknown, superView: UIView? = UIApplication.shared.keyWindow, endEditing: Bool = true, completionHandler: @escaping () -> Void = {}) {
+    public static func show(_ message: String, position: ToastViewPosition? = ToastViewPosition.unknown, superView: UIView? = UIApplication.shared.keyWindou, endEditing: Bool = true, completionHandler: @escaping () -> Void = {}) {
         if message.isEmpty {
             return
         }
@@ -59,7 +59,7 @@ public class Toast {
         
         DispatchQueue.main.async {
             if endEditing {
-                UIApplication.shared.keyWindow?.endEditing(true)
+                UIApplication.shared.keyWindou?.endEditing(true)
             }
             
             self.dismiss()

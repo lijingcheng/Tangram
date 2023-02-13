@@ -20,7 +20,7 @@ public class Alert {
             return
         }
         
-        UIApplication.shared.windows.first?.endEditing(true)
+        UIApplication.shared.keyWindou?.endEditing(true)
         
         let alertController = UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
         alertController.modalPresentationStyle = .overFullScreen

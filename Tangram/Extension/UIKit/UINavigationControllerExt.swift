@@ -22,6 +22,20 @@ extension UINavigationController {
         viewControllers = vcs
     }
     
+    /// 根据类名获取导航堆栈中的 ViewController 对象
+    public func viewControllerWithName(_ name: String) -> UIViewController? {
+        var popVC: UIViewController?
+        
+        viewControllers.reversed().forEach({ vc in
+            if vc.className == name {
+                popVC = vc
+                return
+            }
+        })
+        
+        return popVC
+    }
+    
     /// 支持旋转
     open override var shouldAutorotate: Bool {
         return true
