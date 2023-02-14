@@ -84,6 +84,7 @@
 		F3E59B362993726D004EB0F5 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E59AF12993726C004EB0F5 /* Router.swift */; };
 		F3E721A1299A0FBC008B1F76 /* TangramX.podspec in Resources */ = {isa = PBXBuildFile; fileRef = F3E721A0299A0FBC008B1F76 /* TangramX.podspec */; };
 		F3E721A6299A1037008B1F76 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E721A5299A1037008B1F76 /* SwiftyJSON.swift */; };
+		F3E722F1299B6A82008B1F76 /* MourningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E722F0299B6A82008B1F76 /* MourningView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -166,6 +167,7 @@
 		F3E59AF12993726C004EB0F5 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		F3E721A0299A0FBC008B1F76 /* TangramX.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = TangramX.podspec; sourceTree = SOURCE_ROOT; };
 		F3E721A5299A1037008B1F76 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
+		F3E722F0299B6A82008B1F76 /* MourningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MourningView.swift; sourceTree = "<group>"; };
 		F7164C331AC4CA987141E5C4 /* Pods-Tangram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tangram.debug.xcconfig"; path = "Target Support Files/Pods-Tangram/Pods-Tangram.debug.xcconfig"; sourceTree = "<group>"; };
 		FE51EC9190DDA9E4C1B7925F /* Pods-Tangram.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tangram.release.xcconfig"; path = "Target Support Files/Pods-Tangram/Pods-Tangram.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -254,6 +256,7 @@
 				F3E59AAA2993726B004EB0F5 /* PageControl.swift */,
 				F3E59AB92993726B004EB0F5 /* CircleProgressView.swift */,
 				F3E59AAB2993726B004EB0F5 /* TextBannerView.swift */,
+				F3E722F0299B6A82008B1F76 /* MourningView.swift */,
 				F3E59AB02993726B004EB0F5 /* ProgressHUD.swift */,
 				F3E59AB12993726B004EB0F5 /* TagListView.swift */,
 				F3E59AB32993726B004EB0F5 /* TouchAreaLargenButton.swift */,
@@ -535,6 +538,7 @@
 				F3E59B332993726D004EB0F5 /* DispatchQueueExt.swift in Sources */,
 				F3E59AFF2993726D004EB0F5 /* ProgressHUD.swift in Sources */,
 				F3E59B212993726D004EB0F5 /* UITabBarItemExt.swift in Sources */,
+				F3E722F1299B6A82008B1F76 /* MourningView.swift in Sources */,
 				F3E59B102993726D004EB0F5 /* WaterFallFlowLayout.swift in Sources */,
 				F3E59B222993726D004EB0F5 /* UILabelExt.swift in Sources */,
 				F3E59B2C2993726D004EB0F5 /* ArrayExt.swift in Sources */,
