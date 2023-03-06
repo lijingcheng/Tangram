@@ -1,4 +1,4 @@
-source 'https://github.com/CocoaPods/Specs.git'
+source 'https://cdn.cocoapods.org/'
 
 platform :ios, '15.0'
 
@@ -15,8 +15,6 @@ target 'Tangram' do
     pod 'Kingfisher', '7.6.0'
     pod 'RxSwift', '6.5.0'
     pod 'RxCocoa', '6.5.0'
-    
-    pod 'SwiftLint', :configurations => ['Debug']
 end
 
 # remove warning

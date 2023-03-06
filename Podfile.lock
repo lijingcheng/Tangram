@@ -7,23 +7,20 @@ PODS:
   - RxRelay (6.5.0):
     - RxSwift (= 6.5.0)
   - RxSwift (6.5.0)
-  - SwiftLint (0.50.3)
 
 DEPENDENCIES:
   - Alamofire (= 5.6.4)
   - Kingfisher (= 7.6.0)
   - RxCocoa (= 6.5.0)
   - RxSwift (= 6.5.0)
-  - SwiftLint
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - Alamofire
     - Kingfisher
     - RxCocoa
     - RxRelay
     - RxSwift
-    - SwiftLint
 
 SPEC CHECKSUMS:
   Alamofire: 4e95d97098eacb88856099c4fc79b526a299e48c
@@ -31,8 +28,7 @@ SPEC CHECKSUMS:
   RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
   RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
-  SwiftLint: 77f7cb2b9bb81ab4a12fcc86448ba3f11afa50c6
 
-PODFILE CHECKSUM: d00ee2a5d696e89168adfe9eac371c162f7dc77b
+PODFILE CHECKSUM: a9308596c199d74ab7f64493c0b924c004ebbae0
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0
