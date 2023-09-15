@@ -14,8 +14,8 @@ s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
 s.source_files = 'Tangram/Base/*.swift', 'Tangram/Extension/**/*.swift', 'Tangram/Service/*.swift', 'Tangram/Component/**/*.swift'
 s.resource_bundles = { 'Tangram' => ['Tangram/Assets.xcassets'] }
 
-s.dependency 'Alamofire', '5.6.4'
-s.dependency 'Kingfisher', '7.6.0'
+s.dependency 'Alamofire', '5.7.1'
+s.dependency 'Kingfisher', '7.8.1'
 s.dependency 'RxSwift', '6.5.0'
 s.dependency 'RxCocoa', '6.5.0'
     

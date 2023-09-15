@@ -11,8 +11,8 @@ use_frameworks! :linkage => :static
 use_modular_headers!
 
 target 'Tangram' do
-    pod 'Alamofire', '5.6.4'
-    pod 'Kingfisher', '7.6.0'
+    pod 'Alamofire', '5.7.1'
+    pod 'Kingfisher', '7.8.1'
     pod 'RxSwift', '6.5.0'
     pod 'RxCocoa', '6.5.0'
 end

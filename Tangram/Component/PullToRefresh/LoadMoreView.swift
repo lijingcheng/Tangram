@@ -194,6 +194,6 @@ class LoadMoreBottomView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        textLabel.frame = CGRect(x: 0, y: 20, width: Device.width, height: 20)
+        textLabel.frame = CGRect(x: 0, y: 20, width: width, height: 20)
     }
 }

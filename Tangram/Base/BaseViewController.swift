@@ -93,8 +93,6 @@ open class BaseViewController: UIViewController {
         super.viewWillAppear(animated)
         
         if supportNavigationBarColorChange {
-            navigationBarTitle = title
-            
             navigationController?.navigationBar.isTranslucent = true
             
             if mainView is UIScrollView {
